@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Consent="urn:oasis:names:tc:SAML:2.0:consent:current-explicit" Destination="urn:oasis:names:tc:SAML:2.0:consent:current-explicit" ID="d6508333d1cbe889a01afc4416bf1233" IssueInstant="2020-09-04T14:15:44+02:00" Version="2.0">
+  <samlp:Status>
+    <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
+  </samlp:Status>
+  <saml:Assertion ID="d6508333d1cbe889a01afc4416bf1233" IssueInstant="2020-09-04T14:15:44+02:00" Version="2.0">
+    <saml:Issuer>http://www.logalty.es</saml:Issuer>
+    <saml:Subject>
+      <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent">083436256bd3c0f955fbc53908e4fdaf</saml:NameID>
+      <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+        <saml:SubjectConfirmationData NotOnOrAfter="2020-09-04T14:45:44+02:00"/>
+        </saml:SubjectConfirmation>
+      </saml:Subject>
+      <saml:Conditions>
+        <saml:AudienceRestriction>
+          <saml:Audience>LA PREVISION MALLORQUINA DE SEGUROS SA</saml:Audience>
+        </saml:AudienceRestriction>
+      </saml:Conditions>
+      <saml:AuthnStatement AuthnInstant="2020-09-04T14:15:44+02:00">
+        <saml:AuthnContextClassRef>
+         urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+       </saml:AuthnContextClassRef>
+       <saml:AuthnContext/>
+     </saml:AuthnStatement>
+     <saml:AttributeStatement>
+      <saml:Attribute Name="urn:logalty:schemas:core:1.0:attributes:login_type" NameFormat="urn:oasis:names:tc:SAML:2.0:attrnameformat:basic">
+        <saml:AttributeValue>USER</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="urn:logalty:schemas:core:1.0:attributes:document_guid" NameFormat="urn:oasis:names:tc:SAML:2.0:attrnameformat:basic">
+        <saml:AttributeValue>001001-9996-000000001257549.par</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="urn:logalty:schemas:core:1.0:attributes:doc_in_frame" NameFormat="urn:oasis:names:tc:SAML:2.0:attrnameformat:basic">
+        <saml:AttributeValue>1</saml:AttributeValue>
+      </saml:Attribute>
+    </saml:AttributeStatement>
+  </saml:Assertion>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/>
+      <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <Reference Id="main_sign" URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <DigestValue>lJblktcG3+f2tDwU8dQAszq07GtVV2Y00EtIXjV51KU=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>4j7ft+3NHUqRuTTea+RhpLkSWbhdxrYKwS5EsDRQnnCZQYJZ6zPM0L54VDA1qp75
+8kgD7eOabItAxiPpoJNwaQBn1evezOqWwt7v7K7dpSKwLBoDLw3ugibduqjI3mhR
+bdtx9n9QaB5YeMzti2KFmrtWcFpafQY/EaN1nIuZVm8=</SignatureValue>
+    <KeyInfo>
+      <X509Data>
+
+      <X509Certificate>MIIDvzCCAyigAwIBAgIJAKHJZ1lr/6ekMA0GCSqGSIb3DQEBBQUAMIGcMQswCQYD
+VQQGEwJFUzEPMA0GA1UECBMGTWFkcmlkMQ8wDQYDVQQHEwZNYWRyaWQxMTAvBgNV
+BAoTKFBSRVZJU09SQSBNQUxMT1JRVUlOQSBERSBTRUdVUk9TLCBTQSwgTEExDTAL
+BgNVBAsTBERlbW8xKTAnBgNVBAMTIFBSRVZJU09SQSBNQUxMT1JRVUlOQSBERSBT
+RUdVUk9TMB4XDTE0MTAwMTE2MDYzMloXDTI0MDkyODE2MDYzMlowgZwxCzAJBgNV
+BAYTAkVTMQ8wDQYDVQQIEwZNYWRyaWQxDzANBgNVBAcTBk1hZHJpZDExMC8GA1UE
+ChMoUFJFVklTT1JBIE1BTExPUlFVSU5BIERFIFNFR1VST1MsIFNBLCBMQTENMAsG
+A1UECxMERGVtbzEpMCcGA1UEAxMgUFJFVklTT1JBIE1BTExPUlFVSU5BIERFIFNF
+R1VST1MwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAOJpB5XxF3EWYQh2NP20
+Y7LwRIQ/CfvQJlxR1GIwLVPVLCHWr95Z8d0ubikZRv97Ay3A7oPPUTsZjifZuEH6
+I/SEz4cLiCwFF9VL5g0TiGGpEgvqvw9oKD4Go6WKwkwdNLXm0PlgSkvjK/EVDjDT
+finpK3Z5GQybqSP4gFHsdJIRAgMBAAGjggEFMIIBATAdBgNVHQ4EFgQU/jCqA3Xn
+ybzy1m4p1B9FtXDxdnQwgdEGA1UdIwSByTCBxoAU/jCqA3Xnybzy1m4p1B9FtXDx
+dnShgaKkgZ8wgZwxCzAJBgNVBAYTAkVTMQ8wDQYDVQQIEwZNYWRyaWQxDzANBgNV
+BAcTBk1hZHJpZDExMC8GA1UEChMoUFJFVklTT1JBIE1BTExPUlFVSU5BIERFIFNF
+R1VST1MsIFNBLCBMQTENMAsGA1UECxMERGVtbzEpMCcGA1UEAxMgUFJFVklTT1JB
+IE1BTExPUlFVSU5BIERFIFNFR1VST1OCCQChyWdZa/+npDAMBgNVHRMEBTADAQH/
+MA0GCSqGSIb3DQEBBQUAA4GBAH3uNaOFGoCkqpA+gmR49V9pZs+GSIbMnD06OjKf
+Dq0AW4sriqEwqxhs+IuNYCQ4gDE9JAPg0xgRa+pxyOMGVJ5ee7ABOcMTltFXOIUN
+MX8ZPZdHT4DbPVNLHlOlZwqQHbyi9KS55FWCV33q7waG47iwYuNdKPCIaJJGDBqZ
+2TKW</X509Certificate>
+</X509Data>
+    </KeyInfo>
+  </Signature>
+</samlp:Response>

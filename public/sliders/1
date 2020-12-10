@@ -1,0 +1,6 @@
+<?php
+$name = 'Campaña navidad 2019';
+$color = '#FFFFFF';
+$header = 'Campaña navidad Wired';
+$description = '';
+?>

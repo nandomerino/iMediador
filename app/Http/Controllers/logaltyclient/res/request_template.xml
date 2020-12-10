@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pt:request xmlns:pt="urn:logalty:schemas:core:1.0" xmlns:identity="urn:logalty:schemas:core:identity:1.0" xmlns:mp="urn:logalty:schemas:metaProperty:1.0" xmlns:process_meta="urn:logalty:schemas:process:meta:1.0" xmlns:ptforms="urn:logalty:schemas:forms:1.0" xmlns:request_meta="urn:logalty:schemas:request:meta:1.0">
+	<pt:request_meta>
+		<request_meta:service></request_meta:service>
+		<request_meta:time2close unit="" value=""/>
+		<request_meta:time2save unit="" value=""/>
+		<request_meta:lopd></request_meta:lopd>
+		<request_meta:signlevel></request_meta:signlevel>
+		<request_meta:retryprotocol></request_meta:retryprotocol>
+		<request_meta:synchronous></request_meta:synchronous>
+		<request_meta:tsa></request_meta:tsa>
+		<request_meta:externalId></request_meta:externalId>
+		<request_meta:duplicateKeyOff></request_meta:duplicateKeyOff>
+		<request_meta:userdefined name="PHP"></request_meta:userdefined>
+		<request_meta:signMethods>
+			<request_meta:signMethod></request_meta:signMethod>
+		</request_meta:signMethods>
+	</pt:request_meta>
+	<pt:process_meta>
+		<process_meta:generator></process_meta:generator>
+		<process_meta:creation-date></process_meta:creation-date>
+		<process_meta:language></process_meta:language>
+		<process_meta:additional_language>en-EN</process_meta:additional_language>
+		<process_meta:receivers>
+			<identity:receiver receiver-id="1">
+				<identity:personalData>
+					<identity:firstname></identity:firstname>
+					<identity:middlename/>
+					<identity:lastname1></identity:lastname1>
+					<identity:lastname2/>
+				</identity:personalData>
+				<identity:contact notice_method="" preferred="WEB">
+					<identity:uuid></identity:uuid>
+					<identity:phone></identity:phone>
+					<identity:mobile></identity:mobile>
+					<identity:hide_mobile>false</identity:hide_mobile>
+					<identity:fax></identity:fax>
+					<identity:email></identity:email>
+				</identity:contact>
+				<identity:legalIdentity>
+					<identity:type></identity:type>
+					<identity:jurisdictionCountry>ESP</identity:jurisdictionCountry>
+					<identity:issuer></identity:issuer>
+					<identity:id></identity:id>
+					<identity:certificate></identity:certificate>
+				</identity:legalIdentity>
+				<identity:binarycontentrules>
+					<identity:binarycontentrule binary-content-group-id="1" binarycontentrule-id="1" hide_cancel_button="" hide_change_mobile_button="true" show_exit_button="false"/>
+				</identity:binarycontentrules>
+			</identity:receiver>
+		</process_meta:receivers>
+		<process_meta:subject></process_meta:subject>
+		<process_meta:body></process_meta:body>
+		<process_meta:url></process_meta:url>
+		<process_meta:url_back></process_meta:url_back>
+		<process_meta:email></process_meta:email>
+		<process_meta:enforce_download>1</process_meta:enforce_download>
+		<process_meta:userdefined name="user-id"></process_meta:userdefined>
+		<process_meta:additional_email_info></process_meta:additional_email_info>
+		<process_meta:xforms_flow>
+		</process_meta:xforms_flow>
+		<process_meta:emailTemplate></process_meta:emailTemplate>
+		<mp:metaProperties>
+		</mp:metaProperties>
+	</pt:process_meta>
+	<pt:binarycontents>
+		<pt:binarycontentgroups>
+			<pt:binarycontentgroup binary-content-group-id="1">
+				<pt:binarycontentgroupmember binary-content-id="1"/>
+			</pt:binarycontentgroup>
+		</pt:binarycontentgroups>
+		<pt:binarycontentitems>
+			<pt:binarycontentitem binary-content-id="1" content-transfer-encoding="base64" file-name="" tokenText="" type="">
+			</pt:binarycontentitem>
+		</pt:binarycontentitems>
+	</pt:binarycontents>
+	<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+		<SignedInfo>
+			<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/>
+			<SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+			<Reference Id="main_sign" URI="">
+				<Transforms>
+					<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+				</Transforms>
+				<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+				<DigestValue></DigestValue>
+			</Reference>
+		</SignedInfo>
+		<SignatureValue></SignatureValue>
+		<KeyInfo>
+			<X509Data>
+				
+			</X509Data>
+		</KeyInfo>
+	</Signature>
+</pt:request>

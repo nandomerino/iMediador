@@ -1,0 +1,1512 @@
+# Translation of Plugins - Contact Form 7 - Stable (latest release) in Catalan
+# This file is distributed under the same license as the Plugins - Contact Form 7 - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2019-11-18 05:41:35+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+"Language: ca\n"
+"Project-Id-Version: Plugins - Contact Form 7 - Stable (latest release)\n"
+
+#: includes/config-validator.php:418
+msgid "Unavailable HTML elements are used in the form template."
+msgstr "Els elements HTML no disponibles s'utilitzen en la plantilla del formulari."
+
+#: includes/config-validator.php:587
+msgid "The total size of attachment files is too large."
+msgstr "La grandària total dels fitxers adjunts és massa gran."
+
+#: modules/recaptcha.php:499
+msgid "reCAPTCHA is active on this site."
+msgstr "reCAPTCHA està actiu en aquest lloc."
+
+#: modules/recaptcha.php:156
+msgid "reCAPTCHA response token is empty."
+msgstr "El testimoni de resposta de reCAPTCHA està buit."
+
+#: includes/submission.php:326
+msgid "Blacklisted words are used."
+msgstr "Es fan servir paraules de la llista negra."
+
+#: includes/submission.php:317
+msgid "Submitted nonce is invalid."
+msgstr "El nombre nonce enviat no és vàlid."
+
+#: includes/submission.php:308
+msgid "User-Agent string is unnaturally short."
+msgstr "La cadena de l'agent d'usuari és poc natural."
+
+#: modules/recaptcha.php:162
+msgid "reCAPTCHA score (%1$.2f) is lower than the threshold (%2$.2f)."
+msgstr "La puntuació de reCAPTCHA (%1$.2f) és inferior al llindar (%2$.2f)."
+
+#: modules/akismet.php:58
+msgid "Akismet returns a spam response."
+msgstr "L'Akismet retorna una resposta de brossa."
+
+#: modules/constant-contact.php:588
+msgid "Select lists to which newly added contacts are to belong."
+msgstr "Seleccioneu les llistes a les que pertanyen els contactes nous que heu afegit."
+
+#: modules/constant-contact.php:587
+msgctxt "Constant Contact"
+msgid "Contact Lists: Select lists to which newly added contacts are to belong."
+msgstr "Llistes de contactes: seleccioneu les llistes a les que pertanyen els contactes nous que heu afegit."
+
+#: modules/constant-contact.php:584
+msgctxt "Constant Contact"
+msgid "Contact Lists"
+msgstr "Llistes de contactes"
+
+#: modules/constant-contact.php:565
+msgctxt "API keys"
+msgid "Reset Keys"
+msgstr "Reinicia les claus"
+
+#: modules/constant-contact.php:494
+msgid "This site is connected to the Constant Contact API."
+msgstr "Aquest lloc està connectat a la API Constant Contact."
+
+#: modules/constant-contact.php:473
+msgid "Configuration updated."
+msgstr "S'ha actualitzat la configuració."
+
+#: modules/constant-contact.php:467
+msgid "Failed to establish connection. Please double-check your configuration."
+msgstr "No s'ha pogut establir la connexió. Torneu a revisar la configuració."
+
+#: modules/constant-contact.php:460
+msgid "Connection established."
+msgstr "S'ha establert la connexió."
+
+#. translators: 1: response code, 2: message, 3: body, 4: URL
+#: includes/functions.php:384
+msgid "HTTP Response: %1$s %2$s %3$s from %4$s"
+msgstr "Resposta HTTP: %1$s %2$s %3$s des de %4$s"
+
+#: modules/recaptcha.php:570
+msgid "Save Changes"
+msgstr "Desa els canvis"
+
+#: modules/recaptcha.php:489
+msgid "reCAPTCHA protects you against spam and other types of automated abuse. With Contact Form 7&#8217;s reCAPTCHA integration module, you can block abusive form submissions by spam bots. For details, see %s."
+msgstr "El reCAPTCHA us protegeix contra la brossa i altres tipus d'abús automatitzat. Amb el mòdul d'integració per al reCAPTCHA de Contact Form 7, podeu bloquejar les trameses de formulari abusives dels bots de brossa. Per a més detalls, mireu %s.  "
+
+#: modules/recaptcha.php:234 modules/recaptcha.php:492
+msgid "reCAPTCHA (v3)"
+msgstr "reCAPTCHA (v3)"
+
+#: modules/recaptcha.php:231
+msgid "API keys for reCAPTCHA v3 are different from those for v2; keys for v2 don&#8217;t work with the v3 API. You need to register your sites again to get new keys for v3. For details, see %s."
+msgstr "Les claus API de reCAPTCHA versió 3 són diferents de les de la versió 2; les claus de la versió 2 no funcionen amb l'API de la versió 3. Necessiteu registrar les pàgines web per obtenir claus noves de la versió 3. Per a més detalls, mireu %s."
+
+#: modules/constant-contact.php:570
+msgid "Connect to the Constant Contact API"
+msgstr "Connecta a l'Api de Constant Contact"
+
+#: modules/recaptcha.php:565
+msgctxt "API keys"
+msgid "Remove Keys"
+msgstr "Elimina les claus"
+
+#: modules/constant-contact.php:557
+msgid "Set this URL as the redirect URI."
+msgstr "Defineix aquest URL com l'URI de redirecció"
+
+#: modules/constant-contact.php:550
+msgid "Redirect URI"
+msgstr "URI de redirecció"
+
+#: modules/constant-contact.php:533
+msgid "App Secret"
+msgstr "L'aplicació Secret"
+
+#: modules/constant-contact.php:516
+msgid "API Key"
+msgstr "Clau API"
+
+#: modules/constant-contact.php:504 modules/recaptcha.php:509
+msgid "Setup Integration"
+msgstr "Configuració de la integració"
+
+#: modules/constant-contact.php:487
+msgid "Constant Contact Integration"
+msgstr "Integració de Constant Contact"
+
+#: modules/constant-contact.php:483
+msgid "https://contactform7.com/constant-contact-integration/"
+msgstr "https://contactform7.com/constant-contact-integration/"
+
+#: modules/constant-contact.php:481
+msgid "The Constant Contact integration module allows you to send contact data collected through your contact forms to the Constant Contact API. You can create reliable email subscription services in a few easy steps. For details, see %s."
+msgstr "El mòdul d'integració de Constant Contact us permet enviat dades de contacte recollides mitjançant formularis de contacte a l'API de Constant Contact. Podeu crear serveis de subscripció de correu electrònic fiable en uns pocs passos senzills. Per a més detalls, mireu %s."
+
+#: modules/constant-contact.php:236
+msgid "Constant Contact"
+msgstr "Constant Contact"
+
+#: modules/constant-contact.php:9
+msgid "Email Marketing"
+msgstr "Màrqueting per correu electrònic"
+
+#: includes/config-validator.php:649
+msgid "It is not allowed to use files outside the wp-content directory."
+msgstr "No es permet utilitzar fitxers fora del directori de wp-content."
+
+#: modules/acceptance.php:267
+msgid "Make this checkbox optional"
+msgstr "Fes aquesta casella de selecció opcional"
+
+#: admin/edit-contact-form.php:206
+msgid "Professional Services"
+msgstr "Serveis professionals"
+
+#: admin/edit-contact-form.php:205
+msgid "https://contactform7.com/custom-development/"
+msgstr "https://contactform7.com/custom-development/"
+
+#: admin/edit-contact-form.php:202
+msgid "Support Forums"
+msgstr "Fòrums de suport"
+
+#: admin/edit-contact-form.php:201
+msgid "https://wordpress.org/support/plugin/contact-form-7/"
+msgstr "https://wordpress.org/support/plugin/contact-form-7/"
+
+#. translators: 1: FAQ, 2: Docs ("FAQ & Docs")
+#: admin/edit-contact-form.php:190
+msgid "%1$s &#38; %2$s"
+msgstr "%1$s i %2$s"
+
+#: admin/edit-contact-form.php:186
+msgid "Here are some available options to help solve your problems."
+msgstr "Aquí hi ha algunes opcions disponibles per ajudar-vos a solucionar els problemes."
+
+#: admin/edit-contact-form.php:184
+msgid "Do you need help?"
+msgstr "Necessiteu ajuda?"
+
+#: modules/acceptance.php:258
+msgid "Condition"
+msgstr "Condició"
+
+#. translators: 1: 'Consented' or 'Not consented', 2: conditions
+#: modules/acceptance.php:216
+msgctxt "mail output for acceptance checkboxes"
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: modules/acceptance.php:200
+msgid "Not consented"
+msgstr "No consentit"
+
+#: modules/acceptance.php:198
+msgid "Consented"
+msgstr "Consentit"
+
+#: includes/submission.php:206
+msgid "Sending mail has been aborted."
+msgstr "L'enviament del correu s'ha cancel·lat."
+
+#: admin/includes/editor.php:211
+msgid "You can edit messages used in various situations here. For details, see %s."
+msgstr "Aquí podeu editar els missatges utilitzats en vàries situacions. Per a més detalls, mireu %s."
+
+#: admin/includes/editor.php:210
+msgid "Editing Messages"
+msgstr "S'estan editant els missatges"
+
+#: admin/includes/editor.php:209
+msgid "https://contactform7.com/editing-messages/"
+msgstr "https://contactform7.com/editing-messages/"
+
+#: admin/includes/editor.php:130
+msgid "You can edit the mail template here. For details, see %s."
+msgstr "Aquí podeu editar la plantilla de correu. Per detalls, mireu %s."
+
+#: admin/includes/editor.php:57
+msgid "You can edit the form template here. For details, see %s."
+msgstr "Aquí podeu editar la plantilla del formulari. Per a més detalls, mireu %s."
+
+#: admin/includes/editor.php:56
+msgid "Editing Form Template"
+msgstr "Plantilla d'edició de formulari"
+
+#: admin/includes/editor.php:55
+msgid "https://contactform7.com/editing-form-template/"
+msgstr "https://contactform7.com/editing-form-template/"
+
+#. translators: screen reader text
+#: admin/edit-contact-form.php:224
+msgid "(left and right arrow)"
+msgstr "(fletxes esquerra i dreta)"
+
+#. translators: 1: ◀ ▶ dashicon, 2: screen reader text for the dashicon
+#: admin/edit-contact-form.php:219
+msgid "%1$s %2$s keys switch panels"
+msgstr "les tecles %1$s %2$s canvien el panell"
+
+#. translators: screen reader text
+#: admin/admin.php:138
+msgid "(configuration error)"
+msgstr "(error de configuració)"
+
+#: admin/admin.php:131
+msgid "How to resolve?"
+msgstr "Com resoldre-ho?"
+
+#: admin/includes/welcome-panel.php:63
+msgid "Your donation will help encourage and support the plugin&#8217;s continued development and better user support."
+msgstr "La donació ajudarà a encoratjar i recolzar el desenvolupament de l'extensió i millorar el suport a l'usuari."
+
+#: admin/includes/welcome-panel.php:58
+msgid "making a donation"
+msgstr "fer una donació"
+
+#. translators: %s: link labeled 'making a donation'
+#: admin/includes/welcome-panel.php:55
+msgid "If you enjoy using Contact Form 7 and find it useful, please consider %s."
+msgstr "Si us agrada Contact Form 7 i el trobeu útil d'ajuda, considereu %s."
+
+#: admin/includes/welcome-panel.php:50
+msgid "It is hard to continue development and support for this plugin without contributions from users like you."
+msgstr "És difícil continuar el desenvolupament i donar suport a aquesta extensió sense contribucions d'usuaris."
+
+#: includes/contact-form.php:316 includes/contact-form.php:731
+msgid "This contact form is available only for logged in users."
+msgstr "Aquest formulari de contacte només està disponible per a usuaris registrats."
+
+#: includes/config-validator.php:148
+msgid "Deprecated settings are used."
+msgstr "S'estan utilitzant ajustaments obsolets"
+
+#. translators: %s: link labeled 'Really Simple CAPTCHA'
+#: modules/really-simple-captcha.php:36
+msgid "To use CAPTCHA, you need %s plugin installed."
+msgstr "Per utilitzar el CAPTCHA, necessiteu l'extensió %s instal·lada."
+
+#: includes/rest-api.php:261
+msgid "There was an error deleting the contact form."
+msgstr "S'ha produit un error a l'esborrar el formulari de contacte."
+
+#: includes/rest-api.php:177 includes/rest-api.php:204
+#: includes/rest-api.php:253
+msgid "You are not allowed to access the requested contact form."
+msgstr "No teniu permisos per a accedir a aquest formulari de contacte."
+
+#: includes/rest-api.php:171 includes/rest-api.php:198
+#: includes/rest-api.php:247 includes/rest-api.php:276
+#: includes/rest-api.php:316
+msgid "The requested contact form was not found."
+msgstr "No s'ha trobat aquest formulari de contacte."
+
+#: includes/rest-api.php:127
+msgid "You are not allowed to create a contact form."
+msgstr "No teniu permisos per a crear un formulari de contacte."
+
+#: includes/rest-api.php:121
+msgid "Cannot create existing contact form."
+msgstr "No s'ha pogut crear el formulari de contacte."
+
+#: includes/rest-api.php:64
+msgid "You are not allowed to access contact forms."
+msgstr "No teniu permisos per a accedir als formularis de contacte."
+
+#: includes/config-validator.php:631
+msgid "Attachment file does not exist at %path%."
+msgstr "No existeix aquest fitxer adjunt a %path%."
+
+#: includes/config-validator.php:507
+msgid "Invalid mailbox syntax is used in the %name% field."
+msgstr "S'ha usat una sintaxi incorrecta en el camp %name%."
+
+#. translators: %names%: a list of form control names
+#: includes/config-validator.php:401
+msgid "Unavailable names (%names%) are used for form controls."
+msgstr "S'han usat noms no disponibles (%names%) per als controls de formulari."
+
+#: includes/config-validator.php:146
+msgid "There are invalid mail header fields."
+msgstr "Hi ha camps de capçalera invàlids."
+
+#: includes/config-validator.php:142
+msgid "HTML tags are used in a message."
+msgstr "S'han usat etiquetes HTML en un missatge."
+
+#: includes/config-validator.php:140
+msgid "Sender email address does not belong to the site domain."
+msgstr "L'adreça de correu del remitent no pertany al domini del lloc web."
+
+#: includes/config-validator.php:138
+msgid "Invalid mailbox syntax is used."
+msgstr "S'ha usat una sintaxi incorrecta."
+
+#: includes/config-validator.php:136
+msgid "There is a possible empty field."
+msgstr "Pot ser que hi hagi un camp buit."
+
+#. translators: %s: number of errors detected
+#: admin/includes/class-contact-forms-list-table.php:137
+msgid "%s configuration error detected"
+msgid_plural "%s configuration errors detected"
+msgstr[0] "%s error de configuració detectat"
+msgstr[1] "%s errors de configuració detectats"
+
+#: admin/admin.php:135
+msgid "%d configuration errors detected in this tab panel"
+msgstr "S'han trobat %d errors de configuració en aquesta pestanya del tauler"
+
+#: admin/admin.php:134
+msgid "1 configuration error detected in this tab panel"
+msgstr "S'ha detectat un error de configuració en aquesta pestanya del tauler"
+
+#: admin/admin.php:133
+msgid "%d configuration errors detected"
+msgstr "%d error de configuraciós detectats"
+
+#: admin/admin.php:132
+msgid "1 configuration error detected"
+msgstr "S'ha detectat un error de configuració"
+
+#: includes/rest-api.php:138 includes/rest-api.php:214 admin/admin.php:513
+msgid "There was an error saving the contact form."
+msgstr "S'ha produit un error desant el formulari."
+
+#: includes/functions.php:374
+msgid "%1$s is <strong>deprecated</strong> since Contact Form 7 version %2$s! Use %3$s instead."
+msgstr "%1$s està <strong>obsolet</strong> des de la versió %2$s de Contact Form 7! Utilitzeu %3$s en el seu lloc."
+
+#: admin/includes/welcome-panel.php:77
+msgid "Flamingo"
+msgstr "Flamingo"
+
+#. translators: %s: link labeled 'Flamingo'
+#: admin/includes/welcome-panel.php:74
+msgid "Install a message storage plugin before this happens to you. %s saves all messages through contact forms into the database. Flamingo is a free WordPress plugin created by the same author as Contact Form 7."
+msgstr "Instal·leu una extensió d'emmagatzematge de missatges abans que us passi això. %s desa tots els missatges dels vostres formularis de contacte a la base de dades. Flamingo és una extensió de WordPress gratuïta creada pel mateix autor de Contact Form 7."
+
+#: admin/includes/welcome-panel.php:69
+msgid "Contact Form 7 doesn&#8217;t store submitted messages anywhere. Therefore, you may lose important messages forever if your mail server has issues or you make a mistake in mail configuration."
+msgstr "Contact Form 7 no emmagatzema enlloc els missatges enviats. Per tant, pot ser que perdeu missatges importants per sempre si el vostre servidor de correu té problemes o si cometeu un error en la configuració del correu electrònic."
+
+#: admin/includes/welcome-panel.php:67
+msgid "Before you cry over spilt mail&#8230;"
+msgstr "Abans de plorar per haver perdut correus&#8230;"
+
+#: admin/includes/welcome-panel.php:40
+msgid "comment blacklist"
+msgstr "llista negra de comentaris"
+
+#: admin/includes/welcome-panel.php:39
+msgid "https://contactform7.com/comment-blacklist/"
+msgstr "http://contactform7.com/comment-blacklist/"
+
+#. translators: links labeled 1: 'Akismet', 2: 'reCAPTCHA', 3: 'comment
+#. blacklist'
+#: admin/includes/welcome-panel.php:29
+msgid "Contact Form 7 supports spam-filtering with %1$s. Intelligent %2$s blocks annoying spambots. Plus, using %3$s, you can block messages containing specified keywords or those sent from specified IP addresses."
+msgstr "Contact Form 7 és compatible amb el filtrat de brossa de %1$s. El sistema intel·ligent de %2$s  bloca els molestos robots de correu brossa. A més, usant %3$s, podeu blocar missatges que continguin paraules clau específiques o que s'enviïn des d'adreces IP específiques."
+
+#: admin/includes/welcome-panel.php:24
+msgid "Spammers target everything; your contact forms aren&#8217;t an exception. Before you get spammed, protect your contact forms with the powerful anti-spam features Contact Form 7 provides."
+msgstr "Els emissors de correu brossa ho ataquen tot, i els formularis de contacte no són una excepció. Abans de què us arribi brossa, protegiu els formularis de contacte amb les potents característiques anti brossa que ofereix Contact Form 7."
+
+#: admin/includes/welcome-panel.php:22
+msgid "Getting spammed? You have protection."
+msgstr "Rebeu brossa? Podeu protegir-vos."
+
+#: includes/config-validator.php:144
+msgid "Multiple form controls are in a single label element."
+msgstr "Múltiples controls del formulari estan posats dins d'un únic element etiqueta."
+
+#: admin/includes/config-validator.php:131
+msgid "FAQ about Configuration Validator"
+msgstr "Preguntes freqüents sobre el validador de la configuració"
+
+#: admin/includes/config-validator.php:130
+msgid "https://contactform7.com/configuration-validator-faq/"
+msgstr "http://contactform7.com/configuration-validator-faq/"
+
+#: modules/text.php:192
+msgid "The telephone number is invalid."
+msgstr "El número de telèfon no és vàlid."
+
+#: modules/text.php:185
+msgid "The URL is invalid."
+msgstr "L'URL no és vàlid."
+
+#: modules/text.php:178
+msgid "The e-mail address entered is invalid."
+msgstr "La direcció de correu electrònic que has introduït no és vàlida."
+
+#: modules/quiz.php:166
+msgid "The answer to the quiz is incorrect."
+msgstr "La resposta a la pregunta no és correcta."
+
+#: modules/number.php:132
+msgid "The number is larger than the maximum allowed."
+msgstr "El nombre és més gran que el màxim permès."
+
+#: modules/number.php:127
+msgid "The number is smaller than the minimum allowed."
+msgstr "El nombre és menor que el mínim permès."
+
+#: modules/number.php:122
+msgid "The number format is invalid."
+msgstr "El format del número no és vàlid."
+
+#: modules/file.php:173
+msgid "There was an error uploading the file."
+msgstr "S'ha produït un error pujant el fitxer"
+
+#: modules/file.php:168
+msgid "The file is too big."
+msgstr "El fitxer és massa gran."
+
+#: modules/file.php:163
+msgid "You are not allowed to upload files of this type."
+msgstr "No teniu permisos per pujar fitxers d'aquest tipus."
+
+#: modules/file.php:158
+msgid "There was an unknown error uploading the file."
+msgstr "S'ha produït un error desconegut penjant el fitxer."
+
+#: modules/date.php:129
+msgid "The date is after the latest one allowed."
+msgstr "La data és posterior a la més tardana permesa."
+
+#: modules/date.php:124
+msgid "The date is before the earliest one allowed."
+msgstr "La data és anterior a la més primerenca permesa."
+
+#: modules/date.php:119
+msgid "The date format is incorrect."
+msgstr "El format de la data és incorrecte."
+
+#: includes/contact-form-template.php:202
+msgid "The field is too short."
+msgstr "El camp és massa curt."
+
+#: includes/contact-form-template.php:195
+msgid "The field is too long."
+msgstr "El camp és massa llarg."
+
+#: includes/contact-form-template.php:188
+msgid "The field is required."
+msgstr "El camp és obligatori."
+
+#: includes/contact-form-template.php:181
+msgid "You must accept the terms and conditions before sending your message."
+msgstr "Heu d'acceptar els termes i condicions abans d'enviar el missatge."
+
+#: includes/contact-form-template.php:167
+msgid "One or more fields have an error. Please check and try again."
+msgstr "Un o més camps té un error. Si us plau reviseu-ho i torneu a intentar-ho."
+
+#: includes/contact-form-template.php:160
+#: includes/contact-form-template.php:174
+msgid "There was an error trying to send your message. Please try again later."
+msgstr "Hi ha hagut un error intentant enviar el vostre missatge. Si us plau intenteu-ho de nou més tard."
+
+#: includes/contact-form-template.php:153
+msgid "Thank you for your message. It has been sent."
+msgstr "Gràcies pel vostre missatge. Ha estat enviat."
+
+#. translators: 1: blog name, 2: [your-subject]
+#: includes/contact-form-template.php:52 includes/contact-form-template.php:90
+msgctxt "mail subject"
+msgid "%1$s \"%2$s\""
+msgstr "%1$s \"%2$s\""
+
+#: admin/includes/config-validator.php:44
+msgid "Misconfiguration leads to mail delivery failure or other troubles. Validate your contact forms now."
+msgstr "Una configuració errònia provoca errors en l'enviament de missatges o altres problemes. Valida ara els teus formularis de contacte."
+
+#: admin/includes/config-validator.php:41
+msgid "Validate Contact Form 7 Configuration"
+msgstr "Valida la configuració de Contact Form 7"
+
+#: includes/config-validator.php:20
+msgid "https://contactform7.com/configuration-errors/"
+msgstr "http://contactform7.com/configuration-errors/"
+
+#: admin/admin.php:538
+msgid "Configuration validation completed. No invalid contact form was found."
+msgstr "La validació de la configuració ha estat completada. No s'ha trobat cap formulari de contacte no vàlid."
+
+#. translators: %s: number of contact forms
+#: admin/admin.php:527
+msgid "Configuration validation completed. %s invalid contact form was found."
+msgid_plural "Configuration validation completed. %s invalid contact forms were found."
+msgstr[0] "La validació de la configuració s'ha completat. S'ha trobat un formulari de contacte no vàlid."
+msgstr[1] "La validació de la configuració s'ha completat. S'han trobat %s formularis de contacte no vàlids"
+
+#: admin/includes/config-validator.php:120
+msgid "Validate Configuration"
+msgstr "Valida la configuració"
+
+#. translators: %s: number of contact forms
+#: admin/includes/config-validator.php:108
+msgid "Validate %s Contact Form Now"
+msgid_plural "Validate %s Contact Forms Now"
+msgstr[0] "Valida el %s formulari de contacte"
+msgstr[1] "Valida els %s formularis de contacte"
+
+#: admin/includes/config-validator.php:66
+msgid "You are not allowed to validate configuration."
+msgstr "No teniu permís per validar la configuració."
+
+#: modules/recaptcha.php:233 modules/recaptcha.php:491
+#: admin/includes/welcome-panel.php:35
+msgid "https://contactform7.com/recaptcha/"
+msgstr "http://contactform7.com/recaptcha/"
+
+#: modules/recaptcha.php:541
+msgid "Secret Key"
+msgstr "Clau secreta"
+
+#: modules/recaptcha.php:524
+msgid "Site Key"
+msgstr "Clau del lloc web"
+
+#: modules/recaptcha.php:483
+msgid "Settings saved."
+msgstr "S'ha desat la configuració."
+
+#: modules/recaptcha.php:478
+msgid "Invalid key values."
+msgstr "Valors de clau no vàlids."
+
+#: modules/constant-contact.php:466 modules/recaptcha.php:477
+msgid "ERROR"
+msgstr "ERROR"
+
+#: modules/recaptcha.php:267 admin/includes/welcome-panel.php:36
+msgid "reCAPTCHA"
+msgstr "reCAPTCHA"
+
+#: modules/really-simple-captcha.php:246
+msgid "CAPTCHA (Really Simple CAPTCHA)"
+msgstr "CAPTCHA (Really Simple CAPTCHA)"
+
+#. Author URI of the plugin
+msgid "https://ideasilo.wordpress.com/"
+msgstr "https://ideasilo.wordpress.com/"
+
+#. Author of the plugin
+msgid "Takayuki Miyoshi"
+msgstr "Takayuki Miyoshi"
+
+#. Description of the plugin
+msgid "Just another contact form plugin. Simple but flexible."
+msgstr "Un altre extensió de formulari de contacte. Simple però flexible."
+
+#. Plugin URI of the plugin
+msgid "https://contactform7.com/"
+msgstr "http://contactform7.com/"
+
+#. translators: title of your first contact form. %d: number fixed to '1'
+#: settings.php:144
+msgid "Contact form %d"
+msgstr "Formulari de contacte %d"
+
+#: modules/textarea.php:139
+msgid "Generate a form-tag for a multi-line text input field. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un camp d'entrada de text multilínia. Per a més detalls veieu %s."
+
+#: modules/textarea.php:131
+msgid "text area"
+msgstr "Àrea de text"
+
+#: modules/text.php:284
+msgid "This field requires author's URL"
+msgstr "Aquest quadre de text requereix la URL de l'autor"
+
+#: modules/text.php:279
+msgid "This field requires author's email address"
+msgstr "Aquest camp de text requereix el correu electrònic de l'autor"
+
+#: modules/text.php:274
+msgid "This field requires author's name"
+msgstr "Aquest camp de text requereix el nom de l'autor"
+
+#: modules/text.php:266 modules/text.php:269
+#: admin/includes/welcome-panel.php:32
+msgid "Akismet"
+msgstr "Akismet"
+
+#: modules/text.php:234 modules/textarea.php:141
+msgid "Text Fields"
+msgstr "Camps de text"
+
+#: modules/text.php:234 modules/textarea.php:141
+msgid "https://contactform7.com/text-fields/"
+msgstr "http://contactform7.com/text-fields/"
+
+#: modules/text.php:231
+msgid "Generate a form-tag for a single-line telephone number input field. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un camp d'entrada de número de telèfon d'una sola línia. Per a més detalls veieu %s."
+
+#: modules/text.php:229
+msgid "Generate a form-tag for a single-line URL input field. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un camp d'entrada d'URL d'una sola línia. Per a més detalls veieu %s."
+
+#: modules/text.php:227
+msgid "Generate a form-tag for a single-line email address input field. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un camp d'entrada de correu electrònic d'una sola línia. Per a més detalls veieu %s."
+
+#: modules/text.php:225
+msgid "Generate a form-tag for a single-line plain text input field. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un camp d'entrada de text d'una sola línia. Per a més detalls veieu %s."
+
+#: modules/text.php:212
+msgid "tel"
+msgstr "telèfon"
+
+#: modules/text.php:210
+msgid "URL"
+msgstr "URL"
+
+#: modules/text.php:208
+msgid "email"
+msgstr "correu electrònic"
+
+#: modules/text.php:206
+msgid "text"
+msgstr "text"
+
+#: modules/text.php:190
+msgid "Telephone number that the sender entered is invalid"
+msgstr "El número de telèfon introduït no és vàlid"
+
+#: modules/text.php:183
+msgid "URL that the sender entered is invalid"
+msgstr "L'adreça URL introduïda no és vàlida"
+
+#: modules/text.php:176
+msgid "Email address that the sender entered is invalid"
+msgstr "L'adreça de correu electrònic introduïda no és vàlida"
+
+#: modules/submit.php:65
+msgid "Label"
+msgstr "Etiqueta"
+
+#: modules/submit.php:55
+msgid "Submit Button"
+msgstr "Botó d'enviament"
+
+#: modules/submit.php:55
+msgid "https://contactform7.com/submit-button/"
+msgstr "http://contactform7.com/submit-button/"
+
+#: modules/submit.php:53
+msgid "Generate a form-tag for a submit button. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un botó 'Envia'. Per a més detalls veieu %s."
+
+#: modules/submit.php:46
+msgid "submit"
+msgstr "envia"
+
+#: modules/select.php:195
+msgid "Insert a blank item as the first option"
+msgstr "Insereix un element en blanc com a primera opció"
+
+#: modules/select.php:194
+msgid "Allow multiple selections"
+msgstr "Permet seleccions múltiples"
+
+#: modules/select.php:161
+msgid "Generate a form-tag for a drop-down menu. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un menú desplegable. Per a més detalls veieu %s."
+
+#: modules/select.php:154
+msgid "drop-down menu"
+msgstr "menú desplegable"
+
+#: modules/quiz.php:210
+msgid "One pipe-separated question-answer pair (e.g. The capital of Brazil?|Rio) per line."
+msgstr "Un parella de pregunta/respuesta per línia, separades per una barra vertical (|). Per exemple: Quina és la capital de Brasil?|Brasilia."
+
+#: modules/quiz.php:205 modules/quiz.php:208
+msgid "Questions and answers"
+msgstr "Preguntes i respostes"
+
+#: modules/quiz.php:190
+msgid "Quiz"
+msgstr "Pregunta"
+
+#: modules/quiz.php:190
+msgid "https://contactform7.com/quiz/"
+msgstr "http://contactform7.com/quiz/"
+
+#: modules/quiz.php:188
+msgid "Generate a form-tag for a question-answer pair. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un parell pregunta/resposta. Per a més detalls, veieu %s."
+
+#: modules/quiz.php:180
+msgid "quiz"
+msgstr "pregunta"
+
+#: modules/quiz.php:164
+msgid "Sender doesn't enter the correct answer to the quiz"
+msgstr "El remitent no ha introduït una resposta vàlida a la pregunta"
+
+#: modules/number.php:170
+msgid "Slider"
+msgstr "Selector lliscant"
+
+#: modules/number.php:169
+msgid "Spinbox"
+msgstr "Selector de valor"
+
+#: modules/number.php:154
+msgid "Number Fields"
+msgstr "Camps numèrics"
+
+#: modules/number.php:154
+msgid "https://contactform7.com/number-fields/"
+msgstr "http://contactform7.com/number-fields/"
+
+#: modules/number.php:152
+msgid "Generate a form-tag for a field for numeric value input. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un camp d'entrada de valor numèric. Per a més detall, mireu %s."
+
+#: modules/number.php:144
+msgid "number"
+msgstr "número"
+
+#: modules/number.php:131
+msgid "Number is larger than maximum limit"
+msgstr "Aquesta xifra supera el màxim establert."
+
+#: modules/number.php:126
+msgid "Number is smaller than minimum limit"
+msgstr "Aquesta xifra està per sota del mínim establert."
+
+#: modules/number.php:121
+msgid "Number format that the sender entered is invalid"
+msgstr "El format numèric és incorrecte."
+
+#: modules/file.php:283
+msgid "This contact form contains file uploading fields, but the temporary folder for the files (%s) does not exist or is not writable. You can create the folder or change its permission manually."
+msgstr "Aquest formulari de contacte inclou camps de càrrega de fitxers, però la carpeta temporal pels fitxers (%s) no existeix o no té permís d'escriptura. Pots crear la carpeta o canviar-ne els permisos manualment."
+
+#: modules/file.php:253
+msgid "To attach the file uploaded through this field to mail, you need to insert the corresponding mail-tag (%s) into the File Attachments field on the Mail tab."
+msgstr "Per adjuntar el fitxer pujat mitjançant aquest camp al missatge de correu electrònic, heu d'inserir l'etiqueta de correu corresponent (%s) al camp Fitxers adjunts de la pestanya Correu electrònic."
+
+#: modules/file.php:225
+msgid "Acceptable file types"
+msgstr "Tipus de fitxers acceptats"
+
+#: modules/file.php:220
+msgid "File size limit (bytes)"
+msgstr "Límit de mida del fitxer (bytes)"
+
+#: modules/file.php:195
+msgid "File Uploading and Attachment"
+msgstr "Pujada de fitxers i adjunts"
+
+#: modules/file.php:195
+msgid "https://contactform7.com/file-uploading-and-attachment/"
+msgstr "http://contactform7.com/file-uploading-and-attachment/"
+
+#: modules/file.php:193
+msgid "Generate a form-tag for a file uploading field. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un camp de càrrega de fitxer. Per a més detall, mireu %s."
+
+#: modules/file.php:185
+msgid "file"
+msgstr "fitxer"
+
+#: modules/file.php:172
+msgid "Uploading a file fails for PHP error"
+msgstr "Pujar un fitxer pot fallar per un error de PHP"
+
+#: modules/file.php:167
+msgid "Uploaded file is too large"
+msgstr "El fitxer és massa gran"
+
+#: modules/file.php:162
+msgid "Uploaded file is not allowed for file type"
+msgstr "El fitxer pujat és un d'un tipus que no està permès"
+
+#: modules/file.php:157
+msgid "Uploading a file fails for any reason"
+msgstr "Pujar un fitxer pot fallar per qualsevol motiu"
+
+#: modules/date.php:192 modules/number.php:200
+msgid "Max"
+msgstr "Màxim"
+
+#: modules/date.php:187 modules/number.php:195
+msgid "Min"
+msgstr "Mínim"
+
+#: modules/date.php:182 modules/date.php:185 modules/number.php:190
+#: modules/number.php:193
+msgid "Range"
+msgstr "Interval"
+
+#: modules/text.php:261 modules/textarea.php:168 modules/date.php:178
+#: modules/number.php:186
+msgid "Use this text as the placeholder of the field"
+msgstr "Utilitza aquest text com a marcador del camp"
+
+#: modules/text.php:259 modules/textarea.php:166 modules/date.php:176
+#: modules/number.php:184
+msgid "Default value"
+msgstr "Valor predeterminat"
+
+#: modules/date.php:151
+msgid "Date Field"
+msgstr "Camp data"
+
+#: modules/date.php:151
+msgid "https://contactform7.com/date-field/"
+msgstr "http://contactform7.com/date-field/"
+
+#: modules/date.php:149
+msgid "Generate a form-tag for a date input field. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un camp data  Per a més detall, mireu %s."
+
+#: modules/date.php:141
+msgid "date"
+msgstr "data"
+
+#: modules/date.php:128
+msgid "Date is later than maximum limit"
+msgstr "Aquesta data supera la data límit establerta."
+
+#: modules/date.php:123
+msgid "Date is earlier than minimum limit"
+msgstr "La data és anterior al límit mínim"
+
+#: modules/date.php:118
+msgid "Date format that the sender entered is invalid"
+msgstr "El format de la data no és vàlid."
+
+#: modules/text.php:317 modules/select.php:224 modules/textarea.php:195
+#: modules/checkbox.php:346 modules/date.php:222 modules/number.php:230
+msgid "To use the value input through this field in a mail field, you need to insert the corresponding mail-tag (%s) into the field on the Mail tab."
+msgstr "Per rebre les dades enviades a través d'aquest camp, heu d'inserir l'etiqueta corresponent (%s) en algun dels camps de la pestanya Correu electrònic."
+
+#: modules/checkbox.php:316
+msgid "Make checkboxes exclusive"
+msgstr "Fes que les caselles de verificació siguin exclusives"
+
+#: modules/checkbox.php:314
+msgid "Wrap each item with label element"
+msgstr "Envolteu cada element amb l'element etiqueta"
+
+#: modules/checkbox.php:313
+msgid "Put a label first, a checkbox last"
+msgstr "Poseu primer una etiqueta, la casella de verificació al final"
+
+#: modules/select.php:193 modules/checkbox.php:312
+msgid "One option per line."
+msgstr "Una opció per línia."
+
+#: modules/text.php:248 modules/select.php:177 modules/textarea.php:155
+#: modules/file.php:209 modules/checkbox.php:295 modules/date.php:165
+#: modules/number.php:173
+msgid "Required field"
+msgstr "Camp requerit"
+
+#: modules/text.php:244 modules/text.php:247 modules/select.php:173
+#: modules/select.php:176 modules/textarea.php:151 modules/textarea.php:154
+#: modules/file.php:205 modules/file.php:208 modules/checkbox.php:291
+#: modules/checkbox.php:294 modules/date.php:161 modules/date.php:164
+#: modules/number.php:164 modules/number.php:167
+msgid "Field type"
+msgstr "Tipus de camp"
+
+#: modules/select.php:163 modules/checkbox.php:280
+msgid "Checkboxes, Radio Buttons and Menus"
+msgstr "Caselles de verificació, botons d'opció i menús"
+
+#: modules/select.php:163 modules/checkbox.php:280
+msgid "https://contactform7.com/checkboxes-radio-buttons-and-menus/"
+msgstr "http://contactform7.com/checkboxes-radio-buttons-and-menus/"
+
+#: modules/checkbox.php:277
+msgid "Generate a form-tag for a group of radio buttons. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un grup de botons de selecció. Per a més detalls, veieu %s."
+
+#: modules/checkbox.php:275
+msgid "Generate a form-tag for a group of checkboxes. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a un grup de caselles de verificació. Per a més detalls, veieu %s."
+
+#: modules/checkbox.php:262
+msgid "radio buttons"
+msgstr "botons de selecció"
+
+#: modules/checkbox.php:260
+msgid "checkboxes"
+msgstr "caselles de verificació"
+
+#: modules/really-simple-captcha.php:367
+msgid "This contact form contains CAPTCHA fields, but the necessary libraries (GD and FreeType) are not available on your server."
+msgstr "Aquest formulari de contacte fa servir CAPTCHA, però les llibreries necessàries (GD i FreeType) no estan disponibles al teu servidor."
+
+#: modules/really-simple-captcha.php:360
+msgid "This contact form contains CAPTCHA fields, but the temporary folder for the files (%s) does not exist or is not writable. You can create the folder or change its permission manually."
+msgstr "Aquest formulari de contacte fa servir CAPTCHA, però la carpeta temporal pels fitxers (%s) no existeix o no hi ha permís d'escriptura. Pots crear la carpeta o canviar-ne els permisos manualment."
+
+#: modules/really-simple-captcha.php:305
+msgid "Input field settings"
+msgstr "Preferències del camp"
+
+#: modules/really-simple-captcha.php:290
+msgid "Image settings"
+msgstr "Preferències d'imatge"
+
+#: modules/really-simple-captcha.php:273
+msgid "https://contactform7.com/captcha/"
+msgstr "http://contactform7.com/captcha/"
+
+#: modules/really-simple-captcha.php:271
+msgid "Generate form-tags for a CAPTCHA image and corresponding response input field. For more details, see %s."
+msgstr "Genera etiquetes de formulari per a una imatge CAPTCHA i un camp d'entrada de resposta corresponent. Per a més detalls, veieu %s."
+
+#. translators: %s: link labeled 'Really Simple CAPTCHA'
+#: modules/really-simple-captcha.php:260
+msgid "To use CAPTCHA, you first need to install and activate %s plugin."
+msgstr "Per utilitzar CAPTCHA, primer heu d'instal·lar i activar l'extensió %s."
+
+#: modules/recaptcha.php:9 modules/really-simple-captcha.php:273
+msgid "CAPTCHA"
+msgstr "CAPTCHA"
+
+#: modules/really-simple-captcha.php:227
+msgid "Your entered code is incorrect."
+msgstr "Has introduït un codi incorrecte."
+
+#: modules/really-simple-captcha.php:225
+msgid "The code that sender entered does not match the CAPTCHA"
+msgstr "El codi introduït no coincideix amb CAPTCHA"
+
+#: modules/text.php:312 modules/select.php:219 modules/textarea.php:190
+#: modules/file.php:248 modules/acceptance.php:291
+#: modules/really-simple-captcha.php:325 modules/checkbox.php:341
+#: modules/date.php:217 modules/quiz.php:234 modules/number.php:225
+#: modules/submit.php:88
+msgid "Insert Tag"
+msgstr "Insereix una etiqueta"
+
+#: modules/text.php:299 modules/select.php:206 modules/textarea.php:177
+#: modules/file.php:235 modules/acceptance.php:278
+#: modules/really-simple-captcha.php:298 modules/really-simple-captcha.php:313
+#: modules/checkbox.php:328 modules/date.php:205 modules/quiz.php:221
+#: modules/number.php:213 modules/submit.php:75
+msgid "Class attribute"
+msgstr "Atribut de classe"
+
+#: modules/text.php:294 modules/select.php:201 modules/textarea.php:172
+#: modules/file.php:230 modules/acceptance.php:273
+#: modules/really-simple-captcha.php:293 modules/really-simple-captcha.php:308
+#: modules/checkbox.php:323 modules/date.php:200 modules/quiz.php:216
+#: modules/number.php:208 modules/submit.php:70
+msgid "Id attribute"
+msgstr "Atribut d'ID"
+
+#: modules/select.php:188 modules/select.php:191 modules/acceptance.php:263
+#: modules/acceptance.php:266 modules/checkbox.php:307 modules/checkbox.php:310
+msgid "Options"
+msgstr "Opcions"
+
+#: modules/text.php:254 modules/select.php:183 modules/textarea.php:161
+#: modules/file.php:215 modules/acceptance.php:253
+#: modules/really-simple-captcha.php:283 modules/checkbox.php:302
+#: modules/date.php:171 modules/quiz.php:200 modules/number.php:179
+msgid "Name"
+msgstr "Nom"
+
+#: modules/acceptance.php:243
+msgid "Acceptance Checkbox"
+msgstr "Casella d'acceptació"
+
+#: modules/acceptance.php:243
+msgid "https://contactform7.com/acceptance-checkbox/"
+msgstr "http://contactform7.com/acceptance-checkbox/"
+
+#: modules/acceptance.php:241
+msgid "Generate a form-tag for an acceptance checkbox. For more details, see %s."
+msgstr "Genera una etiqueta de formulari per a una casella de verificació. Per a més detalls, veieu %s."
+
+#: modules/acceptance.php:233
+msgid "acceptance"
+msgstr "acceptació"
+
+#: includes/contact-form.php:174
+msgid "<code>%1$s</code> property of a <code>WPCF7_ContactForm</code> object is <strong>no longer accessible</strong>. Use <code>%2$s</code> method instead."
+msgstr "La propietat <code>%1$s</code> de l'objecte <code>WPCF7_ContactForm</code> <strong>ja no és accessible</strong>. En el seu lloc, utilitzeu el mètode <code>%2$s</code>."
+
+#: includes/contact-form.php:93 includes/contact-form.php:254
+msgid "Untitled"
+msgstr "Sense títol"
+
+#: includes/contact-form.php:32
+msgid "Contact Form"
+msgstr "Formulari de Contacte"
+
+#: includes/contact-form-template.php:200
+msgid "There is a field with input that is shorter than the minimum allowed length"
+msgstr "Hi ha un camp on el contingut és més curt que la longitud mínima permesa"
+
+#: includes/contact-form-template.php:193
+msgid "There is a field with input that is longer than the maximum allowed length"
+msgstr "Hi ha un camp on el contingut és més llarg que la longitud màxima permesa"
+
+#: includes/contact-form-template.php:186
+msgid "There is a field that the sender must fill in"
+msgstr "Hi ha un camp que falta omplir"
+
+#: includes/contact-form-template.php:179
+msgid "There are terms that the sender must accept"
+msgstr "Hi ha termes que s'han d'acceptar"
+
+#: includes/contact-form-template.php:172
+msgid "Submission was referred to as spam"
+msgstr "Sembla que aquest missatge és brossa"
+
+#: includes/contact-form-template.php:165
+msgid "Validation errors occurred"
+msgstr "Hi ha errors de validació"
+
+#: includes/contact-form-template.php:158
+msgid "Sender's message failed to send"
+msgstr "El missatge no s'ha pogut enviar"
+
+#: includes/contact-form-template.php:151
+msgid "Sender's message was sent successfully"
+msgstr "El missatge s'ha enviat correctament"
+
+#. translators: 1: blog name, 2: blog URL
+#: includes/contact-form-template.php:70 includes/contact-form-template.php:102
+msgid "This e-mail was sent from a contact form on %1$s (%2$s)"
+msgstr "Aquest correu electrònic s'ha enviat des del formulari de contacte de %1$s (%2$s)"
+
+#: includes/contact-form-template.php:65 includes/contact-form-template.php:97
+msgid "Message Body:"
+msgstr "Missatge:"
+
+#. translators: %s: [your-subject]
+#: includes/contact-form-template.php:63
+msgid "Subject: %s"
+msgstr "Assumpte: %s"
+
+#. translators: %s: [your-name] <[your-email]>
+#: includes/contact-form-template.php:60
+msgid "From: %s"
+msgstr "De: %s"
+
+#: includes/contact-form-template.php:42 modules/submit.php:26
+msgid "Send"
+msgstr "Envia"
+
+#: includes/contact-form-template.php:41
+msgid "Your Message"
+msgstr "El missatge"
+
+#: includes/contact-form-template.php:39
+msgid "Your Email"
+msgstr "El correu electrònic"
+
+#: includes/contact-form-template.php:37
+msgid "(required)"
+msgstr "(obligatori)"
+
+#: includes/contact-form-template.php:38
+msgid "Your Name"
+msgstr "El nom"
+
+#. translators: %s: title of form-tag like 'email' or 'checkboxes'
+#: admin/includes/tag-generator.php:46
+msgid "Form-tag Generator: %s"
+msgstr "Generador d'etiquetes de formulari: %s"
+
+#: admin/includes/help-tabs.php:91
+msgid "For more information:"
+msgstr "Per a més informació:"
+
+#: admin/includes/help-tabs.php:83
+msgid "Any information you provide will not be shared with service providers without your authorization."
+msgstr "Sense l'autorització, no es compartirà cap informació que proporcioneu amb els proveïdors de servei."
+
+#: admin/includes/help-tabs.php:82
+msgid "You may need to first sign up for an account with the service that you plan to use. When you do so, you would need to authorize Contact Form 7 to access the service with your account."
+msgstr "Primer haureu de registrar un compte amb el servei que tingueu pensat utilitzar. Un cop registrats, haureu d'autoritzar a Contact Form 7 per accedir al servei amb el teu compte."
+
+#: admin/includes/help-tabs.php:81
+msgid "On this screen, you can manage services that are available through Contact Form 7. Using API will allow you to collaborate with any services that are available."
+msgstr "En aquesta pantalla, podeu gestionar els serveis que estan disponibles a través de Contact Form 7. L'API us permetrà col·laborar amb els serveis que estan disponibles."
+
+#: admin/includes/help-tabs.php:79
+msgid "There are also special mail-tags that have specific names, but don&#8217;t have corresponding form-tags. They are used to represent meta information of form submissions like the submitter&#8217;s IP address or the URL of the page."
+msgstr "També hi ha etiquetes de correu electrònic especials que tenen noms específics, però que no tenen etiquetes de formulari corresponents. Es fan servir per representar la informació meta dels enviaments a través del formulari, com l'adreça IP del remitent o l'URL de la pàgina."
+
+#: admin/includes/help-tabs.php:78
+msgid "A mail-tag is also a short code enclosed in square brackets that you can use in every Mail and Mail (2) field. A mail-tag represents a user input value through an input field of a corresponding form-tag."
+msgstr "Una etiqueta de correu electrònic també és un codi abreujat entre claudàtors que es pot utilitzar en cada camp a Correu electrònic i Correu electrònic (2). Una etiqueta de correu electrònic representa un valor d'entrada de l'usuari a través del camp d'entrada d'una etiqueta de formulari corresponent."
+
+#: admin/includes/help-tabs.php:76
+msgid "While form-tags have a comparatively complex syntax, you don&#8217;t need to know the syntax to add form-tags because you can use the straightforward tag generator (<strong>Generate Tag</strong> button on this screen)."
+msgstr "Mentre que les etiquetes de formulari tenen una sintaxi relativament complexa, no cal conèixer-la per afegir-les, ja que pots fer servir el generador d'etiquetes (botó <strong>Insereix etiqueta </strong> en aquesta pantalla)."
+
+#: admin/includes/help-tabs.php:75
+msgid "A form-tag is a short code enclosed in square brackets used in a form content. A form-tag generally represents an input field, and its components can be separated into four parts: type, name, options, and values. Contact Form 7 supports several types of form-tags including text fields, number fields, date fields, checkboxes, radio buttons, menus, file-uploading fields, CAPTCHAs, and quiz fields."
+msgstr "Una etiqueta de formulari és un codi abreujat entre claudàtors, usat en el contingut del formulari. Una etiqueta de formulari generalment representa un camp d'entrada, i els seus components es poden dividir en quatre parts: tipus, nom, opcions i valors. Contact Form 7 és compatible amb diversos tipus d'etiquetes de formulari que inclouen camps de text, camps de nombre, camps de data, caselles de verificació, botons de selecció, menús, camps de càrrega de fitxers, CAPTCHAs, i camps de preguntes."
+
+#: admin/includes/help-tabs.php:73
+msgid "<strong>Additional Settings</strong> provides a place where you can customize the behavior of this contact form by adding code snippets."
+msgstr "Les <strong>preferències addicionals</strong> proporcionen un lloc on podeu personalitzar el comportament d'aquest formulari de contacte, afegint fragments de codi."
+
+#: admin/includes/help-tabs.php:72
+msgid "In <strong>Messages</strong>, you can edit various types of messages used for this contact form. These messages are relatively short messages, like a validation error message you see when you leave a required field blank."
+msgstr "A <strong>Missatges</strong>, podeu editar diversos tipus de missatges utilitzats per a aquest formulari de contacte. Aquests missatges són relativament curts, com un missatge d'error de validació que apareix quan es deixa en blanc un camp obligatori."
+
+#: admin/includes/help-tabs.php:71
+msgid "<strong>Mail (2)</strong> is an additional mail template that works similar to Mail. Mail (2) is different in that it is sent only when Mail has been sent successfully."
+msgstr "<strong>Correu electrònic (2)</strong> és una plantilla de correu addicional que funciona de manera similar a Correu electrònic. Correu electrònic (2) difereix en que s'envia únicament quan el primer correu s'ha enviat amb èxit."
+
+#: admin/includes/help-tabs.php:70
+msgid "<strong>Mail</strong> manages a mail template (headers and message body) that this contact form will send when users submit it. You can use Contact Form 7&#8217;s mail-tags here."
+msgstr "<strong>Correu electrònic</strong> administra la plantilla de correu (capçaleres i cos del missatge) que enviarà aquest formulari de contacte. Podeu fer servir aquí les etiquetes de correu electrònic de Contact Form 7."
+
+#: admin/includes/help-tabs.php:69
+msgid "<strong>Form</strong> is a content of HTML form. You can use arbitrary HTML, which is allowed inside a form element. You can also use Contact Form 7&#8217;s form-tags here."
+msgstr "<strong>Formulari</strong> és el contingut del formulari en HTML. Pots fer servir HTML arbitrari, permès dins d'un element del formulari. També pots fer servir aquí les etiquetes de formulari de Contact Form 7."
+
+#: admin/includes/help-tabs.php:68
+msgid "<strong>Title</strong> is the title of a contact form. This title is only used for labeling a contact form, and can be edited."
+msgstr "<strong>Títol</strong> és el títol d'un formulari de contacte. Aquest títol només es fa servir per etiquetar un formulari de contacte, i es pot editar."
+
+#: admin/includes/help-tabs.php:67
+msgid "On this screen, you can edit a contact form. A contact form is comprised of the following components:"
+msgstr "En aquesta pàgina podeu editar un formulari de contacte. Un formulari de contacte es compon dels següents elements:"
+
+#: admin/includes/help-tabs.php:65
+msgid "<strong>Duplicate</strong> - Clones that contact form. A cloned contact form inherits all content from the original, but has a different ID."
+msgstr "<strong>Duplica</strong> - Clona aquest formulari de contacte. Un formulari de contacte clonat hereta tot el contingut de l'original, però té una ID diferent."
+
+#: admin/includes/help-tabs.php:64
+msgid "<strong>Edit</strong> - Navigates to the editing screen for that contact form. You can also reach that screen by clicking on the contact form title."
+msgstr "<strong>Edita</strong> - Obre la pàgina d'edició d'aquest formulari de contacte. També podeu arribar a aquesta pàgina fent clic al títol del formulari de contacte."
+
+#: admin/includes/help-tabs.php:63
+msgid "Hovering over a row in the contact forms list will display action links that allow you to manage your contact form. You can perform the following actions:"
+msgstr "En passar el ratolí sobre una fila de la llista de formularis de contacte es mostraran enllaços d'acció que us permetrà gestionar el vostre formulari. Podeu realitzar les següents accions:"
+
+#: admin/includes/help-tabs.php:61
+msgid "On this screen, you can manage contact forms provided by Contact Form 7. You can manage an unlimited number of contact forms. Each contact form has a unique ID and Contact Form 7 shortcode ([contact-form-7 ...]). To insert a contact form into a post or a text widget, insert the shortcode into the target."
+msgstr "En aquesta pantalla, podeu gestionar els formularis de contacte proporcionats per Contact Form 7. Podeu gestionar un nombre il·limitat de formularis de contacte. Cada formulari de contacte té una ID i un codi abreujat únics ([contact-form-7 ...]). Per inserir un formulari de contacte en una entrada o giny de text, inseriu el codi abreujat en el contingut corresponent."
+
+#: admin/includes/help-tabs.php:40
+msgid "Mail-tags"
+msgstr "Etiquetes de correu electrònic"
+
+#: admin/includes/help-tabs.php:35
+msgid "Form-tags"
+msgstr "Etiquetes de formulari"
+
+#: admin/includes/help-tabs.php:21
+msgid "Available Actions"
+msgstr "Accions disponibles"
+
+#: admin/includes/help-tabs.php:16 admin/includes/help-tabs.php:30
+#: admin/includes/help-tabs.php:49
+msgid "Overview"
+msgstr "Resum"
+
+#: admin/includes/editor.php:248
+msgid "You can add customization code snippets here. For details, see %s."
+msgstr "Podeu afegir aquí fragments de codi personalitzat. Per a més detall mireu %s."
+
+#: admin/includes/editor.php:246
+msgid "https://contactform7.com/additional-settings/"
+msgstr "http://contactform7.com/additional-settings/"
+
+#: admin/includes/editor.php:194
+msgid "File Attachments"
+msgstr "Fitxers adjunts"
+
+#: admin/includes/editor.php:188
+msgid "Use HTML content type"
+msgstr "Utilitzar contingut HTML"
+
+#: admin/includes/editor.php:186
+msgid "Exclude lines with blank mail-tags from output"
+msgstr "Exclou les línies amb etiquetes de correu electrònic buides a la sortida"
+
+#: admin/includes/editor.php:181
+msgid "Message Body"
+msgstr "Cos del missatge"
+
+#: admin/includes/editor.php:172
+msgid "Additional Headers"
+msgstr "Capçaleres addicionals"
+
+#: includes/contact-form-template.php:40 admin/includes/editor.php:163
+msgid "Subject"
+msgstr "Assumpte"
+
+#: admin/includes/editor.php:154
+msgid "From"
+msgstr "De"
+
+#: admin/includes/editor.php:145
+msgid "To"
+msgstr "A"
+
+#: admin/includes/editor.php:135
+msgid "In the following fields, you can use these mail-tags:"
+msgstr "En els següents camps, podeu utilitzar aquestes etiquetes de correu electrònic:"
+
+#: admin/includes/editor.php:119
+msgid "Mail (2) is an additional mail template often used as an autoresponder."
+msgstr "Correu (2) és una plantilla de correu electrònic addicional que s'utilitza sovint com a resposta automàtica."
+
+#: admin/includes/editor.php:85
+msgid "Use Mail (2)"
+msgstr "Utilitza el correu (2)"
+
+#: admin/includes/editor.php:84
+msgid "Mail (2)"
+msgstr "Correu (2)"
+
+#: admin/includes/class-contact-forms-list-table.php:247
+msgid "Y/m/d"
+msgstr "Y/m/d"
+
+#. translators: %s: time since the creation of the contact form
+#: admin/includes/class-contact-forms-list-table.php:243
+msgid "%s ago"
+msgstr "fa %s"
+
+#: admin/includes/class-contact-forms-list-table.php:232
+msgid "Y/m/d g:i:s A"
+msgstr "Y/m/d g:i:s A"
+
+#. translators: %s: title of contact form
+#: admin/includes/class-contact-forms-list-table.php:122
+msgid "Edit &#8220;%s&#8221;"
+msgstr "Edita &#8220;%s&#8221;"
+
+#: admin/includes/class-contact-forms-list-table.php:169
+msgid "Edit"
+msgstr "Edita"
+
+#: admin/includes/class-contact-forms-list-table.php:15
+msgid "Date"
+msgstr "Data"
+
+#: admin/includes/class-contact-forms-list-table.php:14
+msgid "Author"
+msgstr "Autor"
+
+#: admin/includes/class-contact-forms-list-table.php:13
+msgid "Shortcode"
+msgstr "Codi curt"
+
+#: admin/includes/class-contact-forms-list-table.php:12
+msgid "Title"
+msgstr "Títol"
+
+#: admin/includes/editor.php:247 admin/includes/editor.php:252
+#: admin/edit-contact-form.php:261
+msgid "Additional Settings"
+msgstr "Preferències addicionals"
+
+#. translators: %d: number of additional settings
+#: admin/edit-contact-form.php:259
+msgid "Additional Settings (%d)"
+msgstr "Preferències addicionals (%d)"
+
+#: admin/includes/editor.php:222 admin/edit-contact-form.php:245
+msgid "Messages"
+msgstr "Missatges"
+
+#: admin/includes/editor.php:93 admin/edit-contact-form.php:241
+msgid "Mail"
+msgstr "Correu"
+
+#: admin/includes/editor.php:61 admin/edit-contact-form.php:237
+msgid "Form"
+msgstr "Formulari"
+
+#: admin/includes/help-tabs.php:94
+msgid "Support"
+msgstr "Suport"
+
+#: admin/includes/help-tabs.php:94
+msgid "https://contactform7.com/support/"
+msgstr "http://contactform7.com/support/"
+
+#: admin/includes/help-tabs.php:93 admin/edit-contact-form.php:193
+msgid "FAQ"
+msgstr "Preguntes Més Freqüents (FAQ)"
+
+#: admin/includes/help-tabs.php:93 admin/edit-contact-form.php:192
+msgid "https://contactform7.com/faq/"
+msgstr "http://contactform7.com/faq/"
+
+#: admin/includes/help-tabs.php:92 admin/edit-contact-form.php:197
+msgid "Docs"
+msgstr "Documents"
+
+#: admin/includes/help-tabs.php:92 admin/edit-contact-form.php:196
+msgid "https://contactform7.com/docs/"
+msgstr "http://contactform7.com/docs/"
+
+#: admin/edit-contact-form.php:168
+msgid ""
+"You are about to delete this contact form.\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"El formulari de contacte serà eliminat.\n"
+"  'Cancel·la' per anular-ho, 'OK' per confirmar-ho."
+
+#: admin/includes/class-contact-forms-list-table.php:90
+#: admin/edit-contact-form.php:168
+msgid "Delete"
+msgstr "Elimina"
+
+#: admin/includes/class-contact-forms-list-table.php:187
+#: admin/edit-contact-form.php:153
+msgid "Duplicate"
+msgstr "Duplica"
+
+#: admin/edit-contact-form.php:139
+msgid "Status"
+msgstr "Estat"
+
+#: admin/edit-contact-form.php:125
+msgid "You can also use this old-style shortcode:"
+msgstr "També podeu fer servir aquest codi abreujat antic:"
+
+#: admin/edit-contact-form.php:118
+msgid "Copy this shortcode and paste it into your post, page, or text widget content:"
+msgstr "Copieu aquest codi i enganxeu-lo al contingut d'una entrada, pàgina o giny de text:"
+
+#: admin/edit-contact-form.php:95
+msgid "Enter title here"
+msgstr "Introdueix el títol aquí"
+
+#: admin/edit-contact-form.php:26 admin/edit-contact-form.php:146
+msgid "Save"
+msgstr "Desa"
+
+#: admin/admin.php:605
+msgid "You are not allowed to edit this contact form."
+msgstr "No teniu permisos per editar aquest formulari de contacte."
+
+#: admin/includes/welcome-panel.php:76
+msgid "https://contactform7.com/save-submitted-messages-with-flamingo/"
+msgstr "http://contactform7.com/save-submitted-messages-with-flamingo/"
+
+#: admin/includes/welcome-panel.php:31
+msgid "https://contactform7.com/spam-filtering-with-akismet/"
+msgstr "http://contactform7.com/spam-filtering-with-akismet/"
+
+#: admin/includes/editor.php:129
+msgid "Setting Up Mail"
+msgstr "Configuració del correu"
+
+#: admin/includes/editor.php:128
+msgid "https://contactform7.com/setting-up-mail/"
+msgstr "https://contactform7.com/setting-up-mail/"
+
+#: admin/includes/welcome-panel.php:57
+msgid "https://contactform7.com/donate/"
+msgstr "http://contactform7.com/donate/"
+
+#: admin/includes/welcome-panel.php:48
+msgid "Contact Form 7 needs your support."
+msgstr "El Contact Form 7 necessita la vostra ajuda."
+
+#: admin/includes/welcome-panel.php:16
+msgid "Dismiss"
+msgstr "Descarta"
+
+#. translators: 1: version of Contact Form 7, 2: version of WordPress, 3: URL
+#: admin/admin.php:582
+msgid "<strong>Contact Form 7 %1$s requires WordPress %2$s or higher.</strong> Please <a href=\"%3$s\">update WordPress</a> first."
+msgstr "<strong>Contact Form 7 %1$s necessita un WordPress %2$s o superior.</strong> Sisplau, <a href=\"%3$s\">actualitza el WordPress</a> primer."
+
+#: admin/admin.php:560
+msgid "Settings"
+msgstr "Preferències"
+
+#: admin/admin.php:504
+msgid "Contact form deleted."
+msgstr "Formulari de contacte eliminat."
+
+#: admin/admin.php:502
+msgid "Contact form saved."
+msgstr "Formulari de contacte desat."
+
+#: admin/admin.php:500
+msgid "Contact form created."
+msgstr "Formulari de contacte creat."
+
+#: admin/admin.php:415
+msgid "Search Contact Forms"
+msgstr "Cercar formularis de contacte"
+
+#. translators: %s: search keywords
+#: admin/admin.php:395
+msgid "Search results for &#8220;%s&#8221;"
+msgstr "Resultats de cerca per &#8220;%s&#8221;"
+
+#: admin/admin.php:124
+msgid "The changes you made will be lost if you navigate away from this page."
+msgstr "Els canvis realitzats es perdran si sortiu d'aquesta pàgina."
+
+#: admin/admin.php:305
+msgid "Error in deleting."
+msgstr "Error en suprimir."
+
+#: admin/admin.php:301
+msgid "You are not allowed to delete this item."
+msgstr "No teniu permisos per suprimir aquest element."
+
+#: admin/admin.php:197 admin/admin.php:259
+msgid "You are not allowed to edit this item."
+msgstr "No teniu permisos per editar aquest element."
+
+#: admin/admin.php:54
+msgid "Integration"
+msgstr "Integració"
+
+#: admin/admin.php:53 admin/admin.php:464
+msgid "Integration with Other Services"
+msgstr "Integració amb altres serveis"
+
+#: admin/edit-contact-form.php:47 admin/admin.php:42 admin/admin.php:387
+msgid "Add New"
+msgstr "Afegeix nou"
+
+#: admin/edit-contact-form.php:36 admin/admin.php:41
+msgid "Add New Contact Form"
+msgstr "Afegeix un formulari de contacte nou"
+
+#: includes/contact-form.php:31 admin/admin.php:33 admin/admin.php:380
+msgid "Contact Forms"
+msgstr "Formularis de Contacte"
+
+#: admin/edit-contact-form.php:38 admin/admin.php:32
+msgid "Edit Contact Form"
+msgstr "Edita el formulari de contacte"
+
+#: admin/admin.php:25
+msgid "Contact"
+msgstr "Contacte"
+
+#. Plugin Name of the plugin
+#: modules/flamingo.php:181 admin/admin.php:24
+msgid "Contact Form 7"
+msgstr "Contact Form 7"

@@ -1,0 +1,61 @@
+#PMmodalWidget{
+    /*position: fixed;
+    top: 0;
+    left: 0;*/
+    width: 100%;
+    margin-top: 77px;
+    background-color: white;
+    z-index: 9999;
+    height: calc( 100vh - 133px - 77px);
+}
+
+#PMmodalWidget .wrapper{
+    position: relative;
+}
+
+#PMmodalWidget .wrapper .close-button{
+    font-size: 20px;
+    font-weight: bold;
+    color: #002A66;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    border: 2px solid #002A66;
+    padding: 5px 7px;
+    border-radius: 50%;
+    font-family: verdana;
+    cursor: pointer;
+    margin-right: 5%;
+    z-index: 999;
+    background-color: white;
+    display: none !important;
+}
+
+#PMwidget,
+.PMwidget{
+    height: calc( 100vh - 133px - 77px);
+    overflow-x:hidden;
+}
+
+
+
+/* md */
+@media (max-width: 991.98px) {
+
+
+}
+
+@media (max-width: 767.98px) {
+    #PMmodalWidget .wrapper .close-button {
+        top: -13px;
+        right: -6px;
+    }
+    #page .container {
+        padding: 0;
+    }
+    #PMmodalWidget .wrapper .close-button {
+        padding: 3px 7px;
+    }
+}
+
+
