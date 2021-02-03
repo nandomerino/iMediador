@@ -118,16 +118,20 @@ class PMWShandler
             }
 
             if (property_exists($data->datosAgrProductos, "listaAgrProductos")) {
-                log::debug("data_datosAgrProductos:");
-                log::debug(print_r($data->datosAgrProductos, TRUE));
-                //log::debug($data->datosAgrProductos);
 
-                foreach ($data->datosAgrProductos->listaAgrProductos as $row) {
-                    log::debug("Row:");
-                    log::debug(print_r($row, TRUE));
-                    //log::debug($row);
-                    $products[$row->codigo]["name"] = $row->descripcion;
+                if (!is_array($data->datosAgrProductos->listaAgrProductos)) {
+
+                    $products[$data->datosAgrProductos->listaAgrProductos->codigo]["name"] = $data->datosAgrProductos->listaAgrProductos->descripcion;
+
+                } else {
+
+                    foreach ($data->datosAgrProductos->listaAgrProductos as $row) {
+
+                        $products[$row->codigo]["name"] = $row->descripcion;
+
+                    }
                 }
+
             } else {
                 $products = null;
             }
