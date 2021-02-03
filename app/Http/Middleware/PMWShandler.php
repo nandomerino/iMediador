@@ -1759,11 +1759,11 @@ class PMWShandler
         return $file;
     }
 
-    function uploadDocument($productor, $folderId, $docId, $refId, $docType, $doc, $docName = null) {
+    function uploadDocument($folderId, $docId, $refId, $docType, $doc, $docName = null) {
 
         // get docName, docType and doc (base64) from file
 
-        $response = $this->PMWS->uploadDocument($this->user, $this->pass, $this->language, $productor, $folderId, $docId, $refId, $docType, $doc, $docName);
+        $response = $this->PMWS->uploadDocument($this->user, $this->pass, $this->language, $folderId, $docId, $refId, $docType, $doc, $docName);
         // app('debugbar')->info($response);
 
         $data = $response->return;

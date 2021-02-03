@@ -3557,7 +3557,7 @@ jQuery( document ).ready(function() {
 
             var url = "/get-data";
             var ws = "uploadDocument";
-            var productor = jQuery("#send-policy-request .productor").val();
+            //var productor = jQuery("#send-policy-request .productor").val();
             var refId =  jQuery("#send-policy-request .refId").val();
             var docId =  jQuery("#send-policy-request .docId").val();
             var folderId =  jQuery("#send-policy-request .folderId").val();
@@ -3608,7 +3608,7 @@ jQuery( document ).ready(function() {
                         url: url,
                         data: {
                             ws: ws,
-                            productor: productor,
+                            //productor: productor,
                             refId : refId,
                             docId : docId,
                             folderId : folderId,
