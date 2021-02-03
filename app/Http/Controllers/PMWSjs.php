@@ -413,7 +413,7 @@ class PMWSjs extends Controller
     {
         // Call PM WS
         $data = $this->PMWShandler->uploadDocument(
-            $this->parameters["productor"],
+            //$this->parameters["productor"],
             $this->parameters["folderId"],
             $this->parameters["docId"],
             $this->parameters["refId"],

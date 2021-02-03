@@ -11,6 +11,7 @@ use WL\Http\LogaltyClient\FormDTO;
 use WL\Http\LogaltyClient\FormElementDTO;
 use WL\Http\LogaltyClient\PropertyDTO;
 
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class PMWS
@@ -770,7 +771,6 @@ class PMWS extends controller
      * @param $user - logged in username
      * @param $pass - logged in password
      * @param $language - logged in language
-     * @param $productor - selected productor
      * @param $folderId - available values: SO -> 65; CP -> 11; CG -> 10
      * @param $docId - available values: SO -> 467; CP -> 444; CG -> 442
      * @param $refId - id de poliza o solicitud asociada
@@ -780,7 +780,7 @@ class PMWS extends controller
      * @return mixed - false or response
      * @throws \SoapFault
      */
-    function uploadDocument($user, $pass, $language, $productor, $folderId, $docId, $refId, $docType, $doc, $docName = null) {
+    function uploadDocument($user, $pass, $language, $folderId, $docId, $refId, $docType, $doc, $docName = null) {
 
         $endpoint = $this->baseUrl . "/wsdocumentacionmtom" . $this->environment . "/WsDocumentacionMTOMPort?WSDL";
         $client = new SoapClient($endpoint);
@@ -788,7 +788,7 @@ class PMWS extends controller
         $inputData = array();
         $inputData[] =  array(
             "nombreParametro"	=> "P_CODIGO_PRODUCTOR",
-            "valorParametro"	=> $productor);
+            "valorParametro"	=> $user);//$productor);
         $inputData[] =  array(
             "nombreParametro"	=> "P_ID_CARPETA",
             "valorParametro"	=> $folderId);

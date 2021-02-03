@@ -757,7 +757,6 @@ class PMWSTEST extends controller
      * @param $user - logged in username
      * @param $pass - logged in password
      * @param $language - logged in language
-     * @param $productor - selected productor
      * @param $folderId - available values: SO -> 65; CP -> 11; CG -> 10
      * @param $docId - available values: SO -> 467; CP -> 444; CG -> 442
      * @param $refId - id de poliza o solicitud asociada
@@ -767,7 +766,7 @@ class PMWSTEST extends controller
      * @return mixed - false or response
      * @throws \SoapFault
      */
-    function uploadDocument($user, $pass, $language, $productor, $folderId, $docId, $refId, $docName, $docType, $doc) {
+    function uploadDocument($user, $pass, $language, $folderId, $docId, $refId, $docName, $docType, $doc) {
 
         $endpoint = $this->baseUrl . "/wsdocumentacionmtom" . $this->environment . "/WsDocumentacionMTOMPort?WSDL";
         $client = new SoapClient($endpoint);
@@ -775,7 +774,7 @@ class PMWSTEST extends controller
         $inputData = array();
         $inputData[] =  array(
             "nombreParametro"	=> "P_CODIGO_PRODUCTOR",
-            "valorParametro"	=> $productor);
+            "valorParametro"	=> $user);
         $inputData[] =  array(
             "nombreParametro"	=> "P_ID_CARPETA",
             "valorParametro"	=> $folderId);
