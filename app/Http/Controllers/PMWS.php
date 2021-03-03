@@ -125,7 +125,7 @@ class PMWS extends controller
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
-
+        
         $result = $client->obtenerDatosMediador($params);
 
         if (is_soap_fault($result)) {
@@ -325,8 +325,6 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        //app('debugbar')->info($params);
-        //file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/test.txt', serialize($params) );
         $result = $client->obtenerListaProductos($params);
 
         if (is_soap_fault($result)) {
@@ -350,7 +348,7 @@ class PMWS extends controller
      * @return bool - false or producto variations list
      * @throws \SoapFault
      */
-    function getProductConfiguration($user, $pass, $language, $productor = null, $productGroup, $productVariationId, $entryChannel, $application, $pmUserCode = null, $modifiedField = null) {
+    function getProductConfiguration($user, $pass, $language, $productor = null, $productGroup, $productModalityId, $entryChannel, $application, $pmUserCode = null, $modifiedField = null) {
 
         $endpoint = $this->baseUrl . "/v4/wsproducto" . $this->environment . "/Producto?WSDL";
         $client = new SoapClient($endpoint);
@@ -366,7 +364,7 @@ class PMWS extends controller
             "valorParametro"	=> $productGroup);
         $inputData[] =  array(
             "nombreParametro"	=> "P_CODIGO_PRODUCTO",
-            "valorParametro"	=> $productVariationId);
+            "valorParametro"	=> $productModalityId);//$productVariationId);
 
         if( !$entryChannel ){
             $entryChannel = $this->getChannel($pmUserCode);
@@ -408,6 +406,8 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
         //app('debugbar')->info($params);
+        //file_put_contents('d:\logs\test.txt', 'productList - params:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt' . PHP_EOL, serialize($params), FILE_APPEND );
 
         $result = $client->obtenerConfiguracionProducto($params);
 
@@ -1095,8 +1095,15 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        //app('debugbar')->info($params);
+//        app('debugbar')->info('$params');
+//        app('debugbar')->info($params);
+//        file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
+//        file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
+//        file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
+//        file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
+//        app('debugbar')->info('$result');
+//        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -1112,6 +1119,7 @@ class PMWS extends controller
      * @param $language - logged in language
      * @param $productor - (optional) selected productor
      * @param $option - datosProductos.listaProductos.opcionTarificaInversa
+     * @param $productCode - datosProductos.listaProductos.productosModalidad
      * @param $price - Cuota mensual que se desea obtener
      * @param $franchise - (optional) selected franchise or null for all franchises
      * @param "scheme" - (optional) regimen seguridad social. Default: A
@@ -1125,8 +1133,9 @@ class PMWS extends controller
      * @return bool - false or rates list
      * @throws \SoapFault
      */
-    function getRatesByPrice($user, $pass, $language, $productor = null, $option, $price, $franchise = null, $jobType = "A", $profession, $birthdate, $gender, $height, $weight, $duration, $commercialKey, $pmUserCode = null) {
+    function getRatesByPrice($user, $pass, $language, $productor = null, $option, $productCode, $price, $franchise = null, $jobType = "A", $profession, $birthdate, $gender, $height, $weight, $duration, $commercialKey, $pmUserCode = null) {
 
+        
         $endpoint = $this->baseUrl . "/v4/wstarificacion" . $this->environment . "/Tarificacion?WSDL";
         $client = new SoapClient($endpoint);
 
@@ -1145,6 +1154,9 @@ class PMWS extends controller
         $inputData[] =  array(
             "nombreParametro"	=> "P_CODIGO_OPCION",
             "valorParametro"	=> $option);
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_CODIGO_PRODUCTO",
+            "valorParametro"	=> $productCode);
         $inputData[] =  array(
             "nombreParametro"	=> "P_FRANQUICIA",
             "valorParametro"	=> $franchise === null ? "" : $franchise);
@@ -1208,8 +1220,15 @@ class PMWS extends controller
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
-        app('debugbar')->info($params);
-        $result = $client->obtenerSubsidiosPrima($params);
+//        app('debugbar')->info('obtenerSubsidiosPrima: $params:');
+        //app('debugbar')->info($params);
+        //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - params:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt', json_encode($params) . PHP_EOL , FILE_APPEND );
+    $result = $client->obtenerSubsidiosPrima($params);
+        //app('debugbar')->info('obtenerSubsidiosPrima: $result:');
+        //app('debugbar')->info($result);
+        //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - result:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt', json_encode($result) . PHP_EOL , FILE_APPEND );
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -1232,6 +1251,8 @@ class PMWS extends controller
         // $user = "2300000";
         // $pass = "4213V";
         // $productor = "2300000";
+        //app('debugbar')->info('getHealthForm: product: ');
+        //app('debugbar')->info($product);
         $endpoint = $this->baseUrl . "/v4/wssolicitud" . $this->environment . "/Solicitud?WSDL";
         $client = new SoapClient($endpoint);
 
@@ -1285,6 +1306,8 @@ class PMWS extends controller
 
     function validateHealthForm($user, $pass, $language, $productor, $product, $formId, $form) {
 
+        //app('debugbar')->info('validateHealthForm: product: ');
+        //app('debugbar')->info($product);
         $endpoint = $this->baseUrl . "/v4/wssolicitud" . $this->environment . "/Solicitud?WSDL";
         $client = new SoapClient($endpoint);
 
@@ -1397,6 +1420,8 @@ class PMWS extends controller
      */
     public function submitPolicy($data) {
 
+        //app('debugbar')->info('submitPolicy: $data["productId"]: ');
+        //app('debugbar')->info($data["productId"]);
         //app('debugbar')->info($data);
         $endpoint = $this->baseUrl . "/v3/wspoliza" . $this->environment . "/Poliza?WSDL";
         $client = new SoapClient($endpoint);
@@ -1675,7 +1700,7 @@ class PMWS extends controller
         }
 
         // app('debugbar')->info($params);
-        file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/log.txt', serialize($params) );
+        //file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/log.txt', serialize($params) );
         $result = $client->altaPoliza($params);
 
         if (is_soap_fault($result)) {

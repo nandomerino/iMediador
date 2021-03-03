@@ -332,7 +332,7 @@ jQuery( document ).ready(function() {
         // Stores this info in a global array to access it later on
         window.PMproductVariations = data;
 
-        //console.log( window );
+        //console.log( window.PMproductVariations );
         var output = "";
 
 
@@ -353,7 +353,45 @@ jQuery( document ).ready(function() {
 
     // QUOTE - Gets product configuration and displays new block to fill
     jQuery("#quote .product-variations").on('click', "input[type='radio']",  function (e) {
+        
+        // hides next Block and resets fields
+        resetProductExtraInfo();
 
+        jQuery('#quote #step-1 .loader-wrapper').fadeIn();
+
+        // Then retrieves extra info of selected product variation in the background
+        var url = "/get-data";
+        var ws = "getProductsList";
+        var productor = jQuery("#quote-productor").val();
+        var product = jQuery("#quote input[name='quote-product']:checked").val();
+        var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                ws: ws,
+                productor: productor,
+                product: product,
+                productVariation: productVariation
+            },
+            success: function (response) {
+                if (response['success'] == true) {
+                    quote_load_ProductModalities(response.data);
+                } else {
+                    console.error( response.e);
+                }
+            },
+            error: function (response) {
+                console.error( lang["WS.error"] );
+            }
+        });
+
+    });
+/*
+    // QUOTE - Gets product configuration and displays new block to fill
+    jQuery("#quote .product-variations").on('click', "input[type='radio']",  function (e) {
+        
         // hides next Block and resets fields
         resetProductExtraInfo();
 
@@ -389,6 +427,81 @@ jQuery( document ).ready(function() {
 
     });
 
+
+
+*/
+    function quote_load_ProductModalities ( data ){
+
+       // Stores this info in a global array to access it later on
+       window.PMproductModalities = data;
+       
+       productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
+       
+       //console.log( data );
+       //console.log("Producto:  ")
+       //console.log( productVariation );
+       var output = "";
+
+       Object.keys(data).forEach(function(key) {
+           if (key == productVariation) {
+               Object.keys(data[key].modalityList).forEach(function(key2) {
+                    output += "<div class='checkboxWithLabel col-6 pb-2'>";
+                    output += "<label>";
+                    output += "<input type='radio' class='form-control' name='quote-product-modality' value='" + data[key].modalityList[key2].modalityId + "'>";
+                    output += "<div>" + data[key].modalityList[key2].modalityName + "</div>";
+                    output += "</label>";
+                    output += "</div>";
+               });
+           }
+       });
+
+       // Displays the new block with content
+       jQuery('#quote .product-modalities .dynamic-content .row').html(output);
+       jQuery('#quote #step-1 .loader-wrapper').hide();
+       jQuery('#quote .product-modalities').fadeIn();
+
+    }
+
+    // QUOTE - Gets product configuration and displays new block to fill
+    jQuery("#quote .product-modalities").on('click', "input[type='radio']",  function (e) {
+        
+        // hides next Block and resets fields
+        resetProductExtraInfo();
+
+        jQuery('#quote #step-1 .loader-wrapper').fadeIn();
+
+        // Then retrieves extra info of selected product variation in the background
+        var url = "/get-data";
+        var ws = "getProductConfiguration";
+        var productor = jQuery("#quote-productor").val();
+        var product = jQuery("#quote input[name='quote-product']:checked").val();
+        //var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
+        var productModality = jQuery("#quote input[name='quote-product-modality']:checked").val();
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                ws: ws,
+                productor: productor,
+                product: product,
+               // productVariation: productVariation,
+                productModality: productModality
+            },
+            success: function (response) {
+                if (response['success'] == true) {
+                    quote_load_ProductConfiguration(response.data);
+                } else {
+                    console.error( response.e);
+                }
+            },
+            error: function (response) {
+                console.error( lang["WS.error"] );
+            }
+        });
+
+    });
+
     // QUOTE - Loads extra info dynamically from WS
     function quote_load_ProductConfiguration( data ){
         // Stores this info in a global array to access it later on
@@ -400,6 +513,11 @@ jQuery( document ).ready(function() {
         }else{
             window.PMsigningMode = null;
         }
+
+        //var timestamp = window.PMproductConfig.coberturas;//'{{ Session::get("quote")}}';
+
+        //console.log("en quote_load_ProductConfiguration");
+        //console.log(data);
 
         // Loads jobs
         var jobsArray = data.P_PROFESION_CLIENTE.values;
@@ -424,7 +542,7 @@ jQuery( document ).ready(function() {
         if(data.P_REGIMEN_SEG_SOCIAL.hidden == "S"){
             hidden = " type='hidden' ";
         }
-        var jobTypeField = "<div class='col-8'>";
+        var jobTypeField = "<div class='col-6'>";
         jobTypeField += "<label class='quote-job-type-label mb-1' for='quote-job-type'>" + data.P_REGIMEN_SEG_SOCIAL.name + "</label>";
         jobTypeField += "<" + data.P_REGIMEN_SEG_SOCIAL.fieldType + hidden + " class='form-control w-100 quote-job-type valid' name='quote-job-type' " + data.P_REGIMEN_SEG_SOCIAL.attributes + ">\n";
 
@@ -462,7 +580,7 @@ jQuery( document ).ready(function() {
         if(data.P_CLAVE_COMERCIAL.hidden == "S"){
             hidden = " type='hidden' ";
         }
-        var commercialKey = "<div class='col-4'>";
+        var commercialKey = "<div class='col-12'>";
         commercialKey += "<label class='mb-1 quote-commercial-key-label' for='quote-commercial-key'>" + data.P_CLAVE_COMERCIAL.name + "</label>";
         commercialKey += "<" + data.P_CLAVE_COMERCIAL.fieldType + hidden + " class='form-control w-100 quote-commercial-key valid' name='quote-commercial-key' " + data.P_CLAVE_COMERCIAL.attributes + ">\n";
 
@@ -517,6 +635,9 @@ jQuery( document ).ready(function() {
 
             var i = 1;
             cols = Math.floor(12 / Object.keys(benefitsArray).length);
+            if (cols < 4) { 
+                cols = 4;
+            }
             Object.keys(benefitsArray).forEach(function (key) {
                 switch (i) {
                     case 1:
@@ -533,7 +654,7 @@ jQuery( document ).ready(function() {
                         break;
                 }
 
-                benefits += "<div class='col-" + cols + "'>";
+                benefits += "<div class='col-" + cols + "' align-self-end >";
                 benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + lang["quote.benefitBy"] + FieldDescription + "</label>";
                 /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
                 benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
@@ -707,6 +828,7 @@ jQuery( document ).ready(function() {
         jQuery('#quote .product-extra-info .quote-job').html(jobSelect);
         jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.name);
         jQuery('#quote .product-extra-info .quote-job-type').html(jobTypeSelect);
+        jQuery('#quote .product-extra-info .quote-commercialKey').html(commercialKey);
         jQuery('#quote .product-extra-info .quote-gender').html(genderSelect);
         jQuery('#quote .quote-birthdate-label').html(data.P_FECHA_NACIMIENTO_CLIENTE.name);
         jQuery('#quote .quote-gender-label').html(data.P_SEXO.name);
@@ -719,7 +841,7 @@ jQuery( document ).ready(function() {
         jQuery('#quote .product-extra-info .quote-height-label').html(data.P_TALLA.name);
 
 
-        extraFields = benefits + duration + commercialKey + durationField + jobTypeField + discountFields;
+        extraFields = benefits + duration + durationField + discountFields;
         jQuery('#quote .product-extra-info .quote-benefit-wrapper').html(extraFields);
 
 
@@ -927,7 +1049,7 @@ jQuery( document ).ready(function() {
 
                 var productor = jQuery("#quote-productor").val();
                 var option = window.PMproductVariations[jQuery("#quote input[name='quote-product-variation']:checked").val()].option;
-                var productId = jQuery("#quote input[name='quote-product-variation']:checked").val();
+                var productId = jQuery("#quote input[name='quote-product-modality']:checked").val();//jQuery("#quote input[name='quote-product-variation']:checked").val();
                 var startingDate = jQuery("#quote .quote-starting-date").val();
                 var profession = jQuery("#quote .quote-job").val();
                 var birthdate  = jQuery("#quote .quote-birthdate").val();
@@ -1235,6 +1357,9 @@ jQuery( document ).ready(function() {
 
                 var productor = jQuery("#quote-productor").val();
                 var option = window.PMproductVariations[jQuery("#quote input[name='quote-product-variation']:checked").val()].reverseQuote;
+                //console.log(window.PMproductVariations);
+                //console.log(window.PMproductVariations[jQuery("#quote input[name='quote-product-variation']:checked").val()]);
+                var productCode = jQuery("#quote input[name='quote-product-modality']:checked").val();
                 var productId = jQuery("#quote input[name='quote-product-variation']:checked").val();
                 var startingDate = jQuery("#quote .quote-starting-date").val();
                 var price = jQuery("#quote .quote-price").val();
@@ -1253,6 +1378,7 @@ jQuery( document ).ready(function() {
                 window.PMgetRatesData = {
                     productor : productor,
                     option : option,
+                    productCode : productCode,
                     productId : productId,
                     startingDate : startingDate,
                     price : price,
@@ -1275,6 +1401,7 @@ jQuery( document ).ready(function() {
                         ws: ws,
                         productor : productor,
                         option : option,
+                        productCode : productCode,
                         productId : productId,
                         price : price,
                         franchise : franchise,
@@ -2277,7 +2404,8 @@ jQuery( document ).ready(function() {
             var url = "/get-data";
             var ws = "getHealthForm";
             var productor = window.PMquoteStep1.productor;
-            var product = window.PMquoteStep1.productId;
+            //var product = window.PMquoteStep1.productId;
+            var product = jQuery("#quote input[name='quote-product-modality']:checked").val();
             var commercialKey = window.PMquoteStep1.commercialKey;
 
 
@@ -2537,6 +2665,7 @@ jQuery( document ).ready(function() {
             // Retrieves health form data from WS
             var url = "/get-data";
             var ws = "validateHealthForm";
+            var product = jQuery("#quote input[name='quote-product-modality']:checked").val();
 
             jQuery.ajax({
                 type: "POST",
@@ -2544,7 +2673,7 @@ jQuery( document ).ready(function() {
                 data: {
                     ws: ws,
                     productor: window.PMquoteStep1.productor,
-                    product: window.PMquoteStep1.productId,
+                    product: product, //window.PMquoteStep1.productId,
                     formId: window.PMquoteHealthFormId,
                     formData: formData
 
@@ -2705,7 +2834,9 @@ jQuery( document ).ready(function() {
 
             var productor = window.PMquoteStep1.productor;
             var option = window.PMquoteStep1.option;
-            var productId = window.PMquoteStep1.productId;
+            //var productId = window.PMquoteStep1.productId;
+            var productId = jQuery("#quote input[name='quote-product-modality']:checked").val();
+
             var startingDate = window.PMquoteStep1.startingDate;
             var profession = window.PMquoteStep1.profession;
             var birthdate  = window.PMquoteStep1.birthdate;
@@ -4000,6 +4131,18 @@ jQuery( document ).ready(function() {
         jQuery('#quote .product-extra-info .quote-job').addClass("valid");
 
         resetGetRatesButton();
+    }
+
+    function resetProductSpecifics(){
+        jQuery('#quote .product-specifics').hide();
+        jQuery('#quote .product-specifics input, ' +
+            '#quote .product-specifics select').val("");
+        jQuery('#quote .product-specifics input, ' +
+            '#quote .product-specifics select').removeClass("valid");
+        jQuery('#quote .product-specifics input, ' +
+            '#quote .product-specifics select').removeClass("invalid");
+        jQuery('#quote .product-specifics .quote-job').addClass("valid");
+
     }
 
     function resetGetRatesButton(){

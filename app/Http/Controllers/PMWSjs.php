@@ -53,10 +53,21 @@ class PMWSjs extends Controller
             case "getLgtSignAccess":
                 $response = $this->getLgtSignAccess();
                 break;
+            case "getProductsList":
+                $response = $this->getProductsList();
+                break;
             default:
                 $response = false;
         }
         return $response;
+    }
+
+    public function getProductsList(){
+
+            $quote = session('quote');
+            //return $quote['productVariations'];
+            return response()->json(['success' => true, 'data' => $quote['productVariations']]);
+
     }
 
     public function getProductVariations()
@@ -116,7 +127,8 @@ class PMWSjs extends Controller
         $data = $this->PMWShandler->getProductConfiguration(
             $this->parameters["productor"],
             $this->parameters["product"],
-            $this->parameters["productVariation"],
+           // $this->parameters["productVariation"],
+            $this->parameters["productModality"],
             $this->parameters["entryChannel"],
             $this->parameters["application"],
             $this->parameters["modifiedField"],
@@ -135,6 +147,7 @@ class PMWSjs extends Controller
     public function getRates()
     {
         //app('debugbar')->info($this->parameters);
+        
         // Call PM WS
         $parameters = array();
         $parameters["productor"] = $this->parameters["productor"];
@@ -246,11 +259,12 @@ class PMWSjs extends Controller
 
     public function getRatesByPrice()
     {
-        app('debugbar')->info($this->parameters);
+        //app('debugbar')->info($this->parameters);
 
         $data = $this->PMWShandler->getRatesByPrice(
             $this->parameters["productor"],
             $this->parameters["option"],
+            $this->parameters["productCode"],
             $this->parameters["price"],
             $this->parameters["franchise"],
             $this->parameters["jobType"],
@@ -262,6 +276,7 @@ class PMWSjs extends Controller
             $this->parameters["duration"],
             $this->parameters["commercialKey"]
         );
+        //app('debugbar')->info('pmwsjs getRatesByPrice:');
         //app('debugbar')->info($data);
         if (is_array($data)) {
             return response()->json(['success' => true, 'data' => $data]);

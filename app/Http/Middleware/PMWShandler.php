@@ -223,20 +223,33 @@ class PMWShandler
 
         // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productGroup . " | " . $entryChannel . " | " . $application . " | " . $pmUserCode);
         $response = $this->PMWS->getProductVariations($this->user, $this->pass, $this->language, $productor, $productGroup, $entryChannel, $application, $this->userPM);
-        app('debugbar')->info($response);
+        //app('debugbar')->info($response);
 
 
         $data = $response->return;
 
         if( $data->correcto == "S" ){
             foreach( $data->datosProductos->listaProductos as $row ){
+                $modalityList = array();
                 $i = $row->codigo;
                 $productVariations[$i]['name'] = $row->descripcion;
                 $productVariations[$i]['default'] = $row->porDefecto;
                 $productVariations[$i]['value'] = $row->descripcionImporte;
                 $productVariations[$i]['option'] = $row->opcionTarificacion;
-                $productVariations[$i]['coverageId'] = $row->productosCoberturas->listaValores->codigo;
-                $productVariations[$i]['coverageName'] = $row->productosCoberturas->listaValores->descripcion;
+                if ( ! is_array($row->productosModalidad->listaValores)) {
+                    $modalityList[0]['modalityId'] = $row->productosModalidad->listaValores->codigo;
+                    $modalityList[0]['modalityName'] = $row->productosModalidad->listaValores->descripcion;
+                } else {
+                    $j=0;
+                    foreach ($row->productosModalidad->listaValores as $modality) {
+                        $modalityList[$j]['modalityId'] = $modality->codigo;
+                        $modalityList[$j]['modalityName'] = $modality->descripcion;
+                        $j++;
+                    }
+                }
+                $productVariations[$i]['modalityList'] = $modalityList;
+                //$productVariations[$i]['modalityId'] = $row->productosModalidad->listaValores->codigo;
+                //$productVariations[$i]['modalityName'] = $row->productosModalidad->listaValores->descripcion;
                 $productVariations[$i]['reverseQuote'] = $row->opcionTarificaInversa;
                 $productVariations[$i]['WS'] = $row;
             }
@@ -244,8 +257,17 @@ class PMWShandler
             $productVariations = $data->mensajeError;
         }
 
+        //guardamos en la sesion
+        session([
+            'quote' => [
+                'productVariations' => $productVariations
+            ]
+        ]);
+
         return $productVariations;
     }
+
+
 
     /**
      * @param string $productor
@@ -368,7 +390,7 @@ class PMWShandler
      *
      * Gets extra info of the chosen product
      */
-    function getProductConfiguration($productor = null, $productId, $productVariationId, $entryChannel = null, $application = null, $modifiedField = null, $u = null, $p = null)
+    function getProductConfiguration($productor = null, $productId, $productModalityId, $entryChannel = null, $application = null, $modifiedField = null, $u = null, $p = null)
     {
 
         if($u != null && $p != null){
@@ -377,7 +399,7 @@ class PMWShandler
         }
         // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productId . " | " . $productVariationId . " | " . $entryChannel . " | " . $application);
 
-        $response = $this->PMWS->getProductConfiguration($this->user, $this->pass, $this->language, $productor, $productId, $productVariationId, $entryChannel, $application, $this->userPM, $modifiedField);
+        $response = $this->PMWS->getProductConfiguration($this->user, $this->pass, $this->language, $productor, $productId, $productModalityId, $entryChannel, $application, $this->userPM, $modifiedField);
         app('debugbar')->info($response);
 
         $data = $response->return;
@@ -574,7 +596,7 @@ class PMWShandler
 
         //app('debugbar')->info($parameters);
         $response = $this->PMWS->getRates($parameters);
-        app('debugbar')->info($response);
+        //app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
@@ -756,14 +778,15 @@ class PMWShandler
      * @return mixed
      * @throws \SoapFault
      */
-    function getRatesByPrice( $productor = null, $option, $price, $franchise = null, $jobType = "A", $profession, $birthdate, $gender, $height, $weight, $duration, $commercialKey )
+    function getRatesByPrice( $productor = null, $option, $productCode, $price, $franchise = null, $jobType = "A", $profession, $birthdate, $gender, $height, $weight, $duration, $commercialKey )
     {
 
-        $response = $this->PMWS->getRatesByPrice($this->user, $this->pass, $this->language, $productor, $option, $price, $franchise, $jobType, $profession, $birthdate, $gender, $height, $weight, $duration, $commercialKey, $this->userPM);
+        $response = $this->PMWS->getRatesByPrice($this->user, $this->pass, $this->language, $productor, $option, $productCode, $price, $franchise, $jobType, $profession, $birthdate, $gender, $height, $weight, $duration, $commercialKey, $this->userPM);
         // app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
+            //app('debugbar')->info('getRatesByPrice Correcto');
             $headers = false;
             $i = 0;
             $currentBillingCycles = 0;
@@ -988,7 +1011,7 @@ class PMWShandler
             $this->pass = $p;
         }
         $response = $this->PMWS->getHealthForm($this->user, $this->pass, $this->language, $productor, $product, $commercialKey);
-        app('debugbar')->info($response);
+        //app('debugbar')->info($response);
         $data = $response->return;
         if( $data->correcto == "S" ){
             $healthForm = array();
