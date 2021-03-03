@@ -731,6 +731,7 @@ table.ui-datepicker-calendar tbody td span{
 }
 
 #quote .product-variations label div,
+#quote .product-modalities label div,
 #quote .productsList label div{
     text-transform: uppercase;
     font-size: 0.8rem

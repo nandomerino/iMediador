@@ -110,6 +110,17 @@
                                         </div>
                                     </div>
 
+                                    <div class="product-modalities content w-100 my-3" style="display: none;">
+                                        <h4>{{ __('quote.productModalities') }}</h4>
+                                        <div class="separator thin bg-dark-grey"></div>
+                                        <div class="dynamic-content col pt-3">
+                                            <div class="row">
+                                                @php
+                                                    // Dynamically filled with JS
+                                                @endphp
+                                            </div>
+                                        </div>
+                                    </div>
                                     {{--
                                         Los campos select y/o con modificaConfiguracion=S deben salir en el orden indicado en el WS
                                         Un campo “select” es una lista de valores, te lo indica en “tipoCampoHtml”.
@@ -125,48 +136,15 @@
                                         <h4>{{ __('quote.extraInfo') }}</h4>
                                         <div class="separator thin bg-dark-grey"></div>
 
-                                        <div class="static-content col pt-3">
-                                            <div class="row pt-3">
-                                                <div class="col-4">
-                                                    <label class="quote-starting-date-label mb-1" for="quote-starting-date">{{ __('quote.startDate') }}</label>
-                                                    <input type="text" class="form-control w-100 quote-starting-date" name="quote-starting-date" maxlength="10" autocomplete="off" required>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div class="dynamic-content row pt-3 d-flex">
+                                            <div class="col-6 align-self-end">
+                                                <label class="quote-job-type-label mb-1" for="quote-job-type"></label>
+                                                <select class="form-control quote-job-type valid" required>
 
-                                        <div class="dynamic-content col pt-3">
-                                            <div class="row pt-3">
-                                                <div class="col-4">
-                                                    <label class="quote-height-label mb-1" for="quote-height"></label>
-                                                    <input type="number" class="form-control w-100 quote-height" name="quote-height" min="50" max="300" step="1" autocomplete="off" required>
-                                                </div>
-                                                <div class="col-4">
-                                                    <label class="quote-weight-label mb-1" for="quote-weight"></label>
-                                                    <input type="number" class="form-control w-100 quote-weight" name="quote-weight" min="10" max="400" step="1" autocomplete="off" required>
-                                                </div>
-                                                <div class="col-4">
-                                                    <label class="quote-birthdate-label mb-1" for="quote-birthdate"></label>
-                                                    <input id="datepicker" type="text" class="form-control w-100 quote-birthdate date-input" name="quote-birthdate" maxlength="10" autocomplete="off" required>
-                                                    {{--<script>
-                                                        jQuery( function() {
-                                                            jQuery( "#datepicker" ).datepicker({ maxDate: '-18Y -1D', changeMonth: true, changeYear: true, yearRange: "-70:+0" });
-                                                            jQuery( "#datepicker" ).datepicker("option", jQuery.datepicker.regional[ "{{ $currentLanguage  }}" ]);
-                                                        } );
-                                                    </script>--}}
-                                                </div>
+                                                </select>
                                             </div>
-
-                                            <div class="row pt-3">
-                                                <div class="col-4">
-                                                    <label class="quote-gender-label mb-1" for="quote-gender"></label>
-                                                    <select class="form-control quote-gender" name="quote-gender" autocomplete="off" required>
-                                                        @php
-                                                            // Dynamically filled with JS
-                                                        @endphp
-                                                    </select>
-                                                </div>
-                                                <div class="col-8">
-                                                    <label class="quote-job-label mb-1" for="quote-job-picker"></label>
+                                            <div class="col-6 align-self-end">
+                                            <label class="quote-job-label mb-1" for="quote-job-picker"></label>
                                                     <select class="form-control quote-job valid" name="quote-job" style="display: none;" autocomplete="off" required>
                                                         @php
                                                             // Dynamically filled with JS
@@ -176,6 +154,41 @@
                                                     @php
                                                         // plugin loaded from JS quote_load_ProductConfiguration()
                                                     @endphp
+
+                                            </div>
+                                        </div>
+                                        <div class="dynamic-content row pt-3 quote-commercialKey">
+                                        </div>
+                                    
+                                        <div class="row">
+                                        <div class="dynamic-content col">
+                                            
+                                            <div class="row pt-3 d-flex">
+                                                <div class="col-3 align-self-end">
+                                                    <label class="quote-birthdate-label mb-1 control-label" for="quote-birthdate"></label>
+                                                    <input id="datepicker" type="text" class="form-control w-100 quote-birthdate date-input" name="quote-birthdate" maxlength="10" autocomplete="off" required>
+                                                    {{--<script>
+                                                        jQuery( function() {
+                                                            jQuery( "#datepicker" ).datepicker({ maxDate: '-18Y -1D', changeMonth: true, changeYear: true, yearRange: "-70:+0" });
+                                                            jQuery( "#datepicker" ).datepicker("option", jQuery.datepicker.regional[ "{{ $currentLanguage  }}" ]);
+                                                        } );
+                                                    </script>--}}
+                                                </div>
+                                                <div class="col-3 align-self-end">
+                                                    <label class="quote-gender-label mb-1 control-label" for="quote-gender"></label>
+                                                    <select class="form-control quote-gender" name="quote-gender" autocomplete="off" required>
+                                                        @php
+                                                            // Dynamically filled with JS
+                                                        @endphp
+                                                    </select>
+                                                </div>
+                                                <div class="col-3 align-self-end">
+                                                    <label class="quote-height-label mb-1 control-label" for="quote-height"></label>
+                                                    <input type="number" class="form-control w-100 quote-height" name="quote-height" min="50" max="300" step="1" autocomplete="off" required>
+                                                </div>
+                                                <div class="col-3 align-self-end">
+                                                    <label class="quote-weight-label mb-1 control-label" for="quote-weight"></label>
+                                                    <input type="number" class="form-control w-100 quote-weight" name="quote-weight" min="10" max="400" step="1" autocomplete="off" required>
                                                 </div>
                                             </div>
 
@@ -186,14 +199,27 @@
                                                 </div>
                                             </div>
 
-                                            <div class="quote-benefit-wrapper row pt-3">
+                                            <div class="quote-benefit-wrapper row pt-3 d-flex">
                                                 @php
                                                     // Dynamically filled with JS
                                                 @endphp
                                             </div>
 
                                         </div>
+                                                    </div>
+                                    <div class= "row">
+                                       <div class="static-content col">
+                                            
+                                            <div class="row pt-3">
+                                                <div class="col">
+                                                    <label class="quote-starting-date-label mb-1" for="quote-starting-date">{{ __('quote.startDate') }}</label>
+                                                    <input type="text" class="form-control w-100 quote-starting-date" name="quote-starting-date" maxlength="10" autocomplete="off" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                                    
                                     </div>
+                                                    </div>
 
                                     <div class="get-rates content w-100 mt-4" style="display: none;">
                                         <div class="separator thin bg-dark-grey"></div>
