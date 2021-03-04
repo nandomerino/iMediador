@@ -516,8 +516,6 @@ jQuery( document ).ready(function() {
 
         //var timestamp = window.PMproductConfig.coberturas;//'{{ Session::get("quote")}}';
 
-        //console.log("en quote_load_ProductConfiguration");
-        //console.log(data);
 
         // Loads jobs
         var jobsArray = data.P_PROFESION_CLIENTE.values;
@@ -641,21 +639,23 @@ jQuery( document ).ready(function() {
             Object.keys(benefitsArray).forEach(function (key) {
                 switch (i) {
                     case 1:
-                        FieldDescription = lang["quote.sickness"];
+                        //FieldDescription = lang["quote.sickness"];
                         FieldName = lang["quote.sicknessFieldName"];
                         break;
                     case 2:
-                        FieldDescription = lang["quote.accident"];
+                        //FieldDescription = lang["quote.accident"];
                         FieldName = lang["quote.accidentFieldName"];
                         break;
                     case 3:
-                        FieldDescription = lang["quote.hospitalization"];
+                        //FieldDescription = lang["quote.hospitalization"];
                         FieldName = lang["quote.hospitalizationFieldName"];
                         break;
                 }
 
-                benefits += "<div class='col-" + cols + "' align-self-end >";
-                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + lang["quote.benefitBy"] + FieldDescription + "</label>";
+                FieldDescription = benefitsArray[key].label;
+
+                benefits += "<div class='col-" + cols + " align-self-end' >";
+                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" /*+ lang["quote.benefitBy"]*/ + FieldDescription + "</label>";
                 /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
                 benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                 benefits += "</div>";
@@ -824,6 +824,8 @@ jQuery( document ).ready(function() {
             }
             discountFields += "</div>";
         }
+
+        //console.log(data);
 
         jQuery('#quote .product-extra-info .quote-job').html(jobSelect);
         jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.name);

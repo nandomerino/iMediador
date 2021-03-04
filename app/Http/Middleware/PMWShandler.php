@@ -400,7 +400,8 @@ class PMWShandler
         // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productId . " | " . $productVariationId . " | " . $entryChannel . " | " . $application);
 
         $response = $this->PMWS->getProductConfiguration($this->user, $this->pass, $this->language, $productor, $productId, $productModalityId, $entryChannel, $application, $this->userPM, $modifiedField);
-        app('debugbar')->info($response);
+        //app('debugbar')->info('pmwshandler getProductConfiguration');
+        //app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
@@ -492,6 +493,7 @@ class PMWShandler
                     $productConfig["coberturas"][$row->cobertura]["max"] = $row->valorMaximo;
                     $productConfig["coberturas"][$row->cobertura]["fieldType"] = $row->tipoCampoHTML;
                     $productConfig["coberturas"][$row->cobertura]["attributes"] = $row->atributosHTML;
+                    $productConfig["coberturas"][$row->cobertura]["label"] = $row->etiquetaPre;
                 }
 
                 if( $row->tipoCampoCobertura == "D"){
@@ -500,6 +502,8 @@ class PMWShandler
                     $productConfig["duracion"][$row->cobertura]["max"] = $row->valorMaximo;
                     $productConfig["duracion"][$row->cobertura]["fieldType"] = $row->tipoCampoHTML;
                     $productConfig["duracion"][$row->cobertura]["attributes"] = $row->atributosHTML;
+                    $productConfig["duracion"][$row->cobertura]["label"] = $row->etiquetaPre;
+
                 }
 
                 if( $row->nombre == "P_CLAVE_COMERCIAL"){
