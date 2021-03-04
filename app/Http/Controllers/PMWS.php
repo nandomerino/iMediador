@@ -410,6 +410,8 @@ class PMWS extends controller
         //file_put_contents('d:\logs\test.txt' . PHP_EOL, serialize($params), FILE_APPEND );
 
         $result = $client->obtenerConfiguracionProducto($params);
+        //app('debugbar')->info('resultado servicio obtenerConfiguracionProducto:');
+        //app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
