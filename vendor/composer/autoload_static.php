@@ -309,6 +309,10 @@ class ComposerStaticInit96234841697d9316b28ce554852ffb72
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
+        'Dompdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dompdf/src',
+        ),
         'Opis\\Closure\\' => 
         array (
             0 => __DIR__ . '/..' . '/opis/closure/src',
@@ -2580,6 +2584,12 @@ class ComposerStaticInit96234841697d9316b28ce554852ffb72
         'PHPMailer\\PHPMailer\\PHPMailer' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/PHPMailer.php',
         'PHPMailer\\PHPMailer\\POP3' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/POP3.php',
         'PHPMailer\\PHPMailer\\SMTP' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/SMTP.php',
+        'Dompdf\\Dompdf' => __DIR__ . '/..' . '/dompdf/src/Dompdf.php',
+        'Dompdf\\Options' => __DIR__ . '/..' . '/dompdf/src/Options.php',
+        'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/lib/Cpdf.php',
+        'Svg\\Document' => __DIR__ . '/..' . '/dompdf/lib/php-svg-lib/src/Svg/Document.php',
+        'Svg\\Style' => __DIR__ . '/..' . '/dompdf/lib/php-svg-lib/src/Svg/Style.php',
+        'Svg\\Tag\\AbstractTag' => __DIR__ . '/..' . '/dompdf/lib/php-svg-lib/src/Svg/Tag/AbstractTag.php',
         'PHPUnit\\Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert.php',
         'PHPUnit\\Framework\\AssertionFailedError' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Exception/AssertionFailedError.php',

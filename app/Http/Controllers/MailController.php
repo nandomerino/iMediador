@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 
 class MailController extends Controller
@@ -31,6 +33,7 @@ class MailController extends Controller
     private $modalKOBody = null;
     private $modalKOButton1 = null;
     private $modalKOButton2 = null;
+    private $html;
 
 
     public function __construct()
@@ -203,6 +206,82 @@ class MailController extends Controller
         $this->modalKOTitle = __('mail.send.document.modal.title');
         $this->modalKOBody = __('mail.send.document.modal.body.failed');
         $this->modalKOButton1 = __('mail.send.document.modal.button');
+    }
+
+
+    public function sendHTML(Request $request)
+    {
+        //app('debugbar')->info('En SendHTML');
+        //app('debugbar')->info($request);
+        // Gets sent variables variables
+        $this->JSdata = $request->all();
+
+        //$this->type = $this->JSdata["type"];
+        $this->toAddress = $this->JSdata["email"];
+        $this->body = $this->JSdata["body"];
+        $this->html = $this->JSdata["html"];
+
+        $this->generatePDF("Tarifas");
+        $this->document();
+
+        //Server settings
+        $this->mail->SMTPDebug = 0;                                       // Enable verbose debug output
+        $this->mail->isSMTP();                                            // Set mailer to use SMTP
+        $this->mail->Host = config('mail.host');               // Specify main and backup SMTP servers
+        $this->mail->SMTPAuth = true;                                   // Enable SMTP authentication
+        $this->mail->Username = config('mail.username');           // SMTP username
+        $this->mail->Password = config('mail.password');           // SMTP password
+        $this->mail->SMTPSecure = config('mail.encryption');         // Enable TLS encryption, `ssl` also accepted
+        $this->mail->Port = config('mail.port');               // TCP port to connect to
+        $this->mail->CharSet = 'UTF-8';
+
+        // Content
+        $this->mail->isHTML(true);                                  // Set email format to HTML
+
+        // Fixes connection errors
+        $this->mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+
+        if (!$this->mail->send()) {
+            unlink('tarifas.pdf');
+            return response()->json(['error' => 'KO', 'customClass'=> $this->modalKOClass, 'title'=> $this->modalKOTitle, 'body'=> $this->modalKOBody, 'button'=> $this->modalKOButton1, 'e' => $this->mail->ErrorInfo]);
+        } else {
+            unlink('tarifas.pdf');
+            return response()->json(['success' => 'OK', 'customClass'=>  $this->modalOKClass, 'title'=> $this->modalOKTitle, 'body'=> $this->modalOKBody, 'button'=> $this->modalOKButton1]);
+        }
+        
+    }
+
+    public function generatePDF($title)
+    {
+
+        //app('debugbar')->info('En generatePDF');
+        //app('debugbar')->info($this->html);
+
+        $html_content = file_get_contents('../resources/views/app/mail/layouts/prices.table.php');
+		if ($html_content){
+			$content = str_replace(
+						array("{TITLE}", "{DATA_TABLE}"),
+						array($title, $this->html), 
+						$html_content);
+        }
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', TRUE);
+        //Esto es necesario para que funcionen las css en el pdf
+        $options->setDpi(150);
+        $dompdf = new Dompdf($options);
+        $dompdf->setBasePath(url()->current());
+        $dompdf->loadHtml($content);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        file_put_contents('tarifas.pdf', $dompdf->output());
+        $this->JSdata['attachment'] = 'tarifas.pdf';
     }
 
 
