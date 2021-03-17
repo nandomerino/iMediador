@@ -1490,7 +1490,6 @@ jQuery( document ).ready(function() {
                     amount = data.table[i][j].capital + " &euro;";
                 }
                 rows += "<td class='product' ";
-
                 // Renders coverage (coberturas) data
                 // console.log(i + 'x' + j + ' coverages: ' + data.table[i][j].coverages.length);
                 for( k=0;k<data.table[i][j].coverages.length;k++ ) {
@@ -1623,50 +1622,29 @@ jQuery( document ).ready(function() {
         var tipoFichero = "" // 2;
 
 
-        // Get file from WS and saves it in /downloads
+        var html = window.PMquoteTable;
+
+        var email = jQuery(".modal-send-email input[type=email]").val();
+        var body = lang["email.sendInfo.body"];
+
+        // Send email with attachment from /downloads
         jQuery.ajax({
-            type: "GET",
-            url: "/download",
+            type: "POST",
+            url: "/send-mail-html",
             data: {
-                downloadType : "attachment",
-                fileId : fileId,
-                filename : filename,
-                tipoFichero : tipoFichero
+                email : email,
+                body : body,
+                html : html
+                
             },
             success: function(response) {
-
-                console.log( response);
-                var attachment = response; // FILE PATH
-
-                var email = jQuery(".modal-send-email input[type=email]").val();
-                var body = lang["email.sendInfo.body"];
-
-                // Send email with attachment from /downloads
-                jQuery.ajax({
-                    type: "POST",
-                    url: "/send-mail-request-data",
-                    data: {
-                        type : "document",
-                        email : email,
-                        body : body,
-                        attachment : attachment
-                    },
-                    success: function(response) {
-                        jQuery('.modal-send-email .loader-wrapper').hide();
-                        jQuery('.modal-send-email .result').html(response['body']);
-                    },
-                    error: function(response){
-                        console.error(response['e']);
-                    }
-                });
-
+                jQuery('.modal-send-email .loader-wrapper').hide();		
+                jQuery('.modal-send-email .result').html(response['body']);
             },
             error: function(response){
-                jQuery('.modal-send-email .loader-wrapper').hide();
-                jQuery('.modal-send-email .result').html(response['e']);
+                console.error(response['e']);
             }
         });
-
 
     });
 
