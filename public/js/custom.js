@@ -654,8 +654,8 @@ jQuery( document ).ready(function() {
 
                 FieldDescription = benefitsArray[key].label;
 
-                benefits += "<div class='col-" + cols + " align-self-end' >";
-                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" /*+ lang["quote.benefitBy"]*/ + FieldDescription + "</label>";
+                benefits += "<div class='col-" + cols + "' align-self-end >";
+                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + lang["quote.benefitBy"] + FieldDescription + "</label>";
                 /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
                 benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                 benefits += "</div>";
