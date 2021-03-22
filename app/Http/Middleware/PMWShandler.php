@@ -607,7 +607,18 @@ class PMWShandler
             $headers = false;
             $i = 0;
             $currentBillingCycles = 0;
-            if( is_array( $data->datosOpcionCuadro->listaOpcionCuadro) ) {
+            if (! is_array($data->datosOpcionCuadro->listaOpcionCuadro)){
+
+               //app('debugbar')->info("Creando Array listaOpcionCuadro");
+               //app('debugbar')->info($data->datosOpcionCuadro->listaOpcionCuadro);
+
+               //we build as it was an array with 1 row
+                 $listaAux = array();
+                 $listaAux[] = $data->datosOpcionCuadro->listaOpcionCuadro;
+                 $data->datosOpcionCuadro->listaOpcionCuadro = $listaAux;
+            }
+
+//            if( is_array( $data->datosOpcionCuadro->listaOpcionCuadro) ) {
 
                 // prepare header array;
                 $rates["headers"][0] = __('quote.text.exemption');
@@ -709,7 +720,8 @@ class PMWShandler
 
                     $i++;
                     $x++;
-                }
+               }
+/*               
         // app('debugbar')->info($rates);
             }else{
 
@@ -755,7 +767,8 @@ class PMWShandler
                 }
 
                 $i++;
-            }
+               }
+*/
         }else{
             $rates = $data->mensajeError;
         }
@@ -794,7 +807,19 @@ class PMWShandler
             $headers = false;
             $i = 0;
             $currentBillingCycles = 0;
-            if( is_array( $data->datosOpcionCuadro->listaOpcionCuadro) ) {
+            
+            if (! is_array( $data->datosOpcionCuadro->listaOpcionCuadro) ){
+               //app('debugbar')->info("Creando Array listaOpcionCuadro");
+               //app('debugbar')->info($data->datosOpcionCuadro->listaOpcionCuadro);
+
+               //we build as it was an array with 1 row
+                 $listaAux = array();
+                 $listaAux[] = $data->datosOpcionCuadro->listaOpcionCuadro;
+                 $data->datosOpcionCuadro->listaOpcionCuadro = $listaAux;
+
+            }
+            
+            //if( is_array( $data->datosOpcionCuadro->listaOpcionCuadro) ) {
 
                 // prepare header array;
                 $rates["headers"][0] = __('quote.text.exemption');
@@ -915,6 +940,8 @@ class PMWShandler
                     $i++;
                     $x++;
                 }
+
+/*                
                 // app('debugbar')->info($rates);
             }else{
 
@@ -961,6 +988,7 @@ class PMWShandler
 
                 $i++;
             }
+*/
         }else{
             $rates = $data->mensajeError;
         }
