@@ -1648,7 +1648,14 @@ jQuery( document ).ready(function() {
 
     });
 
-    // QUOTE - Selects row from rates table and enable billing cycle
+
+     // QUOTE - Print button
+     jQuery('#quote .rates-table .action-minibutton.print').click(function(e){
+
+          window.print();
+     });
+
+ // QUOTE - Selects row from rates table and enable billing cycle
     jQuery("#quote .rates-table table").on('click', "td.product", function (e) {
 
         // Updates selected element classes

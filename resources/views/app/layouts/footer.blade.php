@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container hiddenprint">
     <div class="row socialIcons position-relative justify-content-md-center">
         <div class="col-2 text-center">
             <a href="{{ __('social.facebook.url') }}" target="_blank">
