@@ -17,7 +17,7 @@
 @section('content')
     <div id="quote">
 
-        <section class="header pb-4 row">
+        <section class="header pb-4 row hiddenprint">
             <div class="col">
                 <div class="breadcrumbs txt-navy-blue pb-2"><a href="{{ __('menu.home.url') }}">{{ __('menu.home.text') }}</a> > {{ __('menu.quote.text') }}</div>
                 <div class="separator bg-lime-yellow"></div>
@@ -42,7 +42,7 @@
 
                                 @endphp
                                 @if( $productores )
-                                    <div class="select-user row" style="display: none;">
+                                    <div class="select-user hiddenprint row" style="display: none;">
                                         <div class="col-4">
                                             <label for="productor">{{ __('quote.pickProductor') }}</label>
                                         </div>
@@ -57,7 +57,7 @@
                                     </div>
                                 @endif
 
-                                <div class="toggles row dynamic-block my-3 " style="display: none;">
+                                <div class="toggles row dynamic-block my-3 hiddenprint " style="display: none;">
                                     <h4>{{ __('quote.quoteType') }}</h4>
                                     <div class="separator thin bg-dark-grey"></div>
                                     <div class="col-4 pt-3 px-2 px-md-3">
@@ -224,7 +224,7 @@
                                     <div class="get-rates content w-100 mt-4" style="display: none;">
                                         <div class="separator thin bg-dark-grey"></div>
                                         <div class="col">
-                                            <button class="quote-button benefit text-white bold py-2 px-3 px-md-5 border-0 rounded w-100 mt-4 position-relative bg-light-grey" disabled>
+                                            <button class="quote-button benefit text-white bold py-2 px-3 px-md-5 border-0 rounded w-100 mt-4 position-relative bg-light-grey hiddenprint" disabled>
                                                 {{ __('quote.getRates') }}
                                                 <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
                                             </button>
@@ -331,18 +331,18 @@
                                 </div>
                             </div>
                             <div class="col-3 table-actions mb-3">
-                                <button class="action-minibutton send-email text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded">
+                                <button class="action-minibutton send-email text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded hiddenprint">
                                     {{ __("text.send") }}
                                     <img class="button-icon right" src="/img/paper-airplane-white.png">
                                 </button>
-                                <button class="action-minibutton print text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded">
+                                <button class="action-minibutton print text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded hiddenprint">
                                     {{ __("text.print") }}
                                     <img class="button-icon right" src="/img/print.png">
                                 </button>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col instructions">
+                            <div class="col instructions hiddenprint">
                                 {!! __("quote.instructions.selectRowAndBillingCycle") !!}
                             </div>
                         </div>
@@ -559,7 +559,7 @@
                             </div>
                             --}}
                             <div class="col-12 col-md-3 text-center">
-                                <button class="quote-step next bg-lime-yellow text-white bold py-3 px-3 px-md-5 border-0 rounded mt-0 mt-md-4 position-relative font-weight-bold">
+                                <button class="quote-step next bg-lime-yellow text-white bold py-3 px-3 px-md-5 border-0 rounded mt-0 mt-md-4 position-relative font-weight-bold hiddenprint">
                                     {{ __('quote.stepNext') }}
                                 </button>
                             </div>

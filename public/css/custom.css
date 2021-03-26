@@ -1536,3 +1536,18 @@ label{
 }
 
 /* ^^^^^^ MEDIA QUERIES ^^^^^^ */
+
+
+@media print {
+  
+     .hiddenprint {
+          display: none;
+     }
+  
+     .app-core table td.selected,
+     .app-core table th.selected{
+          /*background-color: #D1D546 !important;*/
+          border: 3px solid #000000 !important;
+     }
+
+   }
