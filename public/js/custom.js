@@ -507,6 +507,8 @@ jQuery( document ).ready(function() {
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
 
+        console.log(data);
+
         // Signing method Logalty/handwriting
         if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
             window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
@@ -596,7 +598,38 @@ jQuery( document ).ready(function() {
         }
         commercialKey += "</div>";
 
+        var franchiseField = "";
+        if (data.P_NOMBRE_PRODUCTO == "ENFERMEDADES GRAVES"){
+          // Load franchise
+          window.PMfranchise = data.P_FRANQUICIA;
+          window.PMJP = 'JP';
+          var hidden = "";
+          if(data.P_FRANQUICIA.hidden == "S"){
+               hidden = " type='hidden' ";
+          }
+          franchiseField += "<div class='col-4'>";
+          franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
+          franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
 
+          if( data.P_FRANQUICIA.fieldType == "select"){
+
+               var franchiseArray = data.P_FRANQUICIA.values;
+               var franchiseSelect = "<option value=''>Todas las Franquicias</option>";
+
+               Object.keys(franchiseArray).forEach(function(key) {
+                    franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
+               });
+               franchiseField += franchiseSelect;
+
+               franchiseField += "</select>";
+          }
+          franchiseField += "</div>";
+        } else {
+             window.PMfranchise = null;
+             window.PMJP = null;
+        }
+
+        
         // Load commercial key
         window.PMduration = data.P_PERIODO_COBERTURA;
         var hidden = "";
@@ -843,7 +876,7 @@ jQuery( document ).ready(function() {
         jQuery('#quote .product-extra-info .quote-height-label').html(data.P_TALLA.name);
 
 
-        extraFields = benefits + duration + durationField + discountFields;
+        extraFields = benefits + franchiseField + duration + durationField + discountFields;
         jQuery('#quote .product-extra-info .quote-benefit-wrapper').html(extraFields);
 
 
@@ -1078,6 +1111,18 @@ jQuery( document ).ready(function() {
                 var hospCob = null;
                 var hospSub = null;
 
+                var franchise = null;
+                if (window.PMfranchise != null){
+                    franchise = jQuery("#quote .quote-franchise").val();
+                    if (franchise==''){
+                         franchise = null;
+                    }
+                }
+
+                var enfGraves = false;
+                if (window.PMJP != null){
+                     enfGraves = true;
+                }
                 // TODO: add new LENGTH parameter so the results are correct
                 //  waiting for client response on increased development time
 
@@ -1127,7 +1172,8 @@ jQuery( document ).ready(function() {
                     accCob : accCob,
                     accSub : accSub,
                     hospCob : hospCob,
-                    hospSub : hospSub
+                    hospSub : hospSub,
+                    franchise : franchise
                 }
 
 
@@ -1159,7 +1205,9 @@ jQuery( document ).ready(function() {
                         accCob: accCob,
                         accSub: accSub,
                         hospCob: hospCob,
-                        hospSub: hospSub
+                        hospSub: hospSub,
+                        franchise: franchise,
+                        enfGraves: enfGraves
                     },
                     success: function (response) {
                         if (response['success'] == true) {
@@ -1365,7 +1413,15 @@ jQuery( document ).ready(function() {
                 var productId = jQuery("#quote input[name='quote-product-variation']:checked").val();
                 var startingDate = jQuery("#quote .quote-starting-date").val();
                 var price = jQuery("#quote .quote-price").val();
+
                 var franchise = null;
+                if (window.PMfranchise != null){
+                    franchise = jQuery("#quote .quote-franchise").val();
+                    if (franchise==''){
+                         franchise = null;
+                    }
+                }
+
                 var jobType = jQuery('#quote .quote-job-type').val();
                 var profession = jQuery("#quote .quote-job").val();
                 var birthdate  = jQuery("#quote .quote-birthdate").val();

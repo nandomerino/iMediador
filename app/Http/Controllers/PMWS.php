@@ -410,8 +410,8 @@ class PMWS extends controller
         //file_put_contents('d:\logs\test.txt' . PHP_EOL, serialize($params), FILE_APPEND );
 
         $result = $client->obtenerConfiguracionProducto($params);
-        //app('debugbar')->info('resultado servicio obtenerConfiguracionProducto:');
-        //app('debugbar')->info($result);
+        app('debugbar')->info('resultado servicio obtenerConfiguracionProducto:');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -1097,15 +1097,15 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-//        app('debugbar')->info('$params');
-//        app('debugbar')->info($params);
+        app('debugbar')->info('$params');
+        app('debugbar')->info($params);
 //        file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
 //        file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
 //        file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
 //        file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
 //        app('debugbar')->info('$result');
-//        app('debugbar')->info($result);
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -1162,6 +1162,7 @@ class PMWS extends controller
         $inputData[] =  array(
             "nombreParametro"	=> "P_FRANQUICIA",
             "valorParametro"	=> $franchise === null ? "" : $franchise);
+            
         if ( $pmUserCode !==  null ) {
             $inputData[] =  array(
                 "nombreParametro"	=> "P_USUARIO_INTERNO",
