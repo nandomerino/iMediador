@@ -146,7 +146,7 @@ class PMWSjs extends Controller
 
     public function getRates()
     {
-        app('debugbar')->info($this->parameters);
+        //app('debugbar')->info($this->parameters);
         
         // Call PM WS
         $parameters = array();

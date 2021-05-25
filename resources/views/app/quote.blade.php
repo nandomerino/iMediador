@@ -310,6 +310,7 @@
                     <div class="data col-12 col-md-6 col-lg-6 col-xl-6 rates-table pt-5 pt-md-0" style="display: none;">
                         <div class="row">
                             <div class="col">
+                                <div class="rates-table-description"></div>
                                 <table class="table" >
                                     @php
                                         // Dynamically filled with JS

@@ -95,7 +95,7 @@ class PMWShandler
                 $info = $this->PMWS->loginInt($user, $pass, $this->language, $userPM);
                 break;
         }
-        app('debugbar')->info($info);
+        //app('debugbar')->info($info);
         $data = $info->return;
 
         if( $data->correcto == "S") {
@@ -400,8 +400,8 @@ class PMWShandler
         // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productId . " | " . $productVariationId . " | " . $entryChannel . " | " . $application);
 
         $response = $this->PMWS->getProductConfiguration($this->user, $this->pass, $this->language, $productor, $productId, $productModalityId, $entryChannel, $application, $this->userPM, $modifiedField);
-        app('debugbar')->info('pmwshandler getProductConfiguration');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('pmwshandler getProductConfiguration');
+        //app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
@@ -789,12 +789,12 @@ class PMWShandler
         session([
             'rates' => $rates
         ]);
-        app('debugbar')->info("rates:");
-        app('debugbar')->info($rates);
+        //app('debugbar')->info("rates:");
+        //app('debugbar')->info($rates);
         return $rates;
     }
 
-    /**
+     /**
      * @param $productor - (optional) selected productor
      * @param $option - Proporcionada con las variaciones
      * @param $productId - selected product
@@ -812,66 +812,78 @@ class PMWShandler
      * @return bool
      * @throws \SoapFault
      *
-     * Gets rates for current quote
+     * Gets rates for especific case "ENFERMEDADES GRAVES"
      */
-    function getRatesEnfGraves( $parameters )
-    {
+     function getRatesEnfGraves( $parameters )
+     {
 
-        if($parameters["u"] != null && $parameters["p"] != null){
-            $parameters["user"] = $parameters["u"] ;
-            $parameters["pass"] = $parameters["p"] ;
-        }else{
-            $parameters["user"] = $this->user;
-            $parameters["pass"] = $this->pass;
-        }
+          if($parameters["u"] != null && $parameters["p"] != null){
+               $parameters["user"] = $parameters["u"] ;
+               $parameters["pass"] = $parameters["p"] ;
+          }else{
+               $parameters["user"] = $this->user;
+               $parameters["pass"] = $this->pass;
+          }
 
-        $parameters["language"] = $this->language;
-        $parameters["pmUserCode"] = $this->userPM;
+          $parameters["language"] = $this->language;
+          $parameters["pmUserCode"] = $this->userPM;
 
-        //app('debugbar')->info($parameters);
-        $response = $this->PMWS->getRates($parameters);
-        app('debugbar')->info($response);
+          //app('debugbar')->info($parameters);
+          $response = $this->PMWS->getRates($parameters);
+          //app('debugbar')->info($response);
 
-        $data = $response->return;
-        if( $data->correcto == "S" ){
-            $headers = false;
-            $i = 0;
-            $currentBillingCycles = 0;
-            if (! is_array($data->datosOpcionCuadro->listaOpcionCuadro)){
+          $rates = [];
 
-               app('debugbar')->info("Creando Array listaOpcionCuadro");
-               app('debugbar')->info($data->datosOpcionCuadro->listaOpcionCuadro);
+          $data = $response->return;
+          if( $data->correcto == "S" ){
 
-               //we build as it was an array with 1 row
-                 $listaAux = array();
-                 $listaAux[] = $data->datosOpcionCuadro->listaOpcionCuadro;
-                 $data->datosOpcionCuadro->listaOpcionCuadro = $listaAux;
-            }
+               //Description prior to table and foot info
+               if (is_array($data->datosSalida->listaParametros)){
+                    foreach ($data->datosSalida->listaParametros as $info){
+                         //app('debugbar')->info($info);
+                         if ($info->nombreParametro == "P_COBERTURAS_OPCIONALES"){
+                              $pie = $info->valorParametro;
+                              $rates["foot"] = $pie;
+                         }
+                         if ($info->nombreParametro == "P_RIESGO_TARIFICADO"){
+                              $desc = $info->valorParametro;
+                              $rates["description"] = $desc;
+                         }
+                    }
+               }
 
-//            if( is_array( $data->datosOpcionCuadro->listaOpcionCuadro) ) {
+               $i = 0;
 
-                // prepare header array;
-                $rates["headers"][0] = __('quote.text.exemption');
-                $rates["headers"][1] = __('quote.header1');
-                $rates["headers"][2] = __('quote.header2');
-                $rates["headers"][3] = __('quote.header3');
-                $rates["headers"][4] = __('quote.header4');
+               if (! is_array($data->datosOpcionCuadro->listaOpcionCuadro)){
 
-                $y = 0;
-                $rates["table"] = array();
-                $colsNumber = 1;
-                $xSet = 0;
-                $mens = [];
-                foreach ($data->datosOpcionCuadro->listaOpcionCuadro as $row) {
-                     $mens[strval($row->datosGenerales[2]->valor)][strval($row->datosGenerales[0]->valor)] = $row->datosGenerales[3]->valor;
+                    //we build as it was an array with 1 row
+                    $listaAux = array();
+                    $listaAux[] = $data->datosOpcionCuadro->listaOpcionCuadro;
+                    $data->datosOpcionCuadro->listaOpcionCuadro = $listaAux;
+               }
+
+               $rates["table"] = array();
+               $rates["name"] = "ENFERMEDADES GRAVES";
+               $rates["billingCycles"] = array();
+               $rates["rows"] = array();
+
+               $messages = [];
+               foreach ($data->datosOpcionCuadro->listaOpcionCuadro as $row) {
+
+                    // general data
+                    foreach ($row->datosGenerales->array as $row2) {
+
+                         if ($row2->nombre == "P_PRODUCTO_TARIFICADO") {
+                              $rates["name"] = $row2->valor;
+                         }
+                    }
+
+                    $tableData = self::getTableData($row);
+                    $fila = $tableData['fila'];
+                    $columna = $tableData['columna'];
+
 
                     if (! empty($row->tarificaciones)){
-                         // general data
-                         foreach ($row->datosGenerales->array as $row2) {
-                              if ($row2->nombre == "P_PRODUCTO_TARIFICADO") {
-                                   $rates["name"] = $row2->valor;
-                              }
-                         }
 
                          // billing cycles
                          $j = 0;
@@ -880,60 +892,34 @@ class PMWShandler
                               $j++;
                          }
 
-
-                         //==============================================
-                         // Generate array to display on table
-                         //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-
-                         // Update column
-
-                         if( $row->coberturas->array[0]->franquicia == 0 ){
-                         // Fix to display more than 1 set of results
-                         /*
-                         if($colsNumber > 4){
-                              $colsNumber = 1;
-                              $y = 0;
-                              $xSet += 100;
-                         }
-                         $colsNumber++;
-                         */
-                              $y++;
-
-                         }
-
-                         // Get exemption (franquicia)
-                         $x = $row->coberturas->array[0]->franquicia;
-                         //$x = $row->coberturas->array[0]->franquicia + $xSet;
-                         // $rates["table"][$x]['franquicia'] = $x;
-
                          // Get price
                          foreach (array_reverse($row->tarificaciones->array) as $row2) {
                               if( $row2->formaPago == 1){
-                                   $rates["table"][$x][$y]["price"] = $row2->primaNetaAnual;
+                                   $rates["table"][$fila][$columna]["price"] = $row2->primaNetaAnual;
+                                   $messages[$fila][$columna] = $row2->primaNetaAnual;
                               }
                          }
 
                          // Get coverages (coberturas)
                          $j = 0;
                          foreach ($row->coberturas->array as $row2) {
-                              $rates["table"][$x][$y]["coverages"][$j]["capital"] = $row2->capital;
-                              $rates["table"][$x][$y]["coverages"][$j]["codigo"] = $row2->codigo;
-                              $rates["table"][$x][$y]["coverages"][$j]["descripcion"] = $row2->descripcion;
-                              $rates["table"][$x][$y]["coverages"][$j]["duracion"] = $row2->duracion;
-                              $rates["table"][$x][$y]["coverages"][$j]["franquicia"] = $row2->franquicia;
-                              $rates["table"][$x][$y]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
                               $j++;
                          }
 
                          // Get quotes
                          $j = 0;
                          foreach (array_reverse($row->tarificaciones->array) as $row2) {
-                              $rates["table"][$x][$y]["quotes"][$j]["formaPago"] = $row2->formaPago;
-                              $rates["table"][$x][$y]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
-                              $rates["table"][$x][$y]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
-                              $rates["table"][$x][$y]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
-                              $rates["table"][$x][$y]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
+                              $rates["table"][$fila][$columna]["quotes"][$j]["formaPago"] = $row2->formaPago;
+                              $rates["table"][$fila][$columna]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                              $rates["table"][$fila][$columna]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
+                              $rates["table"][$fila][$columna]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
+                              $rates["table"][$fila][$columna]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
                               $j++;
                          }
 
@@ -952,21 +938,14 @@ class PMWShandler
                          }
 
                          $i++;
-                         $x++;
                     } else {
-                         // general data
-                         foreach ($row->datosGenerales->array as $row2) {
-                              /*
-                              if ($row2->nombre == "P_PRODUCTO_TARIFICADO") {
-                                   $rates["name"] = $row2->valor;
-                              }
-                              */
-                              
-                         }
+                         
+                         //Tooltip for the icon
+                         $messages[$fila][$columna] = $tableData['descripcion'];
 
                     }
                }
-               $rates["mens"] = $mens;
+               $rates["messages"] = $messages;
         }else{
             $rates = $data->mensajeError;
         }
@@ -974,8 +953,8 @@ class PMWShandler
         session([
             'rates' => $rates
         ]);
-        app('debugbar')->info("rates:");
-        app('debugbar')->info($rates);
+        //app('debugbar')->info("rates:");
+        //app('debugbar')->info($rates);
         return $rates;
     }
 
@@ -1000,8 +979,6 @@ class PMWShandler
     {
 
         $response = $this->PMWS->getRatesByPrice($this->user, $this->pass, $this->language, $productor, $option, $productCode, $price, $franchise, $jobType, $profession, $birthdate, $gender, $height, $weight, $duration, $commercialKey, $this->userPM);
-        app('debugbar')->info('PMWShandler - getratesbyprice:');
-        app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
@@ -1918,7 +1895,7 @@ class PMWShandler
         }
         //app('debugbar')->info($parameters);
         $response = $this->PMWS->submitPolicy($parameters);
-        app('debugbar')->info($response);
+        //app('debugbar')->info($response);
 
         $data = $response->return;
 
@@ -2134,4 +2111,20 @@ class PMWShandler
         return $campaigns;
     }
 
+    private static function getTableData($row){
+         $response = [];
+         foreach($row->datosGenerales->array as $row2){
+               if ($row2->nombre == "P_TITULO_COLUMNA") {
+                    $response['columna'] = $row2->valor;
+               }
+               if ($row2->nombre == "P_TITULO_FILA") {
+                    $response['fila'] = $row2->valor;
+               }
+               if ($row2->nombre == "P_DESCRIPCION_OPCION"){
+                    $response['descripcion'] = $row2->valor;
+               }
+         }
+
+         return $response;
+    }
 }
