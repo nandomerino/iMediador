@@ -400,8 +400,8 @@ class PMWShandler
         // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productId . " | " . $productVariationId . " | " . $entryChannel . " | " . $application);
 
         $response = $this->PMWS->getProductConfiguration($this->user, $this->pass, $this->language, $productor, $productId, $productModalityId, $entryChannel, $application, $this->userPM, $modifiedField);
-        app('debugbar')->info('pmwshandler getProductConfiguration');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('pmwshandler getProductConfiguration');
+        //app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){

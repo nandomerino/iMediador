@@ -478,7 +478,7 @@ jQuery( document ).ready(function() {
         //var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
         var productModality = jQuery("#quote input[name='quote-product-modality']:checked").val();
         window.PMSelectedProductModality = productModality;
-        console.log(productModality);
+        //console.log(productModality);
 
         jQuery.ajax({
             type: "POST",
