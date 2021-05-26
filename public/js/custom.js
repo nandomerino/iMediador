@@ -477,6 +477,8 @@ jQuery( document ).ready(function() {
         var product = jQuery("#quote input[name='quote-product']:checked").val();
         //var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
         var productModality = jQuery("#quote input[name='quote-product-modality']:checked").val();
+        window.PMSelectedProductModality = productModality;
+        console.log(productModality);
 
         jQuery.ajax({
             type: "POST",
@@ -508,6 +510,7 @@ jQuery( document ).ready(function() {
         window.PMproductConfig = data;
 
         console.log(data);
+        
 
         // Signing method Logalty/handwriting
         if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
@@ -599,7 +602,7 @@ jQuery( document ).ready(function() {
         commercialKey += "</div>";
 
         var franchiseField = "";
-        if (data.P_NOMBRE_PRODUCTO == "ENFERMEDADES GRAVES"){
+        if (window.PMSelectedProductModality == 22 ){//data.P_NOMBRE_PRODUCTO == "ENFERMEDADES GRAVES"){
           // Load franchise
           window.PMfranchise = data.P_FRANQUICIA;
           window.PMEnfGraves = true;
@@ -688,7 +691,7 @@ jQuery( document ).ready(function() {
                 FieldDescription = benefitsArray[key].label;
 
                 benefits += "<div class='col-" + cols + "' align-self-end >";
-                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + lang["quote.benefitBy"] + FieldDescription + "</label>";
+                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + FieldDescription + "</label>";
                 /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
                 benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                 benefits += "</div>";
@@ -1388,7 +1391,6 @@ jQuery( document ).ready(function() {
     // QUOTE - Process rates and display the table (ENFERMEDADES GRAVES case)
     function quote_load_Rates_EG(data){
 
-     console.log(data);
      window.PMrates = data;
      product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
      variation = data.name.trim().toUpperCase();
@@ -1461,7 +1463,6 @@ jQuery( document ).ready(function() {
                     rows += "<td class='product' ";
                     
                     // Renders coverage (coberturas) data
-                    console.log("i: " + i + " j: " + j );
                     for( k=0;k<data.table[i][j].coverages.length;k++ ) {
                          rows += " data-capital-" + k + "='" + data.table[i][j].coverages[k].capital + "'";
                          rows += " data-codigo-" + k + "='" + data.table[i][j].coverages[k].codigo + "'";
@@ -4323,10 +4324,18 @@ jQuery( document ).ready(function() {
 
     function resetProductVariations(){
         jQuery('#quote .product-variations').hide();
+        jQuery('#quote .product-modalities').hide();
 
         resetProductExtraInfo();
         resetAdvisorResults();
+        resetProductModalities();
     }
+    
+    function resetProductModalities(){
+     jQuery('#quote .product-modalities input').prop("checked", false);
+     window.PMSelectedProductModality = null;
+    }
+
     function resetAdvisorResults(){
         jQuery('#quote .advisor-results').hide();
 
