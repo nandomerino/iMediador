@@ -405,9 +405,6 @@ class PMWS extends controller
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
-        //app('debugbar')->info($params);
-        //file_put_contents('d:\logs\test.txt', 'productList - params:' . PHP_EOL, FILE_APPEND );
-        //file_put_contents('d:\logs\test.txt' . PHP_EOL, serialize($params), FILE_APPEND );
 
         $result = $client->obtenerConfiguracionProducto($params);
         //app('debugbar')->info('resultado servicio obtenerConfiguracionProducto:');
@@ -826,7 +823,7 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        app('debugbar')->info($params);
+        //app('debugbar')->info($params);
         $result = $client->subirDocumento($params);
 
         if (is_soap_fault($result)) {
@@ -1099,11 +1096,7 @@ class PMWS extends controller
 
 //        app('debugbar')->info('$params');
 //        app('debugbar')->info($params);
-//        file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
-//        file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
-//        file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
-//        file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
 //        app('debugbar')->info('$result');
 //        app('debugbar')->info($result);
 
@@ -1162,6 +1155,7 @@ class PMWS extends controller
         $inputData[] =  array(
             "nombreParametro"	=> "P_FRANQUICIA",
             "valorParametro"	=> $franchise === null ? "" : $franchise);
+            
         if ( $pmUserCode !==  null ) {
             $inputData[] =  array(
                 "nombreParametro"	=> "P_USUARIO_INTERNO",
@@ -1224,13 +1218,9 @@ class PMWS extends controller
         );
 //        app('debugbar')->info('obtenerSubsidiosPrima: $params:');
         //app('debugbar')->info($params);
-        //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - params:' . PHP_EOL, FILE_APPEND );
-        //file_put_contents('d:\logs\test.txt', json_encode($params) . PHP_EOL , FILE_APPEND );
     $result = $client->obtenerSubsidiosPrima($params);
         //app('debugbar')->info('obtenerSubsidiosPrima: $result:');
         //app('debugbar')->info($result);
-        //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - result:' . PHP_EOL, FILE_APPEND );
-        //file_put_contents('d:\logs\test.txt', json_encode($result) . PHP_EOL , FILE_APPEND );
 
         if (is_soap_fault($result)) {
             $result = false;
