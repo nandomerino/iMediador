@@ -511,7 +511,6 @@ jQuery( document ).ready(function() {
 
         console.log(data);
         
-
         // Signing method Logalty/handwriting
         if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
             window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
