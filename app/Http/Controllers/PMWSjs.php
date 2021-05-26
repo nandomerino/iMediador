@@ -247,14 +247,27 @@ class PMWSjs extends Controller
         $parameters["Cob5"] = $this->parameters["Cob5"];
         $parameters["Sub5"] = $this->parameters["Sub5"];
 
-        $data = $this->PMWShandler->getRates($parameters);
-        //app('debugbar')->info($data);
-        if (is_array($data)) {
-            return response()->json(['success' => true, 'data' => $data]);
-        } else {
-            return response()->json(['success' => false, 'e' => $data]);
-        }
+        $parameters["franchise"] = $this->parameters["franchise"];
+        //app('debugbar')->info($enf);
+        if ($this->parameters["enfGraves"] == "true"){
+             $data = $this->PMWShandler->getRatesEnfGraves($parameters);
+               //app('debugbar')->info($data);
+               if (is_array($data)) {
+                    return response()->json(['success' => true, 'data' => $data]);
+               } else {
+                    return response()->json(['success' => false, 'e' => $data]);
+               }
 
+        } else {
+
+          $data = $this->PMWShandler->getRates($parameters);
+          //app('debugbar')->info($data);
+          if (is_array($data)) {
+               return response()->json(['success' => true, 'data' => $data]);
+          } else {
+               return response()->json(['success' => false, 'e' => $data]);
+          }
+        }
     }
 
     public function getRatesByPrice()

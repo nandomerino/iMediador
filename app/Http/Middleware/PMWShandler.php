@@ -95,7 +95,7 @@ class PMWShandler
                 $info = $this->PMWS->loginInt($user, $pass, $this->language, $userPM);
                 break;
         }
-        app('debugbar')->info($info);
+        //app('debugbar')->info($info);
         $data = $info->return;
 
         if( $data->correcto == "S") {
@@ -439,6 +439,7 @@ class PMWShandler
 
                 if( $row->nombre == "P_FRANQUICIA"){
                     $productConfig[$row->nombre]["name"] = $row->etiquetaPre;
+                    $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
                     foreach( $row->listaValores->listaValores as $innerRow ) {
                         $productConfig[$row->nombre]["values"][$innerRow->codigo] = $innerRow->descripcion;
                     }
@@ -633,93 +634,106 @@ class PMWShandler
                 $xSet = 0;
                 foreach ($data->datosOpcionCuadro->listaOpcionCuadro as $row) {
 
-                    // general data
-                    foreach ($row->datosGenerales->array as $row2) {
-                        if ($row2->nombre == "P_PRODUCTO_TARIFICADO") {
-                            $rates["name"] = $row2->valor;
-                        }
+                    if (! empty($row->tarificaciones)){
+                         // general data
+                         foreach ($row->datosGenerales->array as $row2) {
+                              if ($row2->nombre == "P_PRODUCTO_TARIFICADO") {
+                                   $rates["name"] = $row2->valor;
+                              }
+                         }
+
+                         // billing cycles
+                         $j = 0;
+                         foreach ($row->tarificaciones->array as $row2) {
+                              $rates["billingCycles"][$j] = $row2->formaPago;
+                              $j++;
+                         }
+
+
+                         //==============================================
+                         // Generate array to display on table
+                         //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+
+                         // Update column
+
+                         if( $row->coberturas->array[0]->franquicia == 0 ){
+                         // Fix to display more than 1 set of results
+                         /*
+                         if($colsNumber > 4){
+                              $colsNumber = 1;
+                              $y = 0;
+                              $xSet += 100;
+                         }
+                         $colsNumber++;
+                         */
+                              $y++;
+
+                         }
+
+                         // Get exemption (franquicia)
+                         $x = $row->coberturas->array[0]->franquicia;
+                         //$x = $row->coberturas->array[0]->franquicia + $xSet;
+                         // $rates["table"][$x]['franquicia'] = $x;
+
+                         // Get price
+                         foreach (array_reverse($row->tarificaciones->array) as $row2) {
+                              if( $row2->formaPago == 1){
+                                   $rates["table"][$x][$y]["price"] = $row2->primaNetaAnual;
+                              }
+                         }
+
+                         // Get coverages (coberturas)
+                         $j = 0;
+                         foreach ($row->coberturas->array as $row2) {
+                              $rates["table"][$x][$y]["coverages"][$j]["capital"] = $row2->capital;
+                              $rates["table"][$x][$y]["coverages"][$j]["codigo"] = $row2->codigo;
+                              $rates["table"][$x][$y]["coverages"][$j]["descripcion"] = $row2->descripcion;
+                              $rates["table"][$x][$y]["coverages"][$j]["duracion"] = $row2->duracion;
+                              $rates["table"][$x][$y]["coverages"][$j]["franquicia"] = $row2->franquicia;
+                              $rates["table"][$x][$y]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
+                              $j++;
+                         }
+
+                         // Get quotes
+                         $j = 0;
+                         foreach (array_reverse($row->tarificaciones->array) as $row2) {
+                              $rates["table"][$x][$y]["quotes"][$j]["formaPago"] = $row2->formaPago;
+                              $rates["table"][$x][$y]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                              $rates["table"][$x][$y]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
+                              $rates["table"][$x][$y]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
+                              $rates["table"][$x][$y]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
+                              $j++;
+                         }
+
+                         //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+                         // quotes (keep for compatibility with Widget)
+                         $j = 0;
+                         foreach (array_reverse($row->tarificaciones->array) as $row2) {
+                              $rates["rows"][$i]["quotes"][$j]["formaPago"] = $row2->formaPago;
+                              $rates["rows"][$i]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                              $rates["rows"][$i]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
+                              $rates["rows"][$i]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
+                              $rates["rows"][$i]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
+                              $j++;
+                         }
+
+                         $i++;
+                         $x++;
+                    } else {
+                         // general data
+                         foreach ($row->datosGenerales->array as $row2) {
+                              /*
+                              if ($row2->nombre == "P_PRODUCTO_TARIFICADO") {
+                                   $rates["name"] = $row2->valor;
+                              }
+                              */
+
+                         }
+
                     }
-
-                    // billing cycles
-                    $j = 0;
-                    foreach ($row->tarificaciones->array as $row2) {
-                        $rates["billingCycles"][$j] = $row2->formaPago;
-                        $j++;
-                    }
-
-
-                    //==============================================
-                    // Generate array to display on table
-                    //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-
-                    // Update column
-
-                    if( $row->coberturas->array[0]->franquicia == 0 ){
-                        // Fix to display more than 1 set of results
-                        /*
-                        if($colsNumber > 4){
-                            $colsNumber = 1;
-                            $y = 0;
-                            $xSet += 100;
-                        }
-                        $colsNumber++;
-                        */
-                        $y++;
-
-                    }
-
-                    // Get exemption (franquicia)
-                    $x = $row->coberturas->array[0]->franquicia;
-                    //$x = $row->coberturas->array[0]->franquicia + $xSet;
-                    // $rates["table"][$x]['franquicia'] = $x;
-
-                    // Get price
-                    foreach (array_reverse($row->tarificaciones->array) as $row2) {
-                        if( $row2->formaPago == 1){
-                            $rates["table"][$x][$y]["price"] = $row2->primaNetaAnual;
-                        }
-                    }
-
-                    // Get coverages (coberturas)
-                    $j = 0;
-                    foreach ($row->coberturas->array as $row2) {
-                        $rates["table"][$x][$y]["coverages"][$j]["capital"] = $row2->capital;
-                        $rates["table"][$x][$y]["coverages"][$j]["codigo"] = $row2->codigo;
-                        $rates["table"][$x][$y]["coverages"][$j]["descripcion"] = $row2->descripcion;
-                        $rates["table"][$x][$y]["coverages"][$j]["duracion"] = $row2->duracion;
-                        $rates["table"][$x][$y]["coverages"][$j]["franquicia"] = $row2->franquicia;
-                        $rates["table"][$x][$y]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
-                        $j++;
-                    }
-
-                    // Get quotes
-                    $j = 0;
-                    foreach (array_reverse($row->tarificaciones->array) as $row2) {
-                        $rates["table"][$x][$y]["quotes"][$j]["formaPago"] = $row2->formaPago;
-                        $rates["table"][$x][$y]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
-                        $rates["table"][$x][$y]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
-                        $rates["table"][$x][$y]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
-                        $rates["table"][$x][$y]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
-                        $j++;
-                    }
-
-                    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-                    // quotes (keep for compatibility with Widget)
-                    $j = 0;
-                    foreach (array_reverse($row->tarificaciones->array) as $row2) {
-                        $rates["rows"][$i]["quotes"][$j]["formaPago"] = $row2->formaPago;
-                        $rates["rows"][$i]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
-                        $rates["rows"][$i]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
-                        $rates["rows"][$i]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
-                        $rates["rows"][$i]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
-                        $j++;
-                    }
-
-                    $i++;
-                    $x++;
                }
 /*               
         // app('debugbar')->info($rates);
@@ -775,6 +789,172 @@ class PMWShandler
         session([
             'rates' => $rates
         ]);
+        //app('debugbar')->info("rates:");
+        //app('debugbar')->info($rates);
+        return $rates;
+    }
+
+     /**
+     * @param $productor - (optional) selected productor
+     * @param $option - Proporcionada con las variaciones
+     * @param $productId - selected product
+     * @param $profession - selected profession
+     * @param $birthdate - user birthdate
+     * @param $gender - user gender
+     * @param $height - user height
+     * @param $weight - user weigth
+     * @param $enfCob - cobertura por enfermedad
+     * @param $enfSub - subsidio por enfermedad
+     * @param $accCob - cobertura por accidente
+     * @param $accSub - subsidio por accidente
+     * @param $hospCob - cobertura por hospitalizacion
+     * @param $hospSub - subsidio por hospitalizacion
+     * @return bool
+     * @throws \SoapFault
+     *
+     * Gets rates for especific case "ENFERMEDADES GRAVES"
+     */
+     function getRatesEnfGraves( $parameters )
+     {
+
+          if($parameters["u"] != null && $parameters["p"] != null){
+               $parameters["user"] = $parameters["u"] ;
+               $parameters["pass"] = $parameters["p"] ;
+          }else{
+               $parameters["user"] = $this->user;
+               $parameters["pass"] = $this->pass;
+          }
+
+          $parameters["language"] = $this->language;
+          $parameters["pmUserCode"] = $this->userPM;
+
+          //app('debugbar')->info($parameters);
+          $response = $this->PMWS->getRates($parameters);
+          //app('debugbar')->info($response);
+
+          $rates = [];
+
+          $data = $response->return;
+          if( $data->correcto == "S" ){
+
+               //Description prior to table and foot info
+               if (is_array($data->datosSalida->listaParametros)){
+                    foreach ($data->datosSalida->listaParametros as $info){
+                         //app('debugbar')->info($info);
+                         if ($info->nombreParametro == "P_COBERTURAS_OPCIONALES"){
+                              $pie = $info->valorParametro;
+                              $rates["foot"] = $pie;
+                         }
+                         if ($info->nombreParametro == "P_RIESGO_TARIFICADO"){
+                              $desc = $info->valorParametro;
+                              $rates["description"] = $desc;
+                         }
+                    }
+               }
+
+               $i = 0;
+
+               if (! is_array($data->datosOpcionCuadro->listaOpcionCuadro)){
+
+                    //we build as it was an array with 1 row
+                    $listaAux = array();
+                    $listaAux[] = $data->datosOpcionCuadro->listaOpcionCuadro;
+                    $data->datosOpcionCuadro->listaOpcionCuadro = $listaAux;
+               }
+
+               $rates["table"] = array();
+               $rates["name"] = "ENFERMEDADES GRAVES";
+               $rates["billingCycles"] = array();
+               $rates["rows"] = array();
+
+               $messages = [];
+               foreach ($data->datosOpcionCuadro->listaOpcionCuadro as $row) {
+
+                    // general data
+                    foreach ($row->datosGenerales->array as $row2) {
+
+                         if ($row2->nombre == "P_PRODUCTO_TARIFICADO") {
+                              $rates["name"] = $row2->valor;
+                         }
+                    }
+
+                    $tableData = self::getTableData($row);
+                    $fila = $tableData['fila'];
+                    $columna = $tableData['columna'];
+
+
+                    if (! empty($row->tarificaciones)){
+
+                         // billing cycles
+                         $j = 0;
+                         foreach ($row->tarificaciones->array as $row2) {
+                              $rates["billingCycles"][$j] = $row2->formaPago;
+                              $j++;
+                         }
+
+                         // Get price
+                         foreach (array_reverse($row->tarificaciones->array) as $row2) {
+                              if( $row2->formaPago == 1){
+                                   $rates["table"][$fila][$columna]["price"] = $row2->primaNetaAnual;
+                                   $messages[$fila][$columna] = $row2->primaNetaAnual;
+                              }
+                         }
+
+                         // Get coverages (coberturas)
+                         $j = 0;
+                         foreach ($row->coberturas->array as $row2) {
+                              $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
+                              $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
+                              $j++;
+                         }
+
+                         // Get quotes
+                         $j = 0;
+                         foreach (array_reverse($row->tarificaciones->array) as $row2) {
+                              $rates["table"][$fila][$columna]["quotes"][$j]["formaPago"] = $row2->formaPago;
+                              $rates["table"][$fila][$columna]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                              $rates["table"][$fila][$columna]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
+                              $rates["table"][$fila][$columna]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
+                              $rates["table"][$fila][$columna]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
+                              $j++;
+                         }
+
+                         //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+                         // quotes (keep for compatibility with Widget)
+                         $j = 0;
+                         foreach (array_reverse($row->tarificaciones->array) as $row2) {
+                              $rates["rows"][$i]["quotes"][$j]["formaPago"] = $row2->formaPago;
+                              $rates["rows"][$i]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                              $rates["rows"][$i]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
+                              $rates["rows"][$i]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
+                              $rates["rows"][$i]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
+                              $j++;
+                         }
+
+                         $i++;
+                    } else {
+                         
+                         //Tooltip for the icon
+                         $messages[$fila][$columna] = $tableData['descripcion'];
+
+                    }
+               }
+               $rates["messages"] = $messages;
+        }else{
+            $rates = $data->mensajeError;
+        }
+        
+        session([
+            'rates' => $rates
+        ]);
+        //app('debugbar')->info("rates:");
+        //app('debugbar')->info($rates);
         return $rates;
     }
 
@@ -799,7 +979,6 @@ class PMWShandler
     {
 
         $response = $this->PMWS->getRatesByPrice($this->user, $this->pass, $this->language, $productor, $option, $productCode, $price, $franchise, $jobType, $profession, $birthdate, $gender, $height, $weight, $duration, $commercialKey, $this->userPM);
-        // app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
@@ -1716,7 +1895,7 @@ class PMWShandler
         }
         //app('debugbar')->info($parameters);
         $response = $this->PMWS->submitPolicy($parameters);
-        app('debugbar')->info($response);
+        //app('debugbar')->info($response);
 
         $data = $response->return;
 
@@ -1932,4 +2111,20 @@ class PMWShandler
         return $campaigns;
     }
 
+    private static function getTableData($row){
+         $response = [];
+         foreach($row->datosGenerales->array as $row2){
+               if ($row2->nombre == "P_TITULO_COLUMNA") {
+                    $response['columna'] = $row2->valor;
+               }
+               if ($row2->nombre == "P_TITULO_FILA") {
+                    $response['fila'] = $row2->valor;
+               }
+               if ($row2->nombre == "P_DESCRIPCION_OPCION"){
+                    $response['descripcion'] = $row2->valor;
+               }
+         }
+
+         return $response;
+    }
 }

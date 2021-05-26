@@ -660,6 +660,15 @@ table td{
     border-right: thin solid black
 }
 
+.rates-table .table td, .rates-table .table th{
+     vertical-align: middle;
+     min-width: 60px;
+}
+
+.rates-table .table tfoot td {
+     font-size: 0.7rem;
+}
+
 .app-core table td.selected,
 .app-core table th.selected{
     background-color: #D1D546;
