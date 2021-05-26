@@ -509,7 +509,6 @@ jQuery( document ).ready(function() {
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
 
-        console.log(data);
         // Signing method Logalty/handwriting
         if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
             window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
