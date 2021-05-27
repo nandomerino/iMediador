@@ -316,6 +316,7 @@
                                         // Dynamically filled with JS
                                     @endphp
                                 </table>
+                                <div class="rates-table-selection-description"></div> 
                             </div>
                         </div>
                         <div class="row">

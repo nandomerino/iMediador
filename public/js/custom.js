@@ -1408,9 +1408,7 @@ jQuery( document ).ready(function() {
           return false;
      });
 
-     tableDescription = "<p>" + data.description + "</p>"
-
-     foot = "<tfoot><tr><td colspan='" + headers.length + "'>" + data.foot + "</td></tr></tfoot>";
+     tableDescription = "<p>" + data.optional + "</p>" + "<p>" + data.description + "</p>";
 
      head = "<thead>";
      head += "<tr>";
@@ -1438,12 +1436,10 @@ jQuery( document ).ready(function() {
          // Render columns
          Object.keys(data.messages[i]).forEach(function(j) {
                
-               //rows += "<td>" + j + "</td>";
-
-               if (isNaN(data.messages[i][j])){
-                    rows += "<td>" + startIcon  + "title='" + data.messages[i][j] + "'" + endIcon;
+               if (isNaN(data.table[i][j].price)){
+                         rows += "<td>" + startIcon  + "title='" + data.messages[i][j] + "'" + endIcon;
                } else {
-                    let rawPrice = data.messages[i][j];
+                    let rawPrice = data.table[i][j].price;
                     let splitPrice = rawPrice.split(".");
 
                     var adjustedDecimal;
@@ -1487,6 +1483,9 @@ jQuery( document ).ready(function() {
                          }
                     }
 
+                    //description
+                    rows += " data-product-description='" + data.messages[i][j] + "' ";
+
                     rows += ">" + amount + "</td>";
                   
                     
@@ -1498,7 +1497,7 @@ jQuery( document ).ready(function() {
      });
 
      rows += "</tbody>";
-     table = head + rows + foot;
+     table = head + rows;
 
      // Billing cycles
      var billingCycles = "";
@@ -1979,6 +1978,14 @@ jQuery( document ).ready(function() {
         }
 
         window.PMselectedFinalProductCoverages = coverages;
+
+          if (PMEnfGraves){
+               
+               selectionDescription = "<p>" + jQuery(this).data("product-description") + "<p>";
+               jQuery('#quote .rates-table-selection-description').html(selectionDescription);
+               jQuery('#quote .rates-table-selection-description').fadeIn();
+
+          }
 
     });
 
@@ -4375,6 +4382,7 @@ jQuery( document ).ready(function() {
     function resetRatesTable(){
         jQuery('#quote .rates-table').hide();
         jQuery('#quote .rates-table-description').hide();
+        jQuery('#quote .rates-table-selection-description').hide();
 
         resetRatesTableActionsBilling();
     }
