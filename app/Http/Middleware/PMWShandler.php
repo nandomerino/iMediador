@@ -842,8 +842,8 @@ class PMWShandler
                     foreach ($data->datosSalida->listaParametros as $info){
                          //app('debugbar')->info($info);
                          if ($info->nombreParametro == "P_COBERTURAS_OPCIONALES"){
-                              $pie = $info->valorParametro;
-                              $rates["foot"] = $pie;
+                              $optional = $info->valorParametro;
+                              $rates["optional"] = $optional;
                          }
                          if ($info->nombreParametro == "P_RIESGO_TARIFICADO"){
                               $desc = $info->valorParametro;
@@ -881,7 +881,7 @@ class PMWShandler
                     $tableData = self::getTableData($row);
                     $fila = $tableData['fila'];
                     $columna = $tableData['columna'];
-
+                    $messages[$fila][$columna] = $tableData['descripcion'];
 
                     if (! empty($row->tarificaciones)){
 
@@ -896,7 +896,6 @@ class PMWShandler
                          foreach (array_reverse($row->tarificaciones->array) as $row2) {
                               if( $row2->formaPago == 1){
                                    $rates["table"][$fila][$columna]["price"] = $row2->primaNetaAnual;
-                                   $messages[$fila][$columna] = $row2->primaNetaAnual;
                               }
                          }
 
@@ -942,7 +941,7 @@ class PMWShandler
                          
                          //Tooltip for the icon
                          $messages[$fila][$columna] = $tableData['descripcion'];
-
+                         $rates["table"][$fila][$columna]["price"] = "NAN";
                     }
                }
                $rates["messages"] = $messages;
