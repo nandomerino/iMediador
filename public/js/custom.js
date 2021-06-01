@@ -629,33 +629,34 @@ jQuery( document ).ready(function() {
              window.PMEnfGraves = false;
         }
 
-        
-        // Load commercial key
-        window.PMduration = data.P_PERIODO_COBERTURA;
-        var hidden = "";
+        window.PMduration = null;
         var durationField = "";
-        if(data.P_PERIODO_COBERTURA.hidden == "S"){
-            hidden = " type='hidden' ";
+        if (data.P_PERIODO_COBERTURA){
+             // Load commercial key
+             window.PMduration = data.P_PERIODO_COBERTURA;
+             var hidden = "";
+             var durationField = "";
+             if(data.P_PERIODO_COBERTURA.hidden == "S"){
+                  hidden = " type='hidden' ";
+             }
+             var durationField = "<div class='col-4'>";
+             durationField += "<label class='mb-1 quote-duration-label' for='quote-duration'>" + data.P_PERIODO_COBERTURA.name + "</label>";
+             durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
+
+             if( data.P_PERIODO_COBERTURA.fieldType == "select"){
+
+                  var durationArray = data.P_PERIODO_COBERTURA.values;
+                  var durationSelect = "";
+
+                  Object.keys(durationArray).forEach(function(key) {
+                       durationSelect += "<option value='" + key + "'>" + durationArray[key] + "</option>";
+                  });
+                  durationField += durationSelect;
+
+                  durationField += "</select>";
+             }
+             durationField += "</div>";
         }
-        var durationField = "<div class='col-4'>";
-        durationField += "<label class='mb-1 quote-duration-label' for='quote-duration'>" + data.P_PERIODO_COBERTURA.name + "</label>";
-        durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
-
-        if( data.P_PERIODO_COBERTURA.fieldType == "select"){
-
-            var durationArray = data.P_PERIODO_COBERTURA.values;
-            var durationSelect = "";
-
-            Object.keys(durationArray).forEach(function(key) {
-                durationSelect += "<option value='" + key + "'>" + durationArray[key] + "</option>";
-            });
-            durationField += durationSelect;
-
-            durationField += "</select>";
-        }
-        durationField += "</div>";
-
-
 
         // Loads coverages if "subsidio" is selected
         var benefits = "";
@@ -1092,7 +1093,11 @@ jQuery( document ).ready(function() {
                 var height = jQuery("#quote .quote-height").val();
                 var weight = jQuery("#quote .quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
-                var duration = jQuery('#quote .quote-duration').val();
+                var duration = null;
+                if (Window.PMduration != null)
+                {
+                    duration = jQuery('#quote .quote-duration').val();
+                }
                 var jobType = jQuery('#quote .quote-job-type').val();
 
 
@@ -1595,7 +1600,13 @@ jQuery( document ).ready(function() {
                 var height = jQuery("#quote .quote-height").val();
                 var weight = jQuery("#quote .quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
-                var duration = jQuery('#quote .quote-duration').val();
+                
+                var duration = null;
+                if (Window.PMduration != null)
+                {
+                    duration = jQuery('#quote .quote-duration').val();
+                }
+
 
 
                 // Stores it to use later

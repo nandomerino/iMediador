@@ -612,7 +612,7 @@ class PMWShandler
 
                //app('debugbar')->info("Creando Array listaOpcionCuadro");
                //app('debugbar')->info($data->datosOpcionCuadro->listaOpcionCuadro);
-
+               
                //we build as it was an array with 1 row
                  $listaAux = array();
                  $listaAux[] = $data->datosOpcionCuadro->listaOpcionCuadro;
@@ -883,7 +883,7 @@ class PMWShandler
                     $columna = $tableData['columna'];
                     $messages[$fila][$columna] = $tableData['descripcion'];
 
-                    if (! empty($row->tarificaciones)){
+                    if (! empty($row->tarificaciones) && is_array($row->tarificaciones)){
 
                          // billing cycles
                          $j = 0;
