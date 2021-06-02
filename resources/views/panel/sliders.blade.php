@@ -50,6 +50,8 @@
                         <th>
                             {{ __('panel.sliders.table.header.name') }}
                         </th>
+                        <th>Fecha de inicio</th>
+                        <th>Fecha final</th>
                         <th>
                             {{ __('panel.sliders.table.header.lastUpdate') }}
                         </th>
@@ -98,6 +100,22 @@
                         </div>
                         <div class="col col-xl-4 field-wrapper px-0">
                             <textarea  name="description" class="slider-description valid"></textarea>
+                        </div>
+                    </div>
+                    <div class="row px-3 pb-4">
+                        <div class="col col-xl-2 field-wrapper px-0">
+                            <span class="field-name">Fecha de inicio</span>
+                        </div>
+                        <div class="col col-xl-4 field-wrapper px-0">
+                            <input type="date" class="slider-fInicio valid" name="fInicio" placeholder="Fecha de inicio">
+                        </div>
+                    </div>
+                    <div class="row px-3 pb-4">
+                        <div class="col col-xl-2 field-wrapper px-0">
+                            <span class="field-name">Fecha final</span>
+                        </div>
+                        <div class="col col-xl-4 field-wrapper px-0">
+                            <input type="date" class="slider-fFinal valid" name="fFinal" placeholder="Fecha final">
                         </div>
                     </div>
                     <div class="row px-3 pb-4">

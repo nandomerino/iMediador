@@ -19,7 +19,10 @@
 
         <section class="header pb-4 row hiddenprint">
             <div class="col">
-                <div class="breadcrumbs txt-navy-blue pb-2"><a href="{{ __('menu.home.url') }}">{{ __('menu.home.text') }}</a> > {{ __('menu.quote.text') }}</div>
+                <div class="row pt-xl-3">
+                    <div class="breadcrumbs txt-navy-blue pb-2 col-12 col-lg-6"><a href="{{ __('menu.home.url') }}">{{ __('menu.home.text') }}</a> > {{ __('menu.quote.text') }}</div>
+                    <div class="col-12 col-lg-6">{{ session('home.nombreProductor') }}  </div>
+                </div>
                 <div class="separator bg-lime-yellow"></div>
             </div>
         </section>
@@ -159,11 +162,11 @@
                                         </div>
                                         <div class="dynamic-content row pt-3 quote-commercialKey">
                                         </div>
-                                    
+
                                         <div class="row">
                                         <div class="dynamic-content col">
-                                            
-                                            <div class="row pt-3 d-flex">
+
+                                            <div class="row pt-3 d-flex quote-personal-wrapper">
                                                 <div class="col-3 align-self-end">
                                                     <label class="quote-birthdate-label mb-1 control-label" for="quote-birthdate"></label>
                                                     <input id="datepicker" type="text" class="form-control w-100 quote-birthdate date-input" name="quote-birthdate" maxlength="10" autocomplete="off" required>
@@ -184,11 +187,11 @@
                                                 </div>
                                                 <div class="col-3 align-self-end">
                                                     <label class="quote-height-label mb-1 control-label" for="quote-height"></label>
-                                                    <input type="number" class="form-control w-100 quote-height" name="quote-height" min="50" max="300" step="1" autocomplete="off" required>
+                                                    <input type="number" class="form-control w-100 quote-height" name="quote-height" min="50" max="300" step="1" autocomplete="off"  value="">
                                                 </div>
                                                 <div class="col-3 align-self-end">
                                                     <label class="quote-weight-label mb-1 control-label" for="quote-weight"></label>
-                                                    <input type="number" class="form-control w-100 quote-weight" name="quote-weight" min="10" max="400" step="1" autocomplete="off" required>
+                                                    <input type="number" class="form-control w-100 quote-weight" name="quote-weight" min="10" max="400" step="1" autocomplete="off"  value="">
                                                 </div>
                                             </div>
 
@@ -203,13 +206,14 @@
                                                 @php
                                                     // Dynamically filled with JS
                                                 @endphp
+
                                             </div>
 
                                         </div>
                                                     </div>
                                     <div class= "row">
                                        <div class="static-content col">
-                                            
+
                                             <div class="row pt-3">
                                                 <div class="col">
                                                     <label class="quote-starting-date-label mb-1" for="quote-starting-date">{{ __('quote.startDate') }}</label>
@@ -217,7 +221,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                                    
+
                                     </div>
                                                     </div>
 
@@ -309,12 +313,42 @@
 
                     <div class="data col-12 col-md-6 col-lg-6 col-xl-6 rates-table pt-5 pt-md-0" style="display: none;">
                         <div class="row">
+                            <div class="col datos-salida">
+                                @php
+                                    // Dynamically filled with JS
+                                @endphp
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col optional-coverages">
+                                @php
+                                    // Dynamically filled with JS
+                                @endphp
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col">
                                 <table class="table" >
                                     @php
                                         // Dynamically filled with JS
                                     @endphp
                                 </table>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <style type="text/css">
+                                .display-block {
+                                    display: block;
+                                }
+                                .display-none {
+                                    display: none;
+                                }
+                            </style>
+                            <div class="col descript-option">
+                                @php
+                                    // Dynamically filled with JS
+                                @endphp
                             </div>
                         </div>
                         <div class="row">
@@ -1132,6 +1166,7 @@
 
 
     </div>
+
 @endsection
 
 @include('app.layouts.modal')

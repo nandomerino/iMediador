@@ -43,7 +43,7 @@ class PMWS extends controller
      * @return bool
      * @throws \SoapFault
      */
-    function login($user, $pass, $language, $managerCode = null) {
+    function login($user, $pass, $language, $managerCode = null, $nombreMediador = null, $nombreProductor = null, $coberturasOpcionales = null, $riesgoTarificado= null) {
 
         $endpoint = $this->baseUrl . "/v4/wsautenticacion" . $this->environment . "/Autenticacion?WSDL";
         $client = new SoapClient($endpoint);
@@ -53,17 +53,42 @@ class PMWS extends controller
             "nombreParametro"	=> "P_CANAL_ENTRADA",
             "valorParametro"	=> "IM");
 
+
+
         if ( $managerCode != null ) {
             $inputData[] =  array(
                 "nombreParametro"	=> "P_CODIGO_GESTOR",
                 "valorParametro"	=> $managerCode);
         }
+        if ( $nombreMediador != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_NOMBRE_MEDIADOR",
+                "valorParametro"	=> $nombreMediador);
+        }
+
+        if ( $nombreProductor != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_NOMBRE_PRODUCTOR",
+                "valorParametro"	=> $nombreProductor);
+        }
+        if ( $coberturasOpcionales != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_COBERTURAS_OPCIONALES",
+                "valorParametro"	=> $coberturasOpcionales);
+        }
+        if ( $riesgoTarificado != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_RIESGO_TARIFICADO",
+                "valorParametro"	=> $riesgoTarificado);
+        }
+
 
         $cData = array();
         $cData[] = array(
             "nombreParametro"	=> "P_APLICACION",
-            "valorParametro"	=> "IMEDIADOR"
+            "valorParametro"	=> "IMEDIADOR",
         );
+
 
         $params = array(
             "pTipoAcceso"	=> "GEN",
@@ -111,6 +136,7 @@ class PMWS extends controller
             "nombreParametro"	=> "P_USUARIO_INTERNO",
             "valorParametro"	=> $pmUserCode);
 
+
         $cData = array();
         $cData[] = array(
             "nombreParametro"	=> "P_APLICACION",
@@ -125,7 +151,7 @@ class PMWS extends controller
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
-        
+
         $result = $client->obtenerDatosMediador($params);
 
         if (is_soap_fault($result)) {
@@ -826,7 +852,7 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        app('debugbar')->info($params);
+        //app('debugbar')->info($params);
         $result = $client->subirDocumento($params);
 
         if (is_soap_fault($result)) {
@@ -912,6 +938,12 @@ class PMWS extends controller
      * @param "accSub" - subsidio por accidente
      * @param "hospCob" - cobertura por hospitalizacion
      * @param "hospSub" - subsidio por hospitalizacion
+     * @param "coviltCob"
+     * @param "coviltSub"
+     * @param "covhospCob"
+     * @param "covhospSub"
+     * @param "covAccCob"
+     * @param "covAccSub"
      * @param "paymentMethod" - (optional) selected number of installments
      * @param "pmUserCode" - (optional)
      * @param "period" - (optional)
@@ -1069,6 +1101,12 @@ class PMWS extends controller
             $data["accSub"],
             $data["hospCob"],
             $data["hospSub"],
+            $data["coviltCob"],
+            $data["coviltSub"],
+            $data["covhospCob"],
+            $data["covhospSub"],
+            $data["covAccCob"],
+            $data["covAccSub"],
             $data["Cob4"],
             $data["Sub4"],
             $data["Cob5"],
@@ -1097,15 +1135,15 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-//        app('debugbar')->info('$params');
-//        app('debugbar')->info($params);
-//        file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
-//        file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
+        app('debugbar')->info('$params');
+        app('debugbar')->info($params);
+        file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
+        file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
-//        file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
-//        file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
-//        app('debugbar')->info('$result');
-//        app('debugbar')->info($result);
+        file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
+        file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
+        app('debugbar')->info('$result');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -1137,7 +1175,7 @@ class PMWS extends controller
      */
     function getRatesByPrice($user, $pass, $language, $productor = null, $option, $productCode, $price, $franchise = null, $jobType = "A", $profession, $birthdate, $gender, $height, $weight, $duration, $commercialKey, $pmUserCode = null) {
 
-        
+
         $endpoint = $this->baseUrl . "/v4/wstarificacion" . $this->environment . "/Tarificacion?WSDL";
         $client = new SoapClient($endpoint);
 
@@ -1222,13 +1260,13 @@ class PMWS extends controller
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
-//        app('debugbar')->info('obtenerSubsidiosPrima: $params:');
+        //app('debugbar')->info('obtenerSubsidiosPrima: $params:');
         //app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', json_encode($params) . PHP_EOL , FILE_APPEND );
-    $result = $client->obtenerSubsidiosPrima($params);
-        //app('debugbar')->info('obtenerSubsidiosPrima: $result:');
-        //app('debugbar')->info($result);
+        $result = $client->obtenerSubsidiosPrima($params);
+        app('debugbar')->info('obtenerSubsidiosPrima: $result:');
+        app('debugbar')->info($result);
         //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - result:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', json_encode($result) . PHP_EOL , FILE_APPEND );
 
@@ -2086,9 +2124,15 @@ class PMWS extends controller
      * @param $accSub
      * @param $hospCob
      * @param $hospSub
+     * @param $coviltCob
+     * @param $coviltSub
+     * @param $covhospCob
+     * @param $covhospSub
+     * @param $covAccCob
+     * @param $covAccSub
      * @return array
      */
-    private function getCapitalGarantia($enfCob, $enfSub, $accCob, $accSub, $hospCob, $hospSub, $Cob4, $Sub4, $Cob5, $Sub5) {
+    private function getCapitalGarantia($enfCob, $enfSub, $accCob, $accSub, $hospCob, $hospSub, $Cob4, $Sub4, $Cob5, $Sub5, $coviltCob, $coviltSub, $covhospCob, $covhospSub, $covAccCob, $covAccSub) {
 
         $fData = array();
         $fData[] = array(
@@ -2109,6 +2153,28 @@ class PMWS extends controller
                 "valorParametro"	=> $hospSub
             );
         }
+
+        if ( isset($coviltCob) && isset($coviltSub) ) {
+            $fData[] = array(
+                "nombreParametro"	=> $coviltCob,
+                "valorParametro"	=> $coviltSub
+            );
+        }
+
+        if ( isset($covhospCob) && isset($covhospSub) ) {
+            $fData[] = array(
+                "nombreParametro"	=> $covhospCob,
+                "valorParametro"	=> $covhospSub
+            );
+        }
+
+        if ( isset($covAccCob) && isset($covAccSub) ) {
+            $fData[] = array(
+                "nombreParametro"	=> $covAccCob,
+                "valorParametro"	=> $covAccSub
+            );
+        }
+
 
         if ( isset($Cob4) && isset($Sub4) ) {
             $fData[] = array(

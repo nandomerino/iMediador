@@ -72,6 +72,8 @@ class SliderController extends Controller
         $file .= "\$color = '" . $this->data['color'] . "';\n";
         $file .= "\$header = '" . $this->data['header'] . "';\n";
         $file .= "\$description = '" . $this->data['description'] . "';\n";
+        $file .= "\$fInicio = '" . $this->data['fInicio'] . "';\n";
+        $file .= "\$fFinal = '" . $this->data['fFinal'] . "';\n";
         $file .= "?>";
 
         file_put_contents(config('filesystems.disks.local.sliders') . $id , $file);
@@ -128,6 +130,8 @@ class SliderController extends Controller
                     $output .= "<tr>";
                     $output .= "<td>" . $row . "</td>" ;
                     $output .= "<td>" . $name . "</td>" ;
+                    $output .= "<td>" . $fInicio . "</td>" ;
+                    $output .= "<td>" . $fFinal . "</td>" ;
                     $output .= "<td>" . $modified . "</td>" ;
                     $output .= '<td>
                                     <img class="edit-button action-button" data-id="' . $row . '" alt="' . __('panel.sliders.table.actions.edit') . '" title="' . __('panel.sliders.table.actions.edit') . '" src="/img/edit.png">
@@ -178,6 +182,12 @@ class SliderController extends Controller
         $sliderInfo['color'] = $color;
         $sliderInfo['header'] = $header;
         $sliderInfo['description'] = $description;
+        if (isset($sliderInfo['fInicio'])) {
+            $sliderInfo['fInicio'] = $fInicio;
+        }
+        if (isset($sliderInfo['fFinal'])) {
+            $sliderInfo['fFinal'] = $fFinal;
+        }
         $sliderInfo['image'] = "data:image/jpg;base64," . base64_encode($image);
 
         return $sliderInfo;

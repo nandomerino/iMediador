@@ -147,7 +147,7 @@ class PMWSjs extends Controller
     public function getRates()
     {
         //app('debugbar')->info($this->parameters);
-        
+
         // Call PM WS
         $parameters = array();
         $parameters["productor"] = $this->parameters["productor"];
@@ -164,8 +164,14 @@ class PMWSjs extends Controller
         $parameters["accSub"] = $this->parameters["accSub"];
         $parameters["hospCob"] = $this->parameters["hospCob"];
         $parameters["hospSub"] = $this->parameters["hospSub"];
+        $parameters["coviltCob"] = $this->parameters["coviltCob"];
+        $parameters["coviltSub"] = $this->parameters["coviltSub"];
+        $parameters["covhospCob"] = $this->parameters["covhospCob"];
+        $parameters["covhospSub"] = $this->parameters["covhospSub"];
+        $parameters["covAccCob"] = $this->parameters["covAccCob"];
+        $parameters["covAccSub"] = $this->parameters["covAccSub"];
         $parameters["jobType"] = $this->parameters["jobType"];
-        $parameters["duration"] = $this->parameters["duration"];
+        $parameters["duration"] = $this->parameters["duration"] ?? null;
 
 
 
@@ -246,6 +252,7 @@ class PMWSjs extends Controller
         $parameters["Sub4"] = $this->parameters["Sub4"];
         $parameters["Cob5"] = $this->parameters["Cob5"];
         $parameters["Sub5"] = $this->parameters["Sub5"];
+        $parameters["franchise"] = $this->parameters["franchise"] ?? null;
 
         $data = $this->PMWShandler->getRates($parameters);
         //app('debugbar')->info($data);
@@ -261,19 +268,21 @@ class PMWSjs extends Controller
     {
         //app('debugbar')->info($this->parameters);
 
+
+
         $data = $this->PMWShandler->getRatesByPrice(
             $this->parameters["productor"],
             $this->parameters["option"],
             $this->parameters["productCode"],
             $this->parameters["price"],
-            $this->parameters["franchise"],
+            $this->parameters["franchise"] ?? null,
             $this->parameters["jobType"],
             $this->parameters["profession"],
             $this->parameters["birthdate"],
             $this->parameters["gender"],
             $this->parameters["height"],
             $this->parameters["weight"],
-            $this->parameters["duration"],
+            $this->parameters["duration"] ?? null,
             $this->parameters["commercialKey"]
         );
         //app('debugbar')->info('pmwsjs getRatesByPrice:');
@@ -283,7 +292,6 @@ class PMWSjs extends Controller
         } else {
             return response()->json(['success' => false, 'e' => $data]);
         }
-
     }
 
     public function getCityProvince()
