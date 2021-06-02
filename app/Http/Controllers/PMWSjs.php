@@ -248,7 +248,6 @@ class PMWSjs extends Controller
         $parameters["Sub5"] = $this->parameters["Sub5"];
         $parameters["franchise"] = $this->parameters["franchise"] ?? null;
 
-        $parameters["franchise"] = $this->parameters["franchise"];
         //app('debugbar')->info($enf);
         if ($this->parameters["enfGraves"] == "true"){
              $data = $this->PMWShandler->getRatesEnfGraves($parameters);

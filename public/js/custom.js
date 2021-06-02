@@ -1207,7 +1207,9 @@ jQuery( document ).ready(function() {
                         accCob: accCob,
                         accSub: accSub,
                         hospCob: hospCob,
-                        hospSub: hospSub
+                        hospSub: hospSub,
+                        franchise: franchise,
+                        enfGraves: enfGraves
                     },
                     success: function (response) {
                         if (response['success'] == true) {
@@ -1379,8 +1381,6 @@ jQuery( document ).ready(function() {
 
         window.PMquoteTable = table;
         jQuery('#quote .rates-table table').html(table);
-        jQuery('#quote .rates-table .descript-option').html(descriptionOption);
-        jQuery('#quote .rates-table .datos-salida').html(datosSalida);
         jQuery('#quote .rates-table .billing-cycle').html(billingCycles);
         jQuery('#quote .rates-table').fadeIn();
         jQuery('#quote .get-rates .loadingIcon').hide();
