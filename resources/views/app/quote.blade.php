@@ -166,7 +166,7 @@
                                         <div class="row">
                                         <div class="dynamic-content col">
 
-                                            <div class="row pt-3 d-flex quote-personal-wrapper">
+                                            <div class="row pt-3 d-flex">
                                                 <div class="col-3 align-self-end">
                                                     <label class="quote-birthdate-label mb-1 control-label" for="quote-birthdate"></label>
                                                     <input id="datepicker" type="text" class="form-control w-100 quote-birthdate date-input" name="quote-birthdate" maxlength="10" autocomplete="off" required>
@@ -187,11 +187,11 @@
                                                 </div>
                                                 <div class="col-3 align-self-end">
                                                     <label class="quote-height-label mb-1 control-label" for="quote-height"></label>
-                                                    <input type="number" class="form-control w-100 quote-height" name="quote-height" min="50" max="300" step="1" autocomplete="off"  value="">
+                                                    <input type="number" class="form-control w-100 quote-height" name="quote-height" min="50" max="300" step="1" autocomplete="off" required>
                                                 </div>
                                                 <div class="col-3 align-self-end">
                                                     <label class="quote-weight-label mb-1 control-label" for="quote-weight"></label>
-                                                    <input type="number" class="form-control w-100 quote-weight" name="quote-weight" min="10" max="400" step="1" autocomplete="off"  value="">
+                                                    <input type="number" class="form-control w-100 quote-weight" name="quote-weight" min="10" max="400" step="1" autocomplete="off" required>
                                                 </div>
                                             </div>
 
@@ -328,6 +328,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
+                                <div class="rates-table-description"></div>
                                 <table class="table" >
                                     @php
                                         // Dynamically filled with JS
@@ -349,6 +350,7 @@
                                 @php
                                     // Dynamically filled with JS
                                 @endphp
+                                <div class="rates-table-selection-description"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -1166,7 +1168,6 @@
 
 
     </div>
-
 @endsection
 
 @include('app.layouts.modal')

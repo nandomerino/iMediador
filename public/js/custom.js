@@ -477,6 +477,8 @@ jQuery( document ).ready(function() {
         var product = jQuery("#quote input[name='quote-product']:checked").val();
         //var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
         var productModality = jQuery("#quote input[name='quote-product-modality']:checked").val();
+        window.PMSelectedProductModality = productModality;
+        //console.log(productModality);
 
         jQuery.ajax({
             type: "POST",
@@ -595,71 +597,66 @@ jQuery( document ).ready(function() {
             commercialKey += "</select>";
         }
         commercialKey += "</div>";
-        if (data.P_FRANQUICIA != null) {
-            var franchiseField = "";
-            // Load franchise
-            window.PMfranchise = data.P_FRANQUICIA;
-            window.PMEnfGraves = true;
-            var hidden = "";
-            if (data.P_FRANQUICIA.hidden == "S") {
-                hidden = " type='hidden' ";
-            }
-            franchiseField += "<div class='col-4'>";
-            franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
-            franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
 
-            if (data.P_FRANQUICIA.fieldType == "select") {
+        var franchiseField = "";
+        if (window.PMSelectedProductModality == 22 ){//data.P_NOMBRE_PRODUCTO == "ENFERMEDADES GRAVES"){
+          // Load franchise
+          window.PMfranchise = data.P_FRANQUICIA;
+          window.PMEnfGraves = true;
+          var hidden = "";
+          if(data.P_FRANQUICIA.hidden == "S"){
+               hidden = " type='hidden' ";
+          }
+          franchiseField += "<div class='col-4'>";
+          franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
+          franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
 
-                var franchiseArray = data.P_FRANQUICIA.values;
-                var franchiseSelect = "<option value=''>Todas las Franquicias</option>";
+          if( data.P_FRANQUICIA.fieldType == "select"){
 
-                Object.keys(franchiseArray).forEach(function (key) {
+               var franchiseArray = data.P_FRANQUICIA.values;
+               var franchiseSelect = "<option value=''>Todas las Franquicias</option>";
+
+               Object.keys(franchiseArray).forEach(function(key) {
                     franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
-                });
-                franchiseField += franchiseSelect;
+               });
+               franchiseField += franchiseSelect;
 
-                franchiseField += "</select>";
-            }
-            franchiseField += "</div>";
+               franchiseField += "</select>";
+          }
+          franchiseField += "</div>";
         } else {
-            window.PMEnfGraves = false;
+             window.PMfranchise = null;
+             window.PMEnfGraves = false;
         }
 
+        window.PMduration = null;
+        var durationField = "";
+        if (data.P_PERIODO_COBERTURA){
+             // Load commercial key
+             window.PMduration = data.P_PERIODO_COBERTURA;
+             var hidden = "";
+             var durationField = "";
+             if(data.P_PERIODO_COBERTURA.hidden == "S"){
+                  hidden = " type='hidden' ";
+             }
+             var durationField = "<div class='col-4'>";
+             durationField += "<label class='mb-1 quote-duration-label' for='quote-duration'>" + data.P_PERIODO_COBERTURA.name + "</label>";
+             durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
 
-        // Load commercial key
-        window.PMduration = data.P_PERIODO_COBERTURA;
-        //console.log(data.P_PERIODO_COBERTURA)
-        if (data.P_PERIODO_COBERTURA != null) {
-            //console.log(" No es null - " + data.P_PERIODO_COBERTURA)
-            var hidden = "";
-            var durationField = "";
-            if(data.P_PERIODO_COBERTURA.hidden == "S"){
-                hidden = " type='hidden' ";
-            }
-            var durationField = "<div class='col-4'>";
-            durationField += "<label class='mb-1 quote-duration-label' for='quote-duration'>" + data.P_PERIODO_COBERTURA.name + "</label>";
-            durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
+             if( data.P_PERIODO_COBERTURA.fieldType == "select"){
 
-            if( data.P_PERIODO_COBERTURA.fieldType == "select"){
+                  var durationArray = data.P_PERIODO_COBERTURA.values;
+                  var durationSelect = "";
 
-                var durationArray = data.P_PERIODO_COBERTURA.values;
-                var durationSelect = "";
+                  Object.keys(durationArray).forEach(function(key) {
+                       durationSelect += "<option value='" + key + "'>" + durationArray[key] + "</option>";
+                  });
+                  durationField += durationSelect;
 
-                Object.keys(durationArray).forEach(function(key) {
-                    durationSelect += "<option value='" + key + "'>" + durationArray[key] + "</option>";
-                });
-                durationField += durationSelect;
-
-                durationField += "</select>";
-            }
-            durationField += "</div>";
-        } else {
-            //console.log(" Es null - " +data.P_PERIODO_COBERTURA)
-
+                  durationField += "</select>";
+             }
+             durationField += "</div>";
         }
-
-
-
 
         // Loads coverages if "subsidio" is selected
         var benefits = "";
@@ -692,7 +689,7 @@ jQuery( document ).ready(function() {
                 FieldDescription = benefitsArray[key].label;
 
                 benefits += "<div class='col-" + cols + "' align-self-end >";
-                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + FieldDescription + "</label>";
+                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + lang["quote.benefitBy"] + FieldDescription + "</label>";
                 /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
                 benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                 benefits += "</div>";
@@ -708,6 +705,8 @@ jQuery( document ).ready(function() {
         }else{
             jobLabel = data.P_PROFESION_CLIENTE.name;
         }
+
+
         // Loads autocomplete input text.
         jQuery( function() {
 
@@ -861,7 +860,6 @@ jQuery( document ).ready(function() {
         }
 
         //console.log(data);
-        //console.log(window.PMadvisorResult);
 
         jQuery('#quote .product-extra-info .quote-job').html(jobSelect);
         jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.name);
@@ -877,27 +875,9 @@ jQuery( document ).ready(function() {
         jQuery('#quote .product-extra-info .quote-height').prop("min", data.P_TALLA.min);
         jQuery('#quote .product-extra-info .quote-height').prop("max", data.P_TALLA.max);
         jQuery('#quote .product-extra-info .quote-height-label').html(data.P_TALLA.name);
-        if (data.P_TALLA.hidden == "S") {
-            jQuery('#quote .product-extra-info .quote-height').addClass('hidden');
-            jQuery('#quote .product-extra-info .quote-height-label').addClass('hidden');
-        } else {
-            jQuery('#quote .product-extra-info .quote-height').removeClass('hidden');
-            jQuery('#quote .product-extra-info .quote-height-label').removeClass('hidden');
-        }
-        if (data.P_PESO.hidden == "S") {
-            jQuery('#quote .product-extra-info .quote-weight').addClass('hidden');
-            jQuery('#quote .product-extra-info .quote-weight-label').addClass('hidden');
-        } else {
-            jQuery('#quote .product-extra-info .quote-weight').removeClass('hidden');
-            jQuery('#quote .product-extra-info .quote-weight-label').removeClass('hidden');
-        }
 
-        if (data.P_PERIODO_COBERTURA != null) {
-            extraFields = benefits + duration + durationField +  discountFields;
-        }else{
-            extraFields = benefits + duration + discountFields;
-        }
 
+        extraFields = benefits + franchiseField + duration + durationField + discountFields;
         jQuery('#quote .product-extra-info .quote-benefit-wrapper').html(extraFields);
 
 
@@ -1103,7 +1083,6 @@ jQuery( document ).ready(function() {
                 var url = "/get-data";
                 var ws = "getRates";
 
-
                 var productor = jQuery("#quote-productor").val();
                 var option = window.PMproductVariations[jQuery("#quote input[name='quote-product-variation']:checked").val()].option;
                 var productId = jQuery("#quote input[name='quote-product-modality']:checked").val();//jQuery("#quote input[name='quote-product-variation']:checked").val();
@@ -1114,7 +1093,11 @@ jQuery( document ).ready(function() {
                 var height = jQuery("#quote .quote-height").val();
                 var weight = jQuery("#quote .quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
-                var duration = jQuery('#quote .quote-duration').val();
+                var duration = null;
+                if (Window.PMduration != null)
+                {
+                    duration = jQuery('#quote .quote-duration').val();
+                }
                 var jobType = jQuery('#quote .quote-job-type').val();
 
 
@@ -1132,12 +1115,16 @@ jQuery( document ).ready(function() {
                 var accSub = null;
                 var hospCob = null;
                 var hospSub = null;
-                var coviltCob = null;
-                var coviltSub= null;
-                var covhospCob = null;
-                var covhospSub = null;
-                var covAccCob = null;
-                var covAccSub = null;
+
+                var franchise = null;
+                if (window.PMfranchise != null){
+                    franchise = jQuery("#quote .quote-franchise").val();
+                    if (franchise==''){
+                         franchise = null;
+                    }
+                }
+
+                var enfGraves = window.PMEnfGraves;
 
                 // TODO: add new LENGTH parameter so the results are correct
                 //  waiting for client response on increased development time
@@ -1157,18 +1144,6 @@ jQuery( document ).ready(function() {
                         case 3:
                             hospCob = window.PMproductConfig.coberturas[key].name
                             hospSub  = jQuery("#quote .quote-benefit-wrapper > div:nth-child(3) input").val();
-                            break;
-                        case 4:
-                            coviltCob = window.PMproductConfig.coberturas[key].name
-                            coviltSub = jQuery("#quote .quote-benefit-wrapper > div:nth-child(4) input").val();
-                            break;
-                        case 5:
-                            covAccCob = window.PMproductConfig.coberturas[key].name
-                            covAccpSub = jQuery("#quote .quote-benefit-wrapper > div:nth-child(5) input").val();
-                            break;
-                        case 6:
-                            covhospCob = window.PMproductConfig.coberturas[key].name
-                            covhospSub  = jQuery("#quote .quote-benefit-wrapper > div:nth-child(6) input").val();
                             break;
                     }
                     i++;
@@ -1200,13 +1175,7 @@ jQuery( document ).ready(function() {
                     accCob : accCob,
                     accSub : accSub,
                     hospCob : hospCob,
-                    hospSub : hospSub,
-                    coviltCob : coviltCob,
-                    coviltSub : coviltSub,
-                    covhospCob : covhospCob,
-                    covhospSub : covhospSub,
-                    covAccCob : covAccCob,
-                    covAccSub : covAccSub
+                    hospSub : hospSub
                 }
 
 
@@ -1238,18 +1207,17 @@ jQuery( document ).ready(function() {
                         accCob: accCob,
                         accSub: accSub,
                         hospCob: hospCob,
-                        hospSub: hospSub,
-                        coviltCob : coviltCob,
-                        coviltSub : coviltSub,
-                        covhospCob : covhospCob,
-                        covhospSub : covhospSub,
-                        covAccCob : covAccCob,
-                        covAccSub : covAccSub
+                        hospSub: hospSub
                     },
                     success: function (response) {
                         if (response['success'] == true) {
                             // TODO: there are products that send information in a different structure and won't work
-                            quote_load_Rates(response.data);
+                            if (!enfGraves){
+                              quote_load_Rates(response.data);
+                            }
+                            else {
+                              quote_load_Rates_EG(response.data);
+                            }
                         } else {
                             console.error( response.e);
                             displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
@@ -1278,13 +1246,6 @@ jQuery( document ).ready(function() {
         window.PMrates = data;
         product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
         variation = data.name.trim().toUpperCase();
-        description = data.descriptOption;
-        coberturasOpcionales = data.coberturasOpcionales;
-        riesgoTarificado = data.riesgoTarificado;
-
-        descriptionOption = "<p>"+description+"</p>";
-        datosSalida = "<p>"+coberturasOpcionales+"</p>";
-        datosSalida += "<p>"+riesgoTarificado+"</p>";
 
         var i;
         var j;
@@ -1428,6 +1389,169 @@ jQuery( document ).ready(function() {
 
     }
 
+    // QUOTE - Process rates and display the table (ENFERMEDADES GRAVES case)
+    function quote_load_Rates_EG(data){
+
+     window.PMrates = data;
+     product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
+     variation = data.name.trim().toUpperCase();
+
+     var startIcon = "<i class='fas fa-info-circle'"; //comment-alt'";
+     var endIcon = "></i>"
+     var i;
+     var j;
+     var k;
+
+     //Create headers using column names
+     var headers = [];
+     headers.push(lang["quote.text.exemption"]);
+     Object.keys(data.messages).every(function(i) {
+          Object.keys(data.messages[i]).forEach(function(j) {
+               headers.push(j);
+          });
+          return false;
+     });
+
+     tableDescription = "<p>" + data.optional + "</p>" + "<p>" + data.description + "</p>";
+
+     head = "<thead>";
+     head += "<tr>";
+     head += "<th colspan='" + headers.length + "'>" + product + " - " + variation + "</th>";
+     head += "</tr>";
+     head += "<tr>";
+
+     Object.keys(headers).forEach(function (j) {
+          head += "<th scope='col'>" + headers[j] + "</th>";
+     });
+
+
+     head += "</tr>";
+     head += "</thead>";
+
+     rows = "<tbody>";
+
+     var numFila = 0;
+
+     // Render rows
+     Object.keys(data.messages).forEach(function(i) {
+
+         rows += "<tr class='PM-row row-" + numFila + "'><td>" + i + "</td>";
+         numFila++;
+         // Render columns
+         Object.keys(data.messages[i]).forEach(function(j) {
+
+               if (isNaN(data.table[i][j].price)){
+                         rows += "<td>" + startIcon  + "title='" + data.messages[i][j] + "'" + endIcon;
+               } else {
+                    let rawPrice = data.table[i][j].price;
+                    let splitPrice = rawPrice.split(".");
+
+                    var adjustedDecimal;
+                    if( typeof splitPrice[1] !== 'undefined' ) {
+                         adjustedDecimal = splitPrice[1] + "00";
+                    }else{
+                         adjustedDecimal = "00";
+                    }
+
+                    let newDecimal = adjustedDecimal.slice(0,2);
+
+
+                    amount = splitPrice[0] + "," + newDecimal + " &euro;";
+                    rows += "<td class='product' ";
+
+                    // Renders coverage (coberturas) data
+                    for( k=0;k<data.table[i][j].coverages.length;k++ ) {
+                         rows += " data-capital-" + k + "='" + data.table[i][j].coverages[k].capital + "'";
+                         rows += " data-codigo-" + k + "='" + data.table[i][j].coverages[k].codigo + "'";
+                         rows += " data-descripcion-" + k + "='" + data.table[i][j].coverages[k].descripcion + "'";
+                         rows += " data-duracion-" + k + "='" + data.table[i][j].coverages[k].duracion + "'";
+                         rows += " data-franquicia-" + k + "='" + data.table[i][j].coverages[k].franquicia + "'";
+                         rows += " data-prima-neta-" + k + "='" + data.table[i][j].coverages[k].primaNeta + "'";
+                    }
+
+                    // Renders quotes (formas de pago) data
+                    for( k=0;k<data.table[i][j].quotes.length;k++ ) {
+                         switch(k){
+                         case 0:
+                              rows += " data-annual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-annual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                              break;
+                         case 1:
+                              rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                              break;
+                         case 2:
+                              rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                              break;
+                         case 3:
+                              rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                              break;
+                         }
+                    }
+
+                    //description
+                    rows += " data-product-description='" + data.messages[i][j] + "' ";
+
+                    rows += ">" + amount + "</td>";
+
+
+               }
+         });
+
+         rows += "</tr>";
+
+     });
+
+     rows += "</tbody>";
+     table = head + rows;
+
+     // Billing cycles
+     var billingCycles = "";
+     cols = Math.floor( 12 / data.billingCycles.length );
+     for( i=0;i<data.billingCycles.length;i++ ) {
+         switch(i) {
+             case 0:
+                 description = lang["quote.annual.text"];
+                 dataField = lang["quote.annual.field"];
+                 break;
+             case 1:
+                 description = lang["quote.biannual.text"];
+                 dataField = lang["quote.biannual.field"];
+                 break;
+             case 2:
+                 description = lang["quote.quarterly.text"];
+                 dataField = lang["quote.quarterly.field"];
+                 break;
+             case 3:
+                 description = lang["quote.monthly.text"];
+                 dataField = lang["quote.monthly.field"];
+                 break;
+         }
+
+         billingCycles += "<div class='checkboxWithLabel col-" + cols + " pb-2'>";
+         billingCycles +=    "<label>";
+         billingCycles +=        "<input type='radio' class='form-control' name='quote-billing-cycle' value='" + data.billingCycles[i] + "' disabled>";
+         billingCycles +=        "<div>" + description + "</div>";
+         billingCycles +=    "</label>";
+         billingCycles +=    "<div class='data-info " + dataField + " w-100'>";
+         billingCycles +=        "<div class='quote-amount txt-navy-blue'></div>";
+         billingCycles +=        "<div class='total-quote-amount txt-navy-blue'></div>";
+         billingCycles +=    "</div>";
+         billingCycles += "</div>";
+     }
+
+
+     window.PMquoteTable = table;
+     jQuery('#quote .rates-table-description').html(tableDescription);
+     jQuery('#quote .rates-table-description').fadeIn();
+     jQuery('#quote .rates-table table').html(table);
+     jQuery('#quote .rates-table .billing-cycle').html(billingCycles);
+     jQuery('#quote .rates-table').fadeIn();
+     jQuery('#quote .get-rates .loadingIcon').hide();
+     jQuery('#quote .form .loading-lock').hide();
+     jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+
+ }
+
+
     // QUOTE - Checks fields again and gets rates by price from WS
     if (jQuery('#quote .get-rates .price').length) {
         jQuery('#quote .get-rates .price').click(function() {
@@ -1463,9 +1587,10 @@ jQuery( document ).ready(function() {
                 if (window.PMfranchise != null){
                     franchise = jQuery("#quote .quote-franchise").val();
                     if (franchise==''){
-                        franchise = null;
+                         franchise = null;
                     }
                 }
+
                 var jobType = jQuery('#quote .quote-job-type').val();
                 var profession = jQuery("#quote .quote-job").val();
                 var birthdate  = jQuery("#quote .quote-birthdate").val();
@@ -1473,7 +1598,13 @@ jQuery( document ).ready(function() {
                 var height = jQuery("#quote .quote-height").val();
                 var weight = jQuery("#quote .quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
-                var duration = jQuery('#quote .quote-duration').val();
+
+                var duration = null;
+                if (Window.PMduration != null)
+                {
+                    duration = jQuery('#quote .quote-duration').val();
+                }
+
 
 
                 // Stores it to use later
@@ -1492,9 +1623,7 @@ jQuery( document ).ready(function() {
                     height : height,
                     weight : weight,
                     commercialKey : commercialKey,
-                    duration: duration,
-                    franchise : franchise
-
+                    duration: duration
                 }
 
 
@@ -1516,9 +1645,7 @@ jQuery( document ).ready(function() {
                         height : height,
                         weight : weight,
                         commercialKey : commercialKey,
-                        duration: duration,
-                        franchise : franchise
-
+                        duration: duration
                     },
                     success: function (response) {
                         if (response['success'] == true) {
@@ -1575,6 +1702,7 @@ jQuery( document ).ready(function() {
             head += "<th colspan='5'>" + product + " - " + variation + "</th>";
         }
         head += "</tr>";
+        head += "<tr>";
         var i;
         Object.keys(data.table).forEach(function(i) {
             if (i < 2) {
@@ -1602,6 +1730,7 @@ jQuery( document ).ready(function() {
 
             // Render columns
             Object.keys(data.table[i]).forEach(function(j) {
+
                 // renders exemption (franquicia) as first column
                 if( j == 1 ){
                     rows += "<td>" + i + " " + lang["quote.text.days"] + "</td>";
@@ -1666,7 +1795,6 @@ jQuery( document ).ready(function() {
 
         // Billing cycles
         var billingCycles = "";
-        console.log(data.billingCycles);
         cols = Math.floor( 12 / data.billingCycles.length );
         for( i=0;i<data.billingCycles.length;i++ ) {
             switch(i) {
@@ -1812,7 +1940,7 @@ jQuery( document ).ready(function() {
         jQuery('#quote .rates-table .billing-cycle input').removeAttr("disabled");
         jQuery('#quote .table-actions .action-minibutton').removeAttr("disabled").addClass("active");
 
-        // Loads selected payment methodsº
+        // Loads selected payment methods
         if( jQuery(this).data("monthly") ){
             jQuery('.billing-cycle .data-info.monthly .quote-amount').html(jQuery(this).data("monthly") + " &euro;");
             jQuery('.billing-cycle .data-info.monthly .total-quote-amount').html("(" + jQuery(this).data("monthly-total") + " &euro;/año)");
@@ -1875,34 +2003,6 @@ jQuery( document ).ready(function() {
                             window.PMhospSub = null;
                         }
                         break;
-                    case 3:
-                        if( typeof jQuery(this).data("capital-" + i) !== 'undefined' ){
-                            window.PMcoviltCob = "CAPITAL_" + jQuery(this).data("codigo-" + i);
-                            window.PMcoviltsub = jQuery(this).data("capital-" + i);
-                        }else{
-                            window.PMcoviltCob = null;
-                            window.PMcoviltSub = null;
-                        }
-                        break;
-                    case 4:
-                        if( typeof jQuery(this).data("capital-" + i) !== 'undefined' ){
-                            window.PMcovhospCob = "CAPITAL_" + jQuery(this).data("codigo-" + i);
-                            window.PMcovhospSub = jQuery(this).data("capital-" + i);
-                        }else{
-                            window.PMcovhospCob = null;
-                            window.PMcovhospSub = null;
-                        }
-                        break;
-                    case 5:
-                        if( typeof jQuery(this).data("capital-" + i) !== 'undefined' ){
-                            window.PMcovAccCob = "CAPITAL_" + jQuery(this).data("codigo-" + i);
-                            window.PMcovAccSub = jQuery(this).data("capital-" + i);
-                        }else{
-                            window.PMcovAccCob = null;
-                            window.PMcovAccSub = null;
-                        }
-                        break;
-
                 }
                 j++
             }
@@ -1923,9 +2023,13 @@ jQuery( document ).ready(function() {
 
         window.PMselectedFinalProductCoverages = coverages;
 
-        selectionDescription = "<p>" + jQuery(this).data("product-description") + "<p>";
-        jQuery('#quote .rates-table-selection-description').html(selectionDescription);
-        jQuery('#quote .rates-table-selection-description').fadeIn();
+          if (PMEnfGraves){
+
+               selectionDescription = "<p>" + jQuery(this).data("product-description") + "<p>";
+               jQuery('#quote .rates-table-selection-description').html(selectionDescription);
+               jQuery('#quote .rates-table-selection-description').fadeIn();
+
+          }
 
     });
 
@@ -1986,13 +2090,6 @@ jQuery( document ).ready(function() {
             accSub : window.PMaccSub,
             hospCob : window.PMhospCob,
             hospSub : window.PMhospSub,
-            coviltCob : window.PMcoviltCob,
-            coviltSub : window.PMcoviltSub,
-            covhospCob : window.PMcovhospCob,
-            covhospSub : window.PMcovhospSub,
-            covAccCob : window.PMcovAccCob,
-            covAccSub : window.PMcovAccSub,
-
 
             exemption : window.PMselectedFinalProductExemption, // franquicia
             billingCycle : window.PMbillingCycle, // forma pago
@@ -4018,7 +4115,6 @@ jQuery( document ).ready(function() {
             var action = "get";
             var id = jQuery(this).data("id");
 
-
             jQuery.ajax({
                 type: "POST",
                 url: url,
@@ -4177,8 +4273,6 @@ jQuery( document ).ready(function() {
         var color = jQuery("#sliders .slider-color").val();
         var header = jQuery("#sliders .slider-header").val();
         var description = jQuery("#sliders .slider-description").val();
-        var fInicio = jQuery("#sliders .slider-fInicio").val();
-        var fFinal = jQuery("#sliders .slider-fFinal").val();
         var image = jQuery("#sliders #preview-image").attr("src");
 
         jQuery.ajax({

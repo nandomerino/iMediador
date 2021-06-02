@@ -53,8 +53,6 @@ class PMWS extends controller
             "nombreParametro"	=> "P_CANAL_ENTRADA",
             "valorParametro"	=> "IM");
 
-
-
         if ( $managerCode != null ) {
             $inputData[] =  array(
                 "nombreParametro"	=> "P_CODIGO_GESTOR",
@@ -86,9 +84,8 @@ class PMWS extends controller
         $cData = array();
         $cData[] = array(
             "nombreParametro"	=> "P_APLICACION",
-            "valorParametro"	=> "IMEDIADOR",
+            "valorParametro"	=> "IMEDIADOR"
         );
-
 
         $params = array(
             "pTipoAcceso"	=> "GEN",
@@ -135,7 +132,6 @@ class PMWS extends controller
         $inputData[] =  array(
             "nombreParametro"	=> "P_USUARIO_INTERNO",
             "valorParametro"	=> $pmUserCode);
-
 
         $cData = array();
         $cData[] = array(
@@ -938,12 +934,6 @@ class PMWS extends controller
      * @param "accSub" - subsidio por accidente
      * @param "hospCob" - cobertura por hospitalizacion
      * @param "hospSub" - subsidio por hospitalizacion
-     * @param "coviltCob"
-     * @param "coviltSub"
-     * @param "covhospCob"
-     * @param "covhospSub"
-     * @param "covAccCob"
-     * @param "covAccSub"
      * @param "paymentMethod" - (optional) selected number of installments
      * @param "pmUserCode" - (optional)
      * @param "period" - (optional)
@@ -1129,15 +1119,15 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        //app('debugbar')->info('$params');
-        //app('debugbar')->info($params);
-        //file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
-        //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
+//        app('debugbar')->info('$params');
+//        app('debugbar')->info($params);
+//        file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
+//        file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
-        //file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
-        //file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
-        //app('debugbar')->info('$result');
-        //app('debugbar')->info($result);
+//        file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
+//        file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
+//        app('debugbar')->info('$result');
+//        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -1194,6 +1184,7 @@ class PMWS extends controller
         $inputData[] =  array(
             "nombreParametro"	=> "P_FRANQUICIA",
             "valorParametro"	=> $franchise === null ? "" : $franchise);
+
         if ( $pmUserCode !==  null ) {
             $inputData[] =  array(
                 "nombreParametro"	=> "P_USUARIO_INTERNO",
@@ -1254,11 +1245,11 @@ class PMWS extends controller
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
-        //app('debugbar')->info('obtenerSubsidiosPrima: $params:');
+//        app('debugbar')->info('obtenerSubsidiosPrima: $params:');
         //app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', json_encode($params) . PHP_EOL , FILE_APPEND );
-        $result = $client->obtenerSubsidiosPrima($params);
+    $result = $client->obtenerSubsidiosPrima($params);
         //app('debugbar')->info('obtenerSubsidiosPrima: $result:');
         //app('debugbar')->info($result);
         //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - result:' . PHP_EOL, FILE_APPEND );
@@ -2118,15 +2109,9 @@ class PMWS extends controller
      * @param $accSub
      * @param $hospCob
      * @param $hospSub
-     * @param $coviltCob
-     * @param $coviltSub
-     * @param $covhospCob
-     * @param $covhospSub
-     * @param $covAccCob
-     * @param $covAccSub
      * @return array
      */
-    private function getCapitalGarantia($enfCob, $enfSub, $accCob, $accSub, $hospCob, $hospSub, $Cob4, $Sub4, $Cob5, $Sub5, $coviltCob, $coviltSub, $covhospCob, $covhospSub, $covAccCob, $covAccSub) {
+    private function getCapitalGarantia($enfCob, $enfSub, $accCob, $accSub, $hospCob, $hospSub, $Cob4, $Sub4, $Cob5, $Sub5) {
 
         $fData = array();
         $fData[] = array(
