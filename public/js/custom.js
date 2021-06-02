@@ -690,34 +690,11 @@ jQuery( document ).ready(function() {
                 }
 
                 FieldDescription = benefitsArray[key].label;
-                fieldType = benefitsArray[key].fieldType;
-                id = benefitsArray[key].name;
-                copyOf = benefitsArray[key].valueCopy;
-                depend = benefitsArray[key].dependsOn;
 
                 benefits += "<div class='col-" + cols + "' align-self-end >";
                 benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + FieldDescription + "</label>";
                 /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
-                if (fieldType === "checkbox") {
-                    if (copyOf != null) {
-                        benefits += "<input type='checkbox' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + " id='" + benefitsArray[key].name + "' >";
-                        benefits += "<script type=\"text/javascript\">jQuery(document).ready(function () {jQuery(\"#" + copyOf + "\").keyup(function () {var value = jQuery(this).val();jQuery(\"#" + id + "\").val(value);});});</script>";
-                    } else {
-                        if (depend != null) {
-                            benefits += "<input type='checkbox' class='1 form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + benefitsArray[key].name + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + "  id='" + benefitsArray[key].name + "'>";
-                            benefits += "<script type=\"text/javascript\">document.getElementById(\""+id+"\").onclick = function() {\n" +
-                                "var checkboxes = document.getElementsByName(\"quote-benefit-"+depend+"\");\n" +
-                                "for (var checkbox of checkboxes) {\n" +
-                                "checkbox.checked = this.checked;\n" +
-                                "}\n" +
-                                "}</script>";
-                        } else {
-                            benefits += "<input type='checkbox' class='2 form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + "  id='" + benefitsArray[key].name + "'>";
-                        }
-                    }
-                } else {
-                    benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + "  id='" + benefitsArray[key].name + "'>";
-                }
+                benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                 benefits += "</div>";
                 i++;
                 // TODO: min/max values received are not the ones that the WS is using,
@@ -1571,7 +1548,7 @@ jQuery( document ).ready(function() {
     // QUOTE - Process rates and display the table
     function quote_load_RatesByPrice(data){
 
-        console.log(data);
+        //console.log(data);
         window.PMrates = data;
         product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
         variation = data.name.trim().toUpperCase();
