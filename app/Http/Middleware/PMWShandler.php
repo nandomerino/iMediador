@@ -899,7 +899,14 @@ class PMWShandler
                     $columna = $tableData['columna'];
                     $messages[$fila][$columna] = $tableData['descripcion'];
 
-                    if (! empty($row->tarificaciones) && is_array($row->tarificaciones)){
+                    if (! empty($row->tarificaciones) && property_exists ($row->tarificaciones, 'array')){
+
+                         //if it's not an array we build it
+                         if (! is_array($row->tarificaciones->array)){
+                              $listaAux2 = array();
+                              $listaAux2[] = $row->tarificaciones->array ;
+                              $row->tarificaciones->array = $listaAux2;
+                         }
 
                          // billing cycles
                          $j = 0;
