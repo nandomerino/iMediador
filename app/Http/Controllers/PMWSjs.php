@@ -164,12 +164,6 @@ class PMWSjs extends Controller
         $parameters["accSub"] = $this->parameters["accSub"];
         $parameters["hospCob"] = $this->parameters["hospCob"];
         $parameters["hospSub"] = $this->parameters["hospSub"];
-        $parameters["coviltCob"] = $this->parameters["coviltCob"];
-        $parameters["coviltSub"] = $this->parameters["coviltSub"];
-        $parameters["covhospCob"] = $this->parameters["covhospCob"];
-        $parameters["covhospSub"] = $this->parameters["covhospSub"];
-        $parameters["covAccCob"] = $this->parameters["covAccCob"];
-        $parameters["covAccSub"] = $this->parameters["covAccSub"];
         $parameters["jobType"] = $this->parameters["jobType"];
         $parameters["duration"] = $this->parameters["duration"] ?? null;
 

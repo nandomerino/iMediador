@@ -531,7 +531,7 @@ class PMWShandler
                     $productConfig[$row->nombre]["hidden"] = $row->esOculto;
 
                     if( $productConfig[$row->nombre]["fieldType"] == "select"){
-                        app('debugbar')->info($row);
+                        //app('debugbar')->info($row);
 
                         //app('debugbar')->info($row->listaValores->listaValores);
                         if( is_array ($row->listaValores->listaValores) ){
@@ -597,12 +597,6 @@ class PMWShandler
      * @param $accSub - subsidio por accidente
      * @param $hospCob - cobertura por hospitalizacion
      * @param $hospSub - subsidio por hospitalizacion
-     * @param $coviltCob
-     * @param $coviltSub
-     * @param $covhospCob
-     * @param $covhospSub
-     * @param $covAccCob
-     * @param $covAccSub
      * @return bool
      * @throws \SoapFault
      *
@@ -633,8 +627,8 @@ class PMWShandler
             $currentBillingCycles = 0;
             if (! is_array($data->datosOpcionCuadro->listaOpcionCuadro)){
 
-               app('debugbar')->info("Creando Array listaOpcionCuadro");
-               app('debugbar')->info($data->datosOpcionCuadro->listaOpcionCuadro);
+               //app('debugbar')->info("Creando Array listaOpcionCuadro");
+               //app('debugbar')->info($data->datosOpcionCuadro->listaOpcionCuadro);
 
                //we build as it was an array with 1 row
                  $listaAux = array();
@@ -835,18 +829,18 @@ class PMWShandler
     {
 
         $response = $this->PMWS->getRatesByPrice($this->user, $this->pass, $this->language, $productor, $option, $productCode, $price, $franchise, $jobType, $profession, $birthdate, $gender, $height, $weight, $duration, $commercialKey, $this->userPM);
-        app('debugbar')->info($response);
+        //app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
-            app('debugbar')->info('getRatesByPrice Correcto');
+            //app('debugbar')->info('getRatesByPrice Correcto');
             $headers = false;
             $i = 0;
             $currentBillingCycles = 0;
 
             if (! is_array( $data->datosOpcionCuadro->listaOpcionCuadro) ){
-               app('debugbar')->info("Creando Array listaOpcionCuadro");
-               app('debugbar')->info($data->datosOpcionCuadro->listaOpcionCuadro);
+               //app('debugbar')->info("Creando Array listaOpcionCuadro");
+               //app('debugbar')->info($data->datosOpcionCuadro->listaOpcionCuadro);
 
                //we build as it was an array with 1 row
                  $listaAux = array();
@@ -895,7 +889,7 @@ class PMWShandler
                     if( is_array($row->tarificaciones->array) ) {
                         $j = 0;
                         foreach ($row->tarificaciones->array as $row2) {
-                            $rates["billingCycles"][$j] = $row->tarificaciones->array->formaPago;
+                            $rates["billingCycles"][$j] = $row2->formaPago;
                             $j++;
                         }
                     }else{
@@ -1951,7 +1945,7 @@ class PMWShandler
                     $campaigns[$i]["codigo"] = $row->codigo;
                     $campaigns[$i]["descripcion"] = $row->descripcion;
                     $campaigns[$i]["titulo"] = $row->titulo;
-                  $campaigns[$i]["valorActual"] = $row->valorActual;
+                    $campaigns[$i]["valorActual"] = $row->valorActual;
 
                     if( is_array($row->tramosIncentivos->tramoIncentivo) ) {
                       $j = 0;

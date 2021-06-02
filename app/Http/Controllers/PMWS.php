@@ -1101,12 +1101,6 @@ class PMWS extends controller
             $data["accSub"],
             $data["hospCob"],
             $data["hospSub"],
-            $data["coviltCob"],
-            $data["coviltSub"],
-            $data["covhospCob"],
-            $data["covhospSub"],
-            $data["covAccCob"],
-            $data["covAccSub"],
             $data["Cob4"],
             $data["Sub4"],
             $data["Cob5"],
@@ -1135,15 +1129,15 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        app('debugbar')->info('$params');
-        app('debugbar')->info($params);
-        file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
-        file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
+        //app('debugbar')->info('$params');
+        //app('debugbar')->info($params);
+        //file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
-        file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
-        file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
-        app('debugbar')->info('$result');
-        app('debugbar')->info($result);
+        //file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
+        //app('debugbar')->info('$result');
+        //app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -1265,8 +1259,8 @@ class PMWS extends controller
         //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', json_encode($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerSubsidiosPrima($params);
-        app('debugbar')->info('obtenerSubsidiosPrima: $result:');
-        app('debugbar')->info($result);
+        //app('debugbar')->info('obtenerSubsidiosPrima: $result:');
+        //app('debugbar')->info($result);
         //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - result:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', json_encode($result) . PHP_EOL , FILE_APPEND );
 
@@ -2153,28 +2147,6 @@ class PMWS extends controller
                 "valorParametro"	=> $hospSub
             );
         }
-
-        if ( isset($coviltCob) && isset($coviltSub) ) {
-            $fData[] = array(
-                "nombreParametro"	=> $coviltCob,
-                "valorParametro"	=> $coviltSub
-            );
-        }
-
-        if ( isset($covhospCob) && isset($covhospSub) ) {
-            $fData[] = array(
-                "nombreParametro"	=> $covhospCob,
-                "valorParametro"	=> $covhospSub
-            );
-        }
-
-        if ( isset($covAccCob) && isset($covAccSub) ) {
-            $fData[] = array(
-                "nombreParametro"	=> $covAccCob,
-                "valorParametro"	=> $covAccSub
-            );
-        }
-
 
         if ( isset($Cob4) && isset($Sub4) ) {
             $fData[] = array(
