@@ -266,12 +266,11 @@ class PMWShandler
         }
 
         //guardamos en la sesion
+        $quote = session('quote');
+        $quote['productVariations'] = $productVariations;
         session([
-            'quote' => [
-                'productVariations' => $productVariations
-            ]
+            'quote' => $quote
         ]);
-
         return $productVariations;
     }
 
