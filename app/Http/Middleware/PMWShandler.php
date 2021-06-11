@@ -271,7 +271,6 @@ class PMWShandler
         session([
             'quote' => $quote
         ]);
-        $quote = session('quote');
         return $productVariations;
     }
 
