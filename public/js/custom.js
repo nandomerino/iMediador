@@ -566,7 +566,6 @@ jQuery( document ).ready(function() {
         if( typeof data.duracion !== 'undefined' ) {
             var durationArray = data.duracion;
             window.PMduracion = data.duracion;
-
             Object.keys(durationArray).forEach(function (key) {
                 FieldName = key;
                 duration += "<input type='hidden' class='form-control w-100 quote-duration valid quote-duration-" + FieldName + "' name='quote-duration-" + FieldName + "' data-name='" + durationArray[key].name + "' " + durationArray[key].attributes + ">\n";
@@ -1094,7 +1093,7 @@ jQuery( document ).ready(function() {
                 var weight = jQuery("#quote .quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
                 var duration = null;
-                if (Window.PMduration != null)
+                if (window.PMduration != null)
                 {
                     duration = jQuery('#quote .quote-duration').val();
                 }
@@ -1600,7 +1599,7 @@ jQuery( document ).ready(function() {
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
 
                 var duration = null;
-                if (Window.PMduration != null)
+                if (window.PMduration != null)
                 {
                     duration = jQuery('#quote .quote-duration').val();
                 }
