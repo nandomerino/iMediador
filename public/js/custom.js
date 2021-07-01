@@ -1094,7 +1094,7 @@ jQuery( document ).ready(function() {
                 var weight = jQuery("#quote .quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
                 var duration = null;
-                if (Window.PMduration != null)
+                if (window.PMduration != null)
                 {
                     duration = jQuery('#quote .quote-duration').val();
                 }
@@ -1600,7 +1600,7 @@ jQuery( document ).ready(function() {
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
 
                 var duration = null;
-                if (Window.PMduration != null)
+                if (window.PMduration != null)
                 {
                     duration = jQuery('#quote .quote-duration').val();
                 }
