@@ -417,6 +417,7 @@ class PMWShandler
                 $productConfig[$row->nombreParametro] = $row->valorParametro;
             }
 
+            $index = 0;
             foreach( $data->datosConfProducto->listaCampos as $row ){
                 // Get benefit codes
                 $productConfig[$row->nombre]["WS"] = $row;
@@ -499,28 +500,31 @@ class PMWShandler
                     }
                 }
 
+                //cambiar los keys de row->cobertura a indice++
                 if( $row->tipoCampoCobertura == "C"){
-                    $productConfig["coberturas"][$row->cobertura]["name"] = $row->nombre;
-                    $productConfig["coberturas"][$row->cobertura]["min"] = $row->valorMinimo;
-                    $productConfig["coberturas"][$row->cobertura]["max"] = $row->valorMaximo;
-                    $productConfig["coberturas"][$row->cobertura]["fieldType"] = $row->tipoCampoHTML;
-                    $productConfig["coberturas"][$row->cobertura]["attributes"] = $row->atributosHTML;
-                    $productConfig["coberturas"][$row->cobertura]["label"] = $row->etiquetaPre;
-                    $productConfig["coberturas"][$row->cobertura]["valueCopy"] = $row->copiarValorDe;
-                    $productConfig["coberturas"][$row->cobertura]["dependsOn"] = $row->dependeDe;
+                    $productConfig["coberturas"][$index]["name"] = $row->nombre;
+                    $productConfig["coberturas"][$index]["min"] = $row->valorMinimo;
+                    $productConfig["coberturas"][$index]["max"] = $row->valorMaximo;
+                    $productConfig["coberturas"][$index]["fieldType"] = $row->tipoCampoHTML;
+                    $productConfig["coberturas"][$index]["attributes"] = $row->atributosHTML;
+                    $productConfig["coberturas"][$index]["label"] = $row->etiquetaPre;
+                    $productConfig["coberturas"][$index]["valueCopy"] = $row->copiarValorDe;
+                    $productConfig["coberturas"][$index]["dependsOn"] = $row->dependeDe;
                 }
 
                 if( $row->tipoCampoCobertura == "D"){
-                    $productConfig["duracion"][$row->cobertura]["name"] = $row->nombre;
-                    $productConfig["duracion"][$row->cobertura]["min"] = $row->valorMinimo;
-                    $productConfig["duracion"][$row->cobertura]["max"] = $row->valorMaximo;
-                    $productConfig["duracion"][$row->cobertura]["fieldType"] = $row->tipoCampoHTML;
-                    $productConfig["duracion"][$row->cobertura]["attributes"] = $row->atributosHTML;
-                    $productConfig["duracion"][$row->cobertura]["label"] = $row->etiquetaPre;
-                    $productConfig["duracion"][$row->cobertura]["valueCopy"] = $row->copiarValorDe;
-                    $productConfig["duracion"][$row->cobertura]["dependsOn"] = $row->dependeDe;
+                    $productConfig["duracion"][$index]["name"] = $row->nombre;
+                    $productConfig["duracion"][$index]["min"] = $row->valorMinimo;
+                    $productConfig["duracion"][$index]["max"] = $row->valorMaximo;
+                    $productConfig["duracion"][$index]["fieldType"] = $row->tipoCampoHTML;
+                    $productConfig["duracion"][$index]["attributes"] = $row->atributosHTML;
+                    $productConfig["duracion"][$index]["label"] = $row->etiquetaPre;
+                    $productConfig["duracion"][$index]["valueCopy"] = $row->copiarValorDe;
+                    $productConfig["duracion"][$index]["dependsOn"] = $row->dependeDe;
 
                 }
+
+                $index++;
 
                 if( $row->nombre == "P_CLAVE_COMERCIAL"){
                     $productConfig[$row->nombre]["name"] = $row->etiquetaPre;
