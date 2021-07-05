@@ -537,6 +537,24 @@ jQuery( document ).ready(function() {
             genderSelect += "<option value='" + key + "'>" + genderArray[key] + "</option>";
         });
 
+        // Loads Height
+        var hiddenHeight = "";
+        if(data.P_TALLA.hidden == "S"){
+            var heightProduct = "<input type='hidden' class='form-control w-100 quote-height valid' name='quote-height' " + data.P_TALLA.attributes + ">";
+        } else {
+            var heightProduct = "<label className='quote-height-label mb-1 control-label' htmlFor='quote-height'>"+data.P_TALLA.name+"</label>";
+            heightProduct += "<input type='number' class='form-control w-100 quote-height valid' name='quote-height' " + data.P_TALLA.attributes + " min='"+data.P_TALLA.min+"' max='"+data.P_TALLA.max+"'>";
+        }
+
+        // Loads Weight
+        var hiddenWeight = "";
+        if(data.P_PESO.hidden == "S"){
+            var heightWeight = "<input type='hidden' class='form-control w-100 quote-weight valid' name='quote-weight' " + data.P_PESO.attributes + ">";
+        } else {
+            var heightWeight = "<label className='quote-weight-label mb-1 control-label' htmlFor='quote-weight'>"+data.P_PESO.name+"</label>";
+            heightWeight += "<input type='number' class='form-control w-100 quote-weight valid' name='quote-weight' " + data.P_PESO.attributes + " min='"+data.P_PESO.min+"' max='"+data.P_PESO.max+"'>";
+        }
+
         // Loads Job type
         var hidden = "";
         if(data.P_REGIMEN_SEG_SOCIAL.hidden == "S"){
@@ -699,39 +717,47 @@ jQuery( document ).ready(function() {
                         FieldName = "covidUCI";
                         break;
                 }
-                hidden = benefitsArray[key].hidden;
+
+                hiddenBenefits = benefitsArray[key].hidden;
                 FieldDescription = benefitsArray[key].label;
                 FieldType = benefitsArray[key].fieldType;
-                benefits += "<div class='col-" + cols + "' align-self-end >";
-                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + benefitsArray[key].label + "</label>";
-                /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
-                if (FieldType == 'select') {
-                    benefits += "<select class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' " + benefitsArray[key].attributes + ">";
-                    var valuesArray = benefitsArray[key].values;
-                    var labelArray = benefitsArray[key].labelValue;
-                    var durationSelect = "";
-                    durationSelect += "<option value=''> </option>";
-                    Object.keys(valuesArray).forEach(function(key) {
-                        durationSelect += "<option value='" +  valuesArray[key]  + "'>" + labelArray[key] + "</option>";
-                    });
-                    benefits += durationSelect;
-                    benefits += "</select>";
+                if (hiddenBenefits == "S") {
+                    benefits += "<div class='col-" + cols + "' align-self-end >";
+                    benefits += "<input type='hidden' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                    benefits += "</div>";
+                } else {
+                    benefits += "<div class='col-" + cols + "' align-self-end >";
+                    benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + benefitsArray[key].label + "</label>";
+                    /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
+                    if (FieldType == 'select') {
+                        benefits += "<select class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' " + benefitsArray[key].attributes + ">";
+                        var valuesArray = benefitsArray[key].values;
+                        var labelArray = benefitsArray[key].labelValue;
+                        var durationSelect = "";
+                        durationSelect += "<option value=''> </option>";
+                        Object.keys(valuesArray).forEach(function(key) {
+                            durationSelect += "<option value='" +  valuesArray[key]  + "'>" + labelArray[key] + "</option>";
+                        });
+                        benefits += durationSelect;
+                        benefits += "</select>";
 
-                }else if (FieldType == 'checkbox') {
-                    if (benefitsArray[key].valueCopy != null) {
-                        benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + " >";
-                        benefits += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('#"+benefitsArray[key].valueCopy+"').keyup(function (){var value = jQuery(this).val();jQuery('#"+benefitsArray[key].name+"').val(value);});});</script>";
-                    }else if (benefitsArray[key].dependsOn != null) {
-                        benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + " >";
-                        benefits += "<script type='text/javascript'>jQuery('#"+benefitsArray[key].dependsOn+"').on('change', function(){jQuery('#"+benefitsArray[key].name+"').prop('checked',this.checked);});</script>";
+                    }else if (FieldType == 'checkbox') {
+                        if (benefitsArray[key].valueCopy != null) {
+                            benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + " >";
+                            benefits += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('#"+benefitsArray[key].valueCopy+"').keyup(function (){var value = jQuery(this).val();jQuery('#"+benefitsArray[key].name+"').val(value);});});</script>";
+                        }else if (benefitsArray[key].dependsOn != null) {
+                            benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + " >";
+                            benefits += "<script type='text/javascript'>jQuery('#"+benefitsArray[key].dependsOn+"').on('change', function(){jQuery('#"+benefitsArray[key].name+"').prop('checked',this.checked);});</script>";
+                        }else{
+                            benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                        }
                     }else{
-                        benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                        benefits += "<input type='number' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                     }
-                }else{
-                    benefits += "<input type='number' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                    benefits += "</div>";
+                    i++;
                 }
-                benefits += "</div>";
-                i++;
+
                 // TODO: min/max values received are not the ones that the WS is using,
                 //  sometimes we get a WS response telling us it exceeds the max while it's within provided range.
             });
@@ -906,6 +932,8 @@ jQuery( document ).ready(function() {
         jQuery('#quote .product-extra-info .quote-gender').html(genderSelect);
         jQuery('#quote .quote-birthdate-label').html(data.P_FECHA_NACIMIENTO_CLIENTE.name);
         jQuery('#quote .quote-gender-label').html(data.P_SEXO.name);
+        jQuery('#quote .quote-height').html(heightProduct);
+        jQuery('#quote .quote-weight').html(heightWeight);
         jQuery('#quote .quote-job-label').html(jobLabel);
         jQuery('#quote .product-extra-info .quote-weight').prop("min", data.P_PESO.min);
         jQuery('#quote .product-extra-info .quote-weight').prop("max", data.P_PESO.max);

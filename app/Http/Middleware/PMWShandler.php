@@ -470,6 +470,7 @@ class PMWShandler
                     $productConfig[$row->nombre]["attributes"] = $row->atributosHTML;
                     $productConfig[$row->nombre]["min"] = $row->valorMinimo;
                     $productConfig[$row->nombre]["max"] = $row->valorMaximo;
+                    $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
                 }
 
                 if( $row->nombre == "P_PESO"){
@@ -478,6 +479,7 @@ class PMWShandler
                     $productConfig[$row->nombre]["attributes"] = $row->atributosHTML;
                     $productConfig[$row->nombre]["min"] = $row->valorMinimo;
                     $productConfig[$row->nombre]["max"] = $row->valorMaximo;
+                    $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
                 }
 
                 if( $row->nombre == "P_SEXO"){
