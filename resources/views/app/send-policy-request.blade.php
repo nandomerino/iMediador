@@ -35,9 +35,14 @@
                             }
                         @endphp
                         @if( $productores )
-                            @foreach( $productores as $row )
-                                <option value="{{ $row["id"] }}">{{ $row["name"] }}</option>
-                            @endforeach
+                            @if(empty($productores["id"]))
+                                @foreach( $productores as $row )
+                                    <option value="{{ $row["id"] }}">{{ $row["name"] }}</option>
+                                @endforeach
+                            @else
+                                <option value="{{ $productores["id"] }}">{{ $productores["name"] }}</option>
+                            @endif
+
                         @endif
                     </select>
                 </div>

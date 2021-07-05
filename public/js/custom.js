@@ -508,7 +508,7 @@ jQuery( document ).ready(function() {
     function quote_load_ProductConfiguration( data ){
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
-
+        console.log(data);
         // Signing method Logalty/handwriting
         if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
             window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
@@ -550,6 +550,7 @@ jQuery( document ).ready(function() {
 
             var jobTypeArray = data.P_REGIMEN_SEG_SOCIAL.values;
             var jobTypeSelect ="";
+            jobTypeSelect +="<option value=\"\"> </option>";
             Object.keys(jobTypeArray).forEach(function(key) {
                 jobTypeSelect += "<option value='" + key + "'>" + jobTypeArray[key] + "</option>";
             });
@@ -588,7 +589,7 @@ jQuery( document ).ready(function() {
 
             var claveCommercialArray = data.P_CLAVE_COMERCIAL.values;
             var claveCommercialSelect = "";
-
+            claveCommercialSelect += "<option value=\"\"></option>";
             Object.keys(claveCommercialArray).forEach(function(key) {
                 claveCommercialSelect += "<option value='" + key + "'>" + claveCommercialArray[key] + "</option>";
             });
@@ -663,6 +664,7 @@ jQuery( document ).ready(function() {
         if( jQuery(".toggles .subsidio.active").length == 1 ) {
             // There are no field names coming from the WS so we have to set them manually
             var benefitsArray = data.coberturas;
+            console.log(data.coberturas);
             var cols;
 
             var i = 1;
@@ -684,14 +686,50 @@ jQuery( document ).ready(function() {
                         //FieldDescription = lang["quote.hospitalization"];
                         FieldName = lang["quote.hospitalizationFieldName"];
                         break;
+                    case 4:
+                        //FieldDescription = lang["quote.hospitalization"];
+                        FieldName = "covidPrestacion";
+                        break;
+                    case 5:
+                        //FieldDescription = lang["quote.hospitalization"];
+                        FieldName = "covidHospitalizacion";
+                        break;
+                    case 6:
+                        //FieldDescription = lang["quote.hospitalization"];
+                        FieldName = "covidUCI";
+                        break;
                 }
-
+                hidden = benefitsArray[key].hidden;
                 FieldDescription = benefitsArray[key].label;
-
+                FieldType = benefitsArray[key].fieldType;
                 benefits += "<div class='col-" + cols + "' align-self-end >";
-                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + lang["quote.benefitBy"] + FieldDescription + "</label>";
+                benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + benefitsArray[key].label + "</label>";
                 /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
-                benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                if (FieldType == 'select') {
+                    benefits += "<select class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' " + benefitsArray[key].attributes + ">";
+                    var valuesArray = benefitsArray[key].values;
+                    var labelArray = benefitsArray[key].labelValue;
+                    var durationSelect = "";
+                    durationSelect += "<option value=''> </option>";
+                    Object.keys(valuesArray).forEach(function(key) {
+                        durationSelect += "<option value='" +  valuesArray[key]  + "'>" + labelArray[key] + "</option>";
+                    });
+                    benefits += durationSelect;
+                    benefits += "</select>";
+
+                }else if (FieldType == 'checkbox') {
+                    if (benefitsArray[key].valueCopy != null) {
+                        benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + " >";
+                        benefits += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('#"+benefitsArray[key].valueCopy+"').keyup(function (){var value = jQuery(this).val();jQuery('#"+benefitsArray[key].name+"').val(value);});});</script>";
+                    }else if (benefitsArray[key].dependsOn != null) {
+                        benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + " >";
+                        benefits += "<script type='text/javascript'>jQuery('#"+benefitsArray[key].dependsOn+"').on('change', function(){jQuery('#"+benefitsArray[key].name+"').prop('checked',this.checked);});</script>";
+                    }else{
+                        benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                    }
+                }else{
+                    benefits += "<input type='number' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                }
                 benefits += "</div>";
                 i++;
                 // TODO: min/max values received are not the ones that the WS is using,
@@ -1094,7 +1132,7 @@ jQuery( document ).ready(function() {
                 var weight = jQuery("#quote .quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
                 var duration = null;
-                if (Window.PMduration != null)
+                if (window.PMduration != null)
                 {
                     duration = jQuery('#quote .quote-duration').val();
                 }
@@ -1115,6 +1153,12 @@ jQuery( document ).ready(function() {
                 var accSub = null;
                 var hospCob = null;
                 var hospSub = null;
+                var covidPrestacionCob = null;
+                var covidPrestacionSub = null;
+                var covidHospitalizacionCob = null;
+                var covidHospitalizacionSub = null;
+                var covidUCICob = null;
+                var covidUCISub = null;
 
                 var franchise = null;
                 if (window.PMfranchise != null){
@@ -1131,19 +1175,32 @@ jQuery( document ).ready(function() {
 
                 var i = 1;
                 benefitsArray = window.PMproductConfig.coberturas;
+                //console.log(window.PMproductConfig);
                 Object.keys(benefitsArray).forEach(function(key) {
                     switch(i) {
                         case 1:
                             enfCob = window.PMproductConfig.coberturas[key].name
-                            enfSub = jQuery("#quote .quote-benefit-wrapper > div:nth-child(1) input").val();
+                            enfSub = jQuery("#quote .quote-benefit-sickness").val();
                             break;
                         case 2:
                             accCob = window.PMproductConfig.coberturas[key].name
-                            accSub = jQuery("#quote .quote-benefit-wrapper > div:nth-child(2) input").val();
+                            accSub = jQuery("#quote .quote-benefit-accident").val();
                             break;
                         case 3:
                             hospCob = window.PMproductConfig.coberturas[key].name
-                            hospSub  = jQuery("#quote .quote-benefit-wrapper > div:nth-child(3) input").val();
+                            hospSub  = jQuery("#quote .quote-benefit-hospitalization").val();
+                            break;
+                        case 4:
+                            covidPrestacionCob = window.PMproductConfig.coberturas[key].name
+                            covidPrestacionSub = jQuery("#quote .quote-benefit-covidPrestacion:checked").val();
+                            break;
+                        case 5:
+                            covidHospitalizacionCob = window.PMproductConfig.coberturas[key].name
+                            covidHospitalizacionSub = jQuery("#quote .quote-benefit-covidHospitalizacion:checked").val();
+                            break;
+                        case 6:
+                            covidUCICob = window.PMproductConfig.coberturas[key].name
+                            covidUCISub  = jQuery("#quote .quote-benefit-covidUCI:checked").val();
                             break;
                     }
                     i++;
@@ -1175,7 +1232,13 @@ jQuery( document ).ready(function() {
                     accCob : accCob,
                     accSub : accSub,
                     hospCob : hospCob,
-                    hospSub : hospSub
+                    hospSub : hospSub,
+                    covidPrestacionCob : covidPrestacionCob,
+                    covidPrestacionSub : covidPrestacionSub,
+                    covidHospitalizacionCob : covidHospitalizacionCob,
+                    covidHospitalizacionSub : covidHospitalizacionSub,
+                    covidUCICob : covidUCICob,
+                    covidUCISub : covidUCISub
                 }
 
 
@@ -1208,6 +1271,12 @@ jQuery( document ).ready(function() {
                         accSub: accSub,
                         hospCob: hospCob,
                         hospSub: hospSub,
+                        covidPrestacionCob : covidPrestacionCob,
+                        covidPrestacionSub : covidPrestacionSub,
+                        covidHospitalizacionCob : covidHospitalizacionCob,
+                        covidHospitalizacionSub : covidHospitalizacionSub,
+                        covidUCICob : covidUCICob,
+                        covidUCISub : covidUCISub,
                         franchise: franchise,
                         enfGraves: enfGraves
                     },
@@ -1600,7 +1669,7 @@ jQuery( document ).ready(function() {
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
 
                 var duration = null;
-                if (Window.PMduration != null)
+                if (window.PMduration != null)
                 {
                     duration = jQuery('#quote .quote-duration').val();
                 }
@@ -1942,19 +2011,19 @@ jQuery( document ).ready(function() {
 
         // Loads selected payment methods
         if( jQuery(this).data("monthly") ){
-            jQuery('.billing-cycle .data-info.monthly .quote-amount').html(jQuery(this).data("monthly") + " &euro;");
+            jQuery('.billing-cycle .data-info.monthly .quote-amount').html(jQuery(this).data("monthly") + " &euro; /mensual");
             jQuery('.billing-cycle .data-info.monthly .total-quote-amount').html("(" + jQuery(this).data("monthly-total") + " &euro;/año)");
         }else{
             jQuery('.billing-cycle .data-info.monthly').parent().hide();
         }
         if( jQuery(this).data("quarterly") ){
-            jQuery('.billing-cycle .data-info.quarterly .quote-amount').html(jQuery(this).data("quarterly") + " &euro;");
+            jQuery('.billing-cycle .data-info.quarterly .quote-amount').html(jQuery(this).data("quarterly") + " &euro; /trimestral");
             jQuery('.billing-cycle .data-info.quarterly .total-quote-amount').html("(" + jQuery(this).data("quarterly-total") + " &euro;/año)");
         }else{
             jQuery('.billing-cycle .data-info.quarterly').parent().hide();
         }
         if( jQuery(this).data("biannual") ){
-            jQuery('.billing-cycle .data-info.biannual .quote-amount').html(jQuery(this).data("biannual") + " &euro;");
+            jQuery('.billing-cycle .data-info.biannual .quote-amount').html(jQuery(this).data("biannual") + " &euro; /semestral");
             jQuery('.billing-cycle .data-info.biannual .total-quote-amount').html("(" + jQuery(this).data("biannual-total") + " &euro;/año)");
         }else{
             jQuery('.billing-cycle .data-info.biannual').parent().hide();

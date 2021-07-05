@@ -146,7 +146,7 @@ class PMWSjs extends Controller
 
     public function getRates()
     {
-        //app('debugbar')->info($this->parameters);
+        app('debugbar')->info($this->parameters);
 
         // Call PM WS
         $parameters = array();
@@ -164,9 +164,14 @@ class PMWSjs extends Controller
         $parameters["accSub"] = $this->parameters["accSub"];
         $parameters["hospCob"] = $this->parameters["hospCob"];
         $parameters["hospSub"] = $this->parameters["hospSub"];
+        $parameters["covidPrestacionCob"] = $this->parameters["covidPrestacionCob"] ?? null;
+        $parameters["covidPrestacionSub"] = $this->parameters["covidPrestacionSub"] ?? null;
+        $parameters["covidHospitalizacionCob"] = $this->parameters["covidHospitalizacionCob"] ?? null;
+        $parameters["covidHospitalizacionSub"] = $this->parameters["covidHospitalizacionSub"] ?? null;
+        $parameters["covidUCICob"] = $this->parameters["covidUCICob"] ?? null;
+        $parameters["covidUCISub"] = $this->parameters["covidUCISub"] ?? null;
         $parameters["jobType"] = $this->parameters["jobType"];
         $parameters["duration"] = $this->parameters["duration"] ?? null;
-
 
 
         // extra parameters for quote widget

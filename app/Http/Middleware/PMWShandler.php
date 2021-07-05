@@ -95,7 +95,7 @@ class PMWShandler
                 $info = $this->PMWS->loginInt($user, $pass, $this->language, $userPM);
                 break;
         }
-        //app('debugbar')->info($info);
+        app('debugbar')->info($info);
         $data = $info->return;
 
         if( $data->correcto == "S") {
@@ -161,6 +161,8 @@ class PMWShandler
                                 $recentActivity[$i]["table"]["rows"][$key] = $value;
                             }
                         }
+                    } else {
+                        $recentActivity = null;
                     }
 
                     $i++;
@@ -174,6 +176,8 @@ class PMWShandler
                 // Sliders to show
                 if( isset($data->datosSliders->idSlider) && is_array($data->datosSliders->idSlider)){
                     $showSliders = $data->datosSliders->idSlider;
+                }else{
+                    $showSliders = null;
                 }
             }else{
                 $showSliders = null;
@@ -194,8 +198,8 @@ class PMWShandler
                     'homeMessage2' => $homeMessage2,
                     'nombreMediador' => $nombreMediador,
                     'nombreProductor' => $nombreProductor,
-                    'infoBoxes' => $infoBoxes,
-                    'recentActivity' => $recentActivity,
+                    'infoBoxes' => $infoBoxes ?? '',
+                    'recentActivity' => $recentActivity ?? '',
                     'showSliders' => $showSliders
                 ],
                 'quote' => [
@@ -231,22 +235,47 @@ class PMWShandler
 
         // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productGroup . " | " . $entryChannel . " | " . $application . " | " . $pmUserCode);
         $response = $this->PMWS->getProductVariations($this->user, $this->pass, $this->language, $productor, $productGroup, $entryChannel, $application, $this->userPM);
-        //app('debugbar')->info($response);
+       //app('debugbar')->info($response);
 
 
         $data = $response->return;
 
         if( $data->correcto == "S" ){
-            foreach( $data->datosProductos->listaProductos as $row ){
-                $modalityList = array();
-                $i = $row->codigo;
-                $productVariations[$i]['name'] = $row->descripcion;
-                $productVariations[$i]['default'] = $row->porDefecto;
-                $productVariations[$i]['value'] = $row->descripcionImporte;
-                $productVariations[$i]['option'] = $row->opcionTarificacion;
-                if ( ! is_array($row->productosModalidad->listaValores)) {
-                    $modalityList[0]['modalityId'] = $row->productosModalidad->listaValores->codigo;
-                    $modalityList[0]['modalityName'] = $row->productosModalidad->listaValores->descripcion;
+            app('debugbar')->info($response);
+
+            if ( is_array($data->datosProductos->listaProductos)){
+                foreach( $data->datosProductos->listaProductos as $row ){
+                    $modalityList = array();
+                    $i = $row->codigo;
+                    $productVariations[$i]['name'] = $row->descripcion;
+                    $productVariations[$i]['default'] = $row->porDefecto;
+                    $productVariations[$i]['value'] = $row->descripcionImporte;
+                    $productVariations[$i]['option'] = $row->opcionTarificacion;
+                    if ( ! is_array($row->productosModalidad->listaValores)) {
+                        $modalityList[0]['modalityId'] = $row->productosModalidad->listaValores->codigo;
+                        $modalityList[0]['modalityName'] = $row->productosModalidad->listaValores->descripcion;
+                    } else {
+                        $j=0;
+                        foreach ($row->productosModalidad->listaValores as $modality) {
+                            $modalityList[$j]['modalityId'] = $modality->codigo;
+                            $modalityList[$j]['modalityName'] = $modality->descripcion;
+                            $j++;
+                        }
+                    }
+                    $productVariations[$i]['modalityList'] = $modalityList;
+                    $productVariations[$i]['reverseQuote'] = $row->opcionTarificaInversa;
+                    $productVariations[$i]['WS'] = $row;
+                }
+            }else{
+                app('debugbar')->info($response);
+                $i = $data->datosProductos->listaProductos->codigo;
+                $productVariations[$i]['name'] = $data->datosProductos->listaProductos->descripcion;
+                $productVariations[$i]['default'] = $data->datosProductos->listaProductos->porDefecto;
+                $productVariations[$i]['value'] = $data->datosProductos->listaProductos->descripcionImporte;
+                $productVariations[$i]['option'] = $data->datosProductos->listaProductos->opcionTarificacion;
+                if ( ! is_array($data->datosProductos->listaProductos->productosModalidad->listaValores)) {
+                    $modalityList[0]['modalityId'] = $data->datosProductos->listaProductos->productosModalidad->listaValores->codigo;
+                    $modalityList[0]['modalityName'] = $data->datosProductos->listaProductos->productosModalidad->listaValores->descripcion;
                 } else {
                     $j=0;
                     foreach ($row->productosModalidad->listaValores as $modality) {
@@ -256,22 +285,21 @@ class PMWShandler
                     }
                 }
                 $productVariations[$i]['modalityList'] = $modalityList;
-                $productVariations[$i]['modalityId'] = $row->productosModalidad->listaValores->codigo;
-                $productVariations[$i]['modalityName'] = $row->productosModalidad->listaValores->descripcion;
-                $productVariations[$i]['reverseQuote'] = $row->opcionTarificaInversa;
-                $productVariations[$i]['WS'] = $row;
+                $productVariations[$i]['modalityId'] = $data->datosProductos->listaProductos->productosModalidad->listaValores->codigo;
+                $productVariations[$i]['modalityName'] = $data->datosProductos->listaProductos->productosModalidad->listaValores->descripcion;
+                $productVariations[$i]['reverseQuote'] = $data->datosProductos->listaProductos->opcionTarificaInversa;
+                $productVariations[$i]['WS'] = $data->datosProductos->listaProductos;
             }
         }else{
             $productVariations = $data->mensajeError;
         }
 
         //guardamos en la sesion
+        $quote = session('quote');
+        $quote['productVariations'] = $productVariations;
         session([
-            'quote' => [
-                'productVariations' => $productVariations
-            ]
+            'quote' => $quote
         ]);
-
         return $productVariations;
     }
 
@@ -287,15 +315,25 @@ class PMWShandler
     function getProductores($productor = "")
     {
         $response = $this->PMWS->getProductors($this->user, $this->pass, $this->language, $productor);
-        // app('debugbar')->info($response);
+        app('debugbar')->info($response);
         $data = $response->return;
         if( $data->correcto == "S" ){
+
             $i=0;
-            foreach( $data->listaProductores->array as $row ){
-                $productores[$i]['id'] = $row->codigoProductor;
-                $productores[$i]['name'] = $row->nombreProductor;
-                $i++;
+            if ( is_array($data->listaProductores->array)) {
+                foreach( $data->listaProductores->array as $row ){
+                    error_log('Dentro');
+                    $productores[$i]['id'] = $row->codigoProductor;
+                    $productores[$i]['name'] = $row->nombreProductor;
+                    $i++;
+                }
             }
+            else {
+                error_log('Fuera');
+                $productores['id'] = $data->listaProductores->array->codigoProductor;
+                $productores['name'] = $data->listaProductores->array->nombreProductor;
+            }
+
         }else{
             $productores = false;
         }
@@ -509,6 +547,15 @@ class PMWShandler
                     $productConfig["coberturas"][$row->cobertura]["label"] = $row->etiquetaPre;
                     $productConfig["coberturas"][$row->cobertura]["valueCopy"] = $row->copiarValorDe;
                     $productConfig["coberturas"][$row->cobertura]["dependsOn"] = $row->dependeDe;
+                    $productConfig["coberturas"][$row->cobertura]["hidden"] = $row->esOculto;
+                    if ($row->listaValores != null){
+                        $i=0;
+                        foreach( $row->listaValores->listaValores as $innerRow ) {
+                            $productConfig["coberturas"][$row->cobertura]["labelValue"][$i] = $innerRow->descripcion;
+                            $productConfig["coberturas"][$row->cobertura]["values"][$i] = $innerRow->codigo;
+                            $i++;
+                        }
+                    }
                 }
 
                 if( $row->tipoCampoCobertura == "D"){
@@ -520,6 +567,7 @@ class PMWShandler
                     $productConfig["duracion"][$row->cobertura]["label"] = $row->etiquetaPre;
                     $productConfig["duracion"][$row->cobertura]["valueCopy"] = $row->copiarValorDe;
                     $productConfig["duracion"][$row->cobertura]["dependsOn"] = $row->dependeDe;
+                    $productConfig["duracion"][$row->cobertura]["hidden"] = $row->esOculto;
 
                 }
 
@@ -648,6 +696,8 @@ class PMWShandler
                 $rates["table"] = array();
                 $colsNumber = 1;
                 $xSet = 0;
+            app('debugbar')->info("Creando Array listaOpcionCuadro");
+            app('debugbar')->info($data->datosOpcionCuadro->listaOpcionCuadro);
                 foreach ($data->datosOpcionCuadro->listaOpcionCuadro as $row) {
 
                     if (! empty($row->tarificaciones)){
@@ -657,22 +707,22 @@ class PMWShandler
                                    $rates["name"] = $row2->valor;
                               }
                          }
-
-                         // billing cycles
-                         $j = 0;
-                         foreach ($row->tarificaciones->array as $row2) {
-                              $rates["billingCycles"][$j] = $row2->formaPago;
-                              $j++;
-                         }
-
-
+                        //app('debugbar')->info("Creando Array tarificaciones");
+                        //app('debugbar')->info($row->tarificaciones);
+                        // billing cycles
+                        $j = 0;
+                        foreach ($row->tarificaciones->array as $row2) {
+                            $rates["billingCycles"][$j] = $row2->formaPago;
+                            $j++;
+                        }
                     //==============================================
                     // Generate array to display on table
                     //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
 
                     // Update column
-
+                        //app('debugbar')->info("Creando Array coberturas");
+                        //app('debugbar')->info($row->coberturas);
                          if( $row->coberturas->array[0]->franquicia == 0 ){
                          // Fix to display more than 1 set of results
                          /*
@@ -2023,7 +2073,7 @@ class PMWShandler
         }else{
             $documentsList = $data->mensajeError;
         }
-        return $documentsList;
+        return $documentsList ?? '';
     }
 
     function getFile($fileId, $pmUserCode = null){
@@ -2106,55 +2156,57 @@ class PMWShandler
 
             $campaigns = [];
             $i = 0;
-            if( is_array($data->datosObjetivos->objetivo) ) {
-                foreach ($data->datosObjetivos->objetivo as $row) {
+            if(! empty($data->datosObjetivos->objetivo)) {
+                if (is_array($data->datosObjetivos->objetivo)) {
+                    foreach ($data->datosObjetivos->objetivo as $row) {
+                        $campaigns[$i]["codigo"] = $row->codigo;
+                        $campaigns[$i]["descripcion"] = $row->descripcion;
+                        $campaigns[$i]["titulo"] = $row->titulo;
+                        $campaigns[$i]["valorActual"] = $row->valorActual;
+
+                        if (is_array($row->tramosIncentivos->tramoIncentivo)) {
+                            $j = 0;
+                            foreach ($row->tramosIncentivos->tramoIncentivo as $row2) {
+                                $campaigns[$i]["tramosIncentivos"][$j]["desde"] = $row2->desde;
+                                $campaigns[$i]["tramosIncentivos"][$j]["hasta"] = $row2->hasta;
+                                $campaigns[$i]["tramosIncentivos"][$j]["incentivo"] = $row2->incentivo;
+                                $j++;
+                            }
+                        } else {
+                            $j = 0;
+                            $row2 = $row->tramosIncentivos->tramoIncentivo;
+                            $campaigns[$i]["tramosIncentivos"][$j]["desde"] = $row2->desde;
+                            $campaigns[$i]["tramosIncentivos"][$j]["hasta"] = $row2->hasta;
+                            $campaigns[$i]["tramosIncentivos"][$j]["incentivo"] = $row2->incentivo;
+                        }
+                        $i++;
+                    }
+                } else {
+                    $row = $data->datosObjetivos->objetivo;
                     $campaigns[$i]["codigo"] = $row->codigo;
                     $campaigns[$i]["descripcion"] = $row->descripcion;
                     $campaigns[$i]["titulo"] = $row->titulo;
                     $campaigns[$i]["valorActual"] = $row->valorActual;
 
-                    if( is_array($row->tramosIncentivos->tramoIncentivo) ) {
+                    if (is_array($row->tramosIncentivos->tramoIncentivo)) {
                         $j = 0;
                         foreach ($row->tramosIncentivos->tramoIncentivo as $row2) {
-                            $campaigns[$i]["tramosIncentivos"][$j]["desde"]  = $row2->desde;
-                            $campaigns[$i]["tramosIncentivos"][$j]["hasta"]  = $row2->hasta;
-                            $campaigns[$i]["tramosIncentivos"][$j]["incentivo"]  = $row2->incentivo;
+                            $campaigns[$i]["tramosIncentivos"][$j]["desde"] = $row2->desde;
+                            $campaigns[$i]["tramosIncentivos"][$j]["hasta"] = $row2->hasta;
+                            $campaigns[$i]["tramosIncentivos"][$j]["incentivo"] = $row2->incentivo;
                             $j++;
                         }
-                    }else{
+                    } else {
                         $j = 0;
                         $row2 = $row->tramosIncentivos->tramoIncentivo;
-                        $campaigns[$i]["tramosIncentivos"][$j]["desde"]  = $row2->desde;
-                        $campaigns[$i]["tramosIncentivos"][$j]["hasta"]  = $row2->hasta;
-                        $campaigns[$i]["tramosIncentivos"][$j]["incentivo"]  = $row2->incentivo;
+                        $campaigns[$i]["tramosIncentivos"][$j]["desde"] = $row2->desde;
+                        $campaigns[$i]["tramosIncentivos"][$j]["hasta"] = $row2->hasta;
+                        $campaigns[$i]["tramosIncentivos"][$j]["incentivo"] = $row2->incentivo;
                     }
-                    $i++;
                 }
             }else{
-                $row = $data->datosObjetivos->objetivo;
-                $campaigns[$i]["codigo"] = $row->codigo;
-                $campaigns[$i]["descripcion"] = $row->descripcion;
-                $campaigns[$i]["titulo"] = $row->titulo;
-                $campaigns[$i]["valorActual"] = $row->valorActual;
-
-                if( is_array($row->tramosIncentivos->tramoIncentivo) ) {
-                    $j = 0;
-                    foreach ($row->tramosIncentivos->tramoIncentivo as $row2) {
-                        $campaigns[$i]["tramosIncentivos"][$j]["desde"]  = $row2->desde;
-                        $campaigns[$i]["tramosIncentivos"][$j]["hasta"]  = $row2->hasta;
-                        $campaigns[$i]["tramosIncentivos"][$j]["incentivo"]  = $row2->incentivo;
-                        $j++;
-                    }
-                }else{
-                    $j = 0;
-                    $row2 = $row->tramosIncentivos->tramoIncentivo;
-                    $campaigns[$i]["tramosIncentivos"][$j]["desde"]  = $row2->desde;
-                    $campaigns[$i]["tramosIncentivos"][$j]["hasta"]  = $row2->hasta;
-                    $campaigns[$i]["tramosIncentivos"][$j]["incentivo"]  = $row2->incentivo;
-                }
 
             }
-
         }else{
             $campaigns = $data->mensajeError;
         }

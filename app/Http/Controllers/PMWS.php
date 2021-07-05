@@ -934,6 +934,12 @@ class PMWS extends controller
      * @param "accSub" - subsidio por accidente
      * @param "hospCob" - cobertura por hospitalizacion
      * @param "hospSub" - subsidio por hospitalizacion
+     * @param "covidPrestacionCob" - cobertura por hospitalizacion
+     * @param "covidPrestacionSub" - subsidio por hospitalizacion
+     * @param "covidHospitalizacionCob" - cobertura por hospitalizacion
+     * @param "covidHospitalizacionSub" - subsidio por hospitalizacion
+     * @param "covidUCICob" - cobertura por hospitalizacion
+     * @param "covidUCISub" - subsidio por hospitalizacion
      * @param "paymentMethod" - (optional) selected number of installments
      * @param "pmUserCode" - (optional)
      * @param "period" - (optional)
@@ -1091,6 +1097,12 @@ class PMWS extends controller
             $data["accSub"],
             $data["hospCob"],
             $data["hospSub"],
+            $data["covidPrestacionCob"],
+            $data["covidPrestacionSub"],
+            $data["covidHospitalizacionCob"],
+            $data["covidHospitalizacionSub"],
+            $data["covidUCICob"],
+            $data["covidUCISub"],
             $data["Cob4"],
             $data["Sub4"],
             $data["Cob5"],
@@ -1120,7 +1132,7 @@ class PMWS extends controller
         );
 
 //        app('debugbar')->info('$params');
-//        app('debugbar')->info($params);
+          app('debugbar')->info($params);
 //        file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
 //        file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
@@ -2109,9 +2121,15 @@ class PMWS extends controller
      * @param $accSub
      * @param $hospCob
      * @param $hospSub
+     * @param $covidPrestacionCob
+     * @param $covidPrestacionSub
+     * @param $covidHospitalizacionCob
+     * @param $covidHospitalizacionSub
+     * @param $covidUCICob
+     * @param $covidUCISub
      * @return array
      */
-    private function getCapitalGarantia($enfCob, $enfSub, $accCob, $accSub, $hospCob, $hospSub, $Cob4, $Sub4, $Cob5, $Sub5) {
+    private function getCapitalGarantia($enfCob, $enfSub, $accCob, $accSub, $hospCob, $hospSub, $Cob4, $Sub4, $Cob5, $Sub5, $covidPrestacionCob, $covidPrestacionSub, $covidHospitalizacionCob, $covidHospitalizacionSub, $covidUCICob, $covidUCISub ) {
 
         $fData = array();
         $fData[] = array(
@@ -2123,6 +2141,27 @@ class PMWS extends controller
             $fData[] = array(
                 "nombreParametro"	=> $accCob,
                 "valorParametro"	=> $accSub
+            );
+        }
+
+        if ( isset($covidPrestacionCob) && isset($covidPrestacionSub) ) {
+            $fData[] = array(
+                "nombreParametro"	=> $covidPrestacionCob,
+                "valorParametro"	=> $covidPrestacionSub
+            );
+        }
+
+        if ( isset($covidHospitalizacionCob) && isset($covidHospitalizacionSub) ) {
+            $fData[] = array(
+                "nombreParametro"	=> $covidHospitalizacionCob,
+                "valorParametro"	=> $covidHospitalizacionSub
+            );
+        }
+
+        if ( isset($covidUCICob) && isset($covidUCISub) ) {
+            $fData[] = array(
+                "nombreParametro"	=> $covidUCICob,
+                "valorParametro"	=> $ccovidUCISub
             );
         }
 
