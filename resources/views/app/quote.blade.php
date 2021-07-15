@@ -52,9 +52,13 @@
                                         <div class="col-8">
                                             <select class="form-control" id="quote-productor" autocomplete="off" required>
                                                 <option value=""></option>
-                                                @foreach( $productores as $row )
-                                                    <option value="{{ $row["id"] }}">{{ $row["id"] }} - {{ $row["name"] }}</option>
-                                                @endforeach
+                                                @if(empty($productores["id"]))
+                                                    @foreach( $productores as $row )
+                                                        <option value="{{ $row["id"] }}">{{ $row["id"] }} - {{ $row["name"] }}</option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="{{ $productores["id"] }}">{{ $productores["id"] }} - {{ $productores["name"] }}</option>
+                                                @endif
                                             </select>
                                         </div>
                                     </div>
@@ -185,13 +189,15 @@
                                                         @endphp
                                                     </select>
                                                 </div>
-                                                <div class="col-3 align-self-end">
-                                                    <label class="quote-height-label mb-1 control-label" for="quote-height"></label>
-                                                    <input type="number" class="form-control w-100 quote-height" name="quote-height" min="50" max="300" step="1" autocomplete="off" required>
+                                                <div class="col-3 align-self-end quote-height">
+                                                    @php
+                                                        // Dynamically filled with JS
+                                                    @endphp
                                                 </div>
-                                                <div class="col-3 align-self-end">
-                                                    <label class="quote-weight-label mb-1 control-label" for="quote-weight"></label>
-                                                    <input type="number" class="form-control w-100 quote-weight" name="quote-weight" min="10" max="400" step="1" autocomplete="off" required>
+                                                <div class="col-3 align-self-end quote-weight">
+                                                    @php
+                                                        // Dynamically filled with JS
+                                                    @endphp
                                                 </div>
                                             </div>
 
@@ -346,7 +352,7 @@
                                     display: none;
                                 }
                             </style>
-                            <div class="col descript-option">
+                            <div class="col rates-table-footer">
                                 @php
                                     // Dynamically filled with JS
                                 @endphp

@@ -156,14 +156,20 @@ class PMWSjs extends Controller
         $parameters["profession"] = $this->parameters["profession"];
         $parameters["birthdate"] = $this->parameters["birthdate"];
         $parameters["gender"] = $this->parameters["gender"];
-        $parameters["height"] = $this->parameters["height"];
-        $parameters["weight"] = $this->parameters["weight"];
+        $parameters["height"] = $this->parameters["height"] ?? null;
+        $parameters["weight"] = $this->parameters["weight"] ?? null;
         $parameters["enfCob"] = $this->parameters["enfCob"];
         $parameters["enfSub"] = $this->parameters["enfSub"];
         $parameters["accCob"] = $this->parameters["accCob"];
         $parameters["accSub"] = $this->parameters["accSub"];
         $parameters["hospCob"] = $this->parameters["hospCob"];
         $parameters["hospSub"] = $this->parameters["hospSub"];
+        $parameters["covidPrestacionCob"] = $this->parameters["covidPrestacionCob"] ?? null;
+        $parameters["covidPrestacionSub"] = $this->parameters["covidPrestacionSub"] ?? null;
+        $parameters["covidHospitalizacionCob"] = $this->parameters["covidHospitalizacionCob"] ?? null;
+        $parameters["covidHospitalizacionSub"] = $this->parameters["covidHospitalizacionSub"] ?? null;
+        $parameters["covidUCICob"] = $this->parameters["covidUCICob"] ?? null;
+        $parameters["covidUCISub"] = $this->parameters["covidUCISub"] ?? null;
         $parameters["jobType"] = $this->parameters["jobType"];
         $parameters["duration"] = $this->parameters["duration"] ?? null;
 

@@ -602,12 +602,10 @@ table td{
 }
 
 .app-core label svg{
-    position: absolute;
-    bottom: -27px;
-    right: 5px;
     width: 17px !important;
     height: 17px;
     cursor: pointer;
+    margin-left: 5px;
 }
 .app-core input::placeholder{
     color: #b1b1b1 !important;
@@ -747,7 +745,7 @@ table.ui-datepicker-calendar tbody td span{
 }
 
 #quote .quote-benefit-label{
-    max-width: 100px;
+    max-width: 100%;
 }
 
 #quote .get-rates,
@@ -1225,7 +1223,7 @@ table.ui-datepicker-calendar tbody td span{
 }
 
 .ui-autocomplete {
-    max-height: 100px;
+    max-height: 250px;
     overflow-y: auto;
     /* prevent horizontal scrollbar */
     overflow-x: hidden;
@@ -1548,11 +1546,11 @@ label{
 
 
 @media print {
-  
+
      .hiddenprint {
           display: none;
      }
-  
+
      .app-core table td.selected,
      .app-core table th.selected{
           /*background-color: #D1D546 !important;*/
@@ -1560,3 +1558,4 @@ label{
      }
 
    }
+
