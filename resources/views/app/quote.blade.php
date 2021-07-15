@@ -352,7 +352,7 @@
                                     display: none;
                                 }
                             </style>
-                            <div class="col descript-option">
+                            <div class="col rates-table-footer">
                                 @php
                                     // Dynamically filled with JS
                                 @endphp

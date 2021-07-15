@@ -1132,7 +1132,7 @@ class PMWS extends controller
         );
 
 //        app('debugbar')->info('$params');
-          app('debugbar')->info($params);
+//        app('debugbar')->info($params);
 //        file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
 //        file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
@@ -2127,9 +2127,10 @@ class PMWS extends controller
      * @param $covidHospitalizacionSub
      * @param $covidUCICob
      * @param $covidUCISub
+
      * @return array
      */
-    private function getCapitalGarantia($enfCob, $enfSub, $accCob, $accSub, $hospCob, $hospSub, $Cob4, $Sub4, $Cob5, $Sub5, $covidPrestacionCob, $covidPrestacionSub, $covidHospitalizacionCob, $covidHospitalizacionSub, $covidUCICob, $covidUCISub ) {
+    private function getCapitalGarantia($enfCob, $enfSub, $accCob, $accSub, $hospCob, $hospSub, $Cob4, $Sub4, $Cob5, $Sub5, $covidPrestacionCob, $covidPrestacionSub, $covidHospitalizacionCob, $covidHospitalizacionSub, $covidUCICob, $covidUCISub) {
 
         $fData = array();
         $fData[] = array(
@@ -2144,31 +2145,31 @@ class PMWS extends controller
             );
         }
 
+        if ( isset($hospCob) && isset($hospSub) ) {
+            $fData[] = array(
+                "nombreParametro"	=> $hospCob,
+                "valorParametro"	=> $hospSub
+            );
+        }
+
         if ( isset($covidPrestacionCob) && isset($covidPrestacionSub) ) {
             $fData[] = array(
-                "nombreParametro"	=> $covidPrestacionCob,
-                "valorParametro"	=> $covidPrestacionSub
+                "nombreParametro"   => $covidPrestacionCob,
+                "valorParametro"    => $covidPrestacionSub
             );
         }
 
         if ( isset($covidHospitalizacionCob) && isset($covidHospitalizacionSub) ) {
             $fData[] = array(
-                "nombreParametro"	=> $covidHospitalizacionCob,
-                "valorParametro"	=> $covidHospitalizacionSub
+                "nombreParametro"   => $covidHospitalizacionCob,
+                "valorParametro"    => $covidHospitalizacionSub
             );
         }
 
         if ( isset($covidUCICob) && isset($covidUCISub) ) {
             $fData[] = array(
-                "nombreParametro"	=> $covidUCICob,
-                "valorParametro"	=> $ccovidUCISub
-            );
-        }
-
-        if ( isset($hospCob) && isset($hospSub) ) {
-            $fData[] = array(
-                "nombreParametro"	=> $hospCob,
-                "valorParametro"	=> $hospSub
+                "nombreParametro"   => $covidUCICob,
+                "valorParametro"    => $ccovidUCISub
             );
         }
 

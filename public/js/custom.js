@@ -44,18 +44,18 @@ jQuery( document ).ready(function() {
     }
 
     // GENERAL - Logout
-/*    if( clearCookies ) {
+    /*    if( clearCookies ) {
 
-        var cookies = document.cookie.split(";");
+            var cookies = document.cookie.split(";");
 
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i];
-            var eqPos = cookie.indexOf("=");
-            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        }
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
 
-    }*/
+        }*/
 
     // Updates post links
     if (jQuery('.app-core a[href]').length) {
@@ -388,77 +388,77 @@ jQuery( document ).ready(function() {
         });
 
     });
-/*
-    // QUOTE - Gets product configuration and displays new block to fill
-    jQuery("#quote .product-variations").on('click', "input[type='radio']",  function (e) {
+    /*
+        // QUOTE - Gets product configuration and displays new block to fill
+        jQuery("#quote .product-variations").on('click', "input[type='radio']",  function (e) {
 
-        // hides next Block and resets fields
-        resetProductExtraInfo();
+            // hides next Block and resets fields
+            resetProductExtraInfo();
 
-        jQuery('#quote #step-1 .loader-wrapper').fadeIn();
+            jQuery('#quote #step-1 .loader-wrapper').fadeIn();
 
-        // Then retrieves extra info of selected product variation in the background
-        var url = "/get-data";
-        var ws = "getProductConfiguration";
-        var productor = jQuery("#quote-productor").val();
-        var product = jQuery("#quote input[name='quote-product']:checked").val();
-        var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
+            // Then retrieves extra info of selected product variation in the background
+            var url = "/get-data";
+            var ws = "getProductConfiguration";
+            var productor = jQuery("#quote-productor").val();
+            var product = jQuery("#quote input[name='quote-product']:checked").val();
+            var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
 
-        jQuery.ajax({
-            type: "POST",
-            url: url,
-            data: {
-                ws: ws,
-                productor: productor,
-                product: product,
-                productVariation: productVariation
-            },
-            success: function (response) {
-                if (response['success'] == true) {
-                    quote_load_ProductConfiguration(response.data);
-                } else {
-                    console.error( response.e);
+            jQuery.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    ws: ws,
+                    productor: productor,
+                    product: product,
+                    productVariation: productVariation
+                },
+                success: function (response) {
+                    if (response['success'] == true) {
+                        quote_load_ProductConfiguration(response.data);
+                    } else {
+                        console.error( response.e);
+                    }
+                },
+                error: function (response) {
+                    console.error( lang["WS.error"] );
                 }
-            },
-            error: function (response) {
-                console.error( lang["WS.error"] );
-            }
+            });
+
         });
 
-    });
 
 
-
-*/
+    */
     function quote_load_ProductModalities ( data ){
 
-       // Stores this info in a global array to access it later on
-       window.PMproductModalities = data;
+        // Stores this info in a global array to access it later on
+        window.PMproductModalities = data;
 
-       productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
+        productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
 
-       //console.log( data );
-       //console.log("Producto:  ")
-       //console.log( productVariation );
-       var output = "";
+        //console.log( data );
+        //console.log("Producto:  ")
+        //console.log( productVariation );
+        var output = "";
 
-       Object.keys(data).forEach(function(key) {
-           if (key == productVariation) {
-               Object.keys(data[key].modalityList).forEach(function(key2) {
+        Object.keys(data).forEach(function(key) {
+            if (key == productVariation) {
+                Object.keys(data[key].modalityList).forEach(function(key2) {
                     output += "<div class='checkboxWithLabel col-6 pb-2'>";
                     output += "<label>";
                     output += "<input type='radio' class='form-control' name='quote-product-modality' value='" + data[key].modalityList[key2].modalityId + "'>";
                     output += "<div>" + data[key].modalityList[key2].modalityName + "</div>";
                     output += "</label>";
                     output += "</div>";
-               });
-           }
-       });
+                });
+            }
+        });
 
-       // Displays the new block with content
-       jQuery('#quote .product-modalities .dynamic-content .row').html(output);
-       jQuery('#quote #step-1 .loader-wrapper').hide();
-       jQuery('#quote .product-modalities').fadeIn();
+        // Displays the new block with content
+        jQuery('#quote .product-modalities .dynamic-content .row').html(output);
+        jQuery('#quote #step-1 .loader-wrapper').hide();
+        jQuery('#quote .product-modalities').fadeIn();
 
     }
 
@@ -487,10 +487,11 @@ jQuery( document ).ready(function() {
                 ws: ws,
                 productor: productor,
                 product: product,
-               // productVariation: productVariation,
+                // productVariation: productVariation,
                 productModality: productModality
             },
             success: function (response) {
+
                 if (response['success'] == true) {
                     quote_load_ProductConfiguration(response.data);
                 } else {
@@ -508,7 +509,8 @@ jQuery( document ).ready(function() {
     function quote_load_ProductConfiguration( data ){
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
-        console.log(data);
+        //console.log(data);
+
         // Signing method Logalty/handwriting
         if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
             window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
@@ -539,21 +541,24 @@ jQuery( document ).ready(function() {
 
         // Loads Height
         var hiddenHeight = "";
+        //console.log(data.P_TALLA);
         if(data.P_TALLA.hidden == "S"){
             var heightProduct = "<input type='hidden' class='form-control w-100 quote-height valid' name='quote-height' " + data.P_TALLA.attributes + ">";
         } else {
             var heightProduct = "<label className='quote-height-label mb-1 control-label' htmlFor='quote-height'>"+data.P_TALLA.name+"</label>";
-            heightProduct += "<input type='number' class='form-control w-100 quote-height valid' name='quote-height' " + data.P_TALLA.attributes + " min='"+data.P_TALLA.min+"' max='"+data.P_TALLA.max+"'>";
+            heightProduct += "<input type='number' class='form-control w-100 quote-height valid' name='quote-height' id='quote-height'  " + data.P_TALLA.attributes + " min='"+data.P_TALLA.min+"' max='"+data.P_TALLA.max+"'>";
         }
 
         // Loads Weight
         var hiddenWeight = "";
+        //console.log(data.P_PESO);
         if(data.P_PESO.hidden == "S"){
             var heightWeight = "<input type='hidden' class='form-control w-100 quote-weight valid' name='quote-weight' " + data.P_PESO.attributes + ">";
         } else {
             var heightWeight = "<label className='quote-weight-label mb-1 control-label' htmlFor='quote-weight'>"+data.P_PESO.name+"</label>";
-            heightWeight += "<input type='number' class='form-control w-100 quote-weight valid' name='quote-weight' " + data.P_PESO.attributes + " min='"+data.P_PESO.min+"' max='"+data.P_PESO.max+"'>";
+            heightWeight += "<input type='number' class='form-control w-100 quote-weight valid' name='quote-weight' id='quote-weight' " + data.P_PESO.attributes + " min='"+data.P_PESO.min+"' max='"+data.P_PESO.max+"'>";
         }
+
 
         // Loads Job type
         var hidden = "";
@@ -595,6 +600,7 @@ jQuery( document ).ready(function() {
 
         // Load commercial key
         window.PMcommercialKey = data.P_CLAVE_COMERCIAL;
+        //console.log(data.P_CLAVE_COMERCIAL);
         var hidden = "";
         if(data.P_CLAVE_COMERCIAL.hidden == "S"){
             hidden = " type='hidden' ";
@@ -618,63 +624,63 @@ jQuery( document ).ready(function() {
         commercialKey += "</div>";
 
         var franchiseField = "";
-        if (window.PMSelectedProductModality == 22 ){//data.P_NOMBRE_PRODUCTO == "ENFERMEDADES GRAVES"){
-          // Load franchise
-          window.PMfranchise = data.P_FRANQUICIA;
-          window.PMEnfGraves = true;
-          var hidden = "";
-          if(data.P_FRANQUICIA.hidden == "S"){
-               hidden = " type='hidden' ";
-          }
-          franchiseField += "<div class='col-4'>";
-          franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
-          franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
+        if (data.P_FRANQUICIA ){//data.P_NOMBRE_PRODUCTO == "ENFERMEDADES GRAVES"){
+            // Load franchise
+            window.PMfranchise = data.P_FRANQUICIA;
+            window.PMEnfGraves = true;
+            var hidden = "";
+            if(data.P_FRANQUICIA.hidden == "S"){
+                hidden = " type='hidden' ";
+            }
+            franchiseField += "<div class='col-4'>";
+            franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
+            franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
 
-          if( data.P_FRANQUICIA.fieldType == "select"){
+            if( data.P_FRANQUICIA.fieldType == "select"){
 
-               var franchiseArray = data.P_FRANQUICIA.values;
-               var franchiseSelect = "<option value=''>Todas las Franquicias</option>";
+                var franchiseArray = data.P_FRANQUICIA.values;
+                var franchiseSelect = "<option value=''>Todas las Franquicias</option>";
 
-               Object.keys(franchiseArray).forEach(function(key) {
+                Object.keys(franchiseArray).forEach(function(key) {
                     franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
-               });
-               franchiseField += franchiseSelect;
+                });
+                franchiseField += franchiseSelect;
 
-               franchiseField += "</select>";
-          }
-          franchiseField += "</div>";
+                franchiseField += "</select>";
+            }
+            franchiseField += "</div>";
         } else {
-             window.PMfranchise = null;
-             window.PMEnfGraves = false;
+            window.PMfranchise = null;
+            window.PMEnfGraves = false;
         }
 
         window.PMduration = null;
         var durationField = "";
         if (data.P_PERIODO_COBERTURA){
-             // Load commercial key
-             window.PMduration = data.P_PERIODO_COBERTURA;
-             var hidden = "";
-             var durationField = "";
-             if(data.P_PERIODO_COBERTURA.hidden == "S"){
-                  hidden = " type='hidden' ";
-             }
-             var durationField = "<div class='col-4'>";
-             durationField += "<label class='mb-1 quote-duration-label' for='quote-duration'>" + data.P_PERIODO_COBERTURA.name + "</label>";
-             durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
+            // Load commercial key
+            window.PMduration = data.P_PERIODO_COBERTURA;
+            var hidden = "";
+            var durationField = "";
+            if(data.P_PERIODO_COBERTURA.hidden == "S"){
+                hidden = " type='hidden' ";
+            }
+            var durationField = "<div class='col-4'>";
+            durationField += "<label class='mb-1 quote-duration-label' for='quote-duration'>" + data.P_PERIODO_COBERTURA.name + "</label>";
+            durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
 
-             if( data.P_PERIODO_COBERTURA.fieldType == "select"){
+            if( data.P_PERIODO_COBERTURA.fieldType == "select"){
 
-                  var durationArray = data.P_PERIODO_COBERTURA.values;
-                  var durationSelect = "";
+                var durationArray = data.P_PERIODO_COBERTURA.values;
+                var durationSelect = "";
 
-                  Object.keys(durationArray).forEach(function(key) {
-                       durationSelect += "<option value='" + key + "'>" + durationArray[key] + "</option>";
-                  });
-                  durationField += durationSelect;
+                Object.keys(durationArray).forEach(function(key) {
+                    durationSelect += "<option value='" + key + "'>" + durationArray[key] + "</option>";
+                });
+                durationField += durationSelect;
 
-                  durationField += "</select>";
-             }
-             durationField += "</div>";
+                durationField += "</select>";
+            }
+            durationField += "</div>";
         }
 
         // Loads coverages if "subsidio" is selected
@@ -682,7 +688,7 @@ jQuery( document ).ready(function() {
         if( jQuery(".toggles .subsidio.active").length == 1 ) {
             // There are no field names coming from the WS so we have to set them manually
             var benefitsArray = data.coberturas;
-            console.log(data.coberturas);
+            //console.log(data.coberturas);
             var cols;
 
             var i = 1;
@@ -704,7 +710,7 @@ jQuery( document ).ready(function() {
                         //FieldDescription = lang["quote.hospitalization"];
                         FieldName = lang["quote.hospitalizationFieldName"];
                         break;
-                    case 4:
+                        case 4:
                         //FieldDescription = lang["quote.hospitalization"];
                         FieldName = "covidPrestacion";
                         break;
@@ -717,17 +723,21 @@ jQuery( document ).ready(function() {
                         FieldName = "covidUCI";
                         break;
                 }
-
                 hiddenBenefits = benefitsArray[key].hidden;
                 FieldDescription = benefitsArray[key].label;
                 FieldType = benefitsArray[key].fieldType;
+                ayuda = '';
+                if (benefitsArray[key].helpField != null){
+                    ayuda = '<i class="fas fa-info-circle" title="' + benefitsArray[key].helpField + '"></i>';
+                }
                 if (hiddenBenefits == "S") {
                     benefits += "<div class='col-" + cols + "' align-self-end >";
                     benefits += "<input type='hidden' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                    benefits += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('#"+benefitsArray[key].valueCopy+"').keyup(function (){var value = jQuery(this).val();jQuery('#"+benefitsArray[key].name+"').val(value);});});</script>";
                     benefits += "</div>";
                 } else {
                     benefits += "<div class='col-" + cols + "' align-self-end >";
-                    benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + benefitsArray[key].label + "</label>";
+                    benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + benefitsArray[key].label + ""+ ayuda +"</label>";
                     /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
                     if (FieldType == 'select') {
                         benefits += "<select class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' " + benefitsArray[key].attributes + ">";
@@ -755,9 +765,9 @@ jQuery( document ).ready(function() {
                         benefits += "<input type='number' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                     }
                     benefits += "</div>";
-                    i++;
-                }
 
+                }
+                i++;
                 // TODO: min/max values received are not the ones that the WS is using,
                 //  sometimes we get a WS response telling us it exceeds the max while it's within provided range.
             });
@@ -815,15 +825,15 @@ jQuery( document ).ready(function() {
 
 
         // Load dynamic data and displays updated block
-/*        jQuery('#quote .quote-job-picker').autocomplete({
-            source: jobPicker,
-            // triggers change event when selecting from the list, really important
-            select: function(event,ui) {
-                this.value=ui.item.value;
-                jQuery(this).trigger('change');
-                return false;
-            }
-        });*/
+        /*        jQuery('#quote .quote-job-picker').autocomplete({
+                    source: jobPicker,
+                    // triggers change event when selecting from the list, really important
+                    select: function(event,ui) {
+                        this.value=ui.item.value;
+                        jQuery(this).trigger('change');
+                        return false;
+                    }
+                });*/
 
 
         // load discount fields for impersonator users
@@ -957,21 +967,21 @@ jQuery( document ).ready(function() {
     jQuery("#quote").on('keypress',
         ".quote-birthdate, .quote-another-insurance-ends, .datetimepickerHealth input, .quote-starting-date, .quote-another-insurance-ends, .date-input",
         function (evt) {
-        evt = (evt) ? evt : window.event;
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-            return false;
-        }else{
-            var inputLength = event.target.value.length;
-            if (event.keyCode != 8){
-                if(inputLength === 2 || inputLength === 5){
-                    var thisVal = event.target.value;
-                    thisVal += '/';
-                    jQuery(event.target).val(thisVal);
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }else{
+                var inputLength = event.target.value.length;
+                if (event.keyCode != 8){
+                    if(inputLength === 2 || inputLength === 5){
+                        var thisVal = event.target.value;
+                        thisVal += '/';
+                        jQuery(event.target).val(thisVal);
+                    }
                 }
             }
-        }
-    });
+        });
 
     // QUOTE - Validates extra info fields
     if (jQuery('#quote .product-extra-info').length) {
@@ -981,98 +991,98 @@ jQuery( document ).ready(function() {
             function (e) {
                 var i = 0;
                 var found = false;
-            jQuery(".product-extra-info .quote-job option").each(function () {
-                if (this.text == jQuery(".product-extra-info .quote-job-picker").val()) {
-                    jQuery(".product-extra-info .quote-job").prop("selectedIndex", i);
-                    found = true;
+                jQuery(".product-extra-info .quote-job option").each(function () {
+                    if (this.text == jQuery(".product-extra-info .quote-job-picker").val()) {
+                        jQuery(".product-extra-info .quote-job").prop("selectedIndex", i);
+                        found = true;
+                    } else {
+                        i++;
+                    }
+                });
+                if (found) {
+                    jQuery(this).addClass("valid");
+                    jQuery(this).removeClass("invalid");
                 } else {
-                    i++;
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
                 }
             });
-            if (found) {
-                jQuery(this).addClass("valid");
-                jQuery(this).removeClass("invalid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-            }
-        });
 
         jQuery("#quote .product-extra-info").on('input change click keyup',
             "input[required]:visible, select[required]:visible",
             function (e) {
 
-            // basic field validation
-            if( jQuery(this).attr("type") == "text" ||
-                jQuery(this).is("select") ){
-                if (jQuery(this).val() != "") {
-                    jQuery(this).removeClass("invalid");
-                    jQuery(this).addClass("valid");
-                } else {
-                    jQuery(this).addClass("invalid");
-                    jQuery(this).removeClass("valid");
+                // basic field validation
+                if( jQuery(this).attr("type") == "text" ||
+                    jQuery(this).is("select") ){
+                    if (jQuery(this).val() != "") {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
                 }
-            }
 
-            if( jQuery(this).attr("type") == "number"){
-                if (jQuery(this).val() > 0) {
-                    jQuery(this).removeClass("invalid");
-                    jQuery(this).addClass("valid");
-                } else {
-                    jQuery(this).addClass("invalid");
-                    jQuery(this).removeClass("valid");
+                if( jQuery(this).attr("type") == "number"){
+                    if (jQuery(this).val() > 0) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
                 }
-            }
 
-            // Specific field validation
-            if (jQuery(this).hasClass("quote-height") ||
-                jQuery(this).hasClass("quote-weight")) {
-                if (jQuery(this).val() >= parseInt( jQuery(this).prop( "min" ) ) &&
-                    jQuery(this).val() <= parseInt( jQuery(this).prop( "max" ) ) ) {
-                    jQuery(this).removeClass("invalid");
-                    jQuery(this).addClass("valid");
-                } else {
-                    jQuery(this).addClass("invalid");
-                    jQuery(this).removeClass("valid");
+                // Specific field validation
+                if (jQuery(this).hasClass("quote-height") ||
+                    jQuery(this).hasClass("quote-weight")) {
+                    if (jQuery(this).val() >= parseInt( jQuery(this).prop( "min" ) ) &&
+                        jQuery(this).val() <= parseInt( jQuery(this).prop( "max" ) ) ) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
                 }
-            }
 
-            if (jQuery(this).hasClass("quote-birthdate") ||
-                jQuery(this).hasClass("quote-starting-date")) {
-                var valid;
+                if (jQuery(this).hasClass("quote-birthdate") ||
+                    jQuery(this).hasClass("quote-starting-date")) {
+                    var valid;
 
-                if( jQuery(this).val().length == 10) {
-                    var splitDate = jQuery(this).val().split("/");
-                    if (splitDate[0] >= 1 && splitDate[0] <= 31) {
-                        if (splitDate[1] >= 1 && splitDate[1] <= 12) {
-                            if (splitDate[2] >= 1920 && splitDate[2] <= 2021) {
-                                valid = true;
+                    if( jQuery(this).val().length == 10) {
+                        var splitDate = jQuery(this).val().split("/");
+                        if (splitDate[0] >= 1 && splitDate[0] <= 31) {
+                            if (splitDate[1] >= 1 && splitDate[1] <= 12) {
+                                if (splitDate[2] >= 1920 && splitDate[2] <= 2021) {
+                                    valid = true;
+                                } else {
+                                    valid = false;
+                                }
                             } else {
                                 valid = false;
                             }
                         } else {
                             valid = false;
                         }
-                    } else {
+                    }else {
                         valid = false;
                     }
-                }else {
-                    valid = false;
+
+                    if (valid) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
                 }
 
-                if (valid) {
-                    jQuery(this).removeClass("invalid");
-                    jQuery(this).addClass("valid");
-                } else {
-                    jQuery(this).addClass("invalid");
-                    jQuery(this).removeClass("valid");
-                }
-            }
 
-
-            //console.log( jQuery(this).attr("class") );
-            enableQuoteButton();
-        });
+                //console.log( jQuery(this).attr("class") );
+                enableQuoteButton();
+            });
 
         // QUOTE - benefits only numbers
         jQuery("#quote .product-extra-info").on('keypress', ".quote-benefit[required]", function (evt) {
@@ -1085,19 +1095,19 @@ jQuery( document ).ready(function() {
             enableQuoteButton();
         });
 
-            // QUOTE - benefits limits min/max provided by WS
-   /*     jQuery("#quote .product-extra-info").on('input change click keyup', ".quote-benefit[required]", function (e) {
-            if (jQuery(this).val() >= parseInt( jQuery(this).prop( "min" ) ) &&
-                jQuery(this).val() <= parseInt( jQuery(this).prop( "max" ) ) ) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-            }
+        // QUOTE - benefits limits min/max provided by WS
+        /*     jQuery("#quote .product-extra-info").on('input change click keyup', ".quote-benefit[required]", function (e) {
+                 if (jQuery(this).val() >= parseInt( jQuery(this).prop( "min" ) ) &&
+                     jQuery(this).val() <= parseInt( jQuery(this).prop( "max" ) ) ) {
+                     jQuery(this).removeClass("invalid");
+                     jQuery(this).addClass("valid");
+                 } else {
+                     jQuery(this).addClass("invalid");
+                     jQuery(this).removeClass("valid");
+                 }
 
-            enableQuoteButton();
-        });*/
+                 enableQuoteButton();
+             });*/
     }
 
     // QUOTE - Validates extra info and enables getRate button
@@ -1105,7 +1115,7 @@ jQuery( document ).ready(function() {
         allValid = true;
         //console.log( " --------------------  " );
         jQuery( '#quote .product-extra-info input[required]:visible, ' +
-                '#quote .product-extra-info select[required]:visible' )
+            '#quote .product-extra-info select[required]:visible' )
             .each(function() {
                 if( !jQuery(this).hasClass("valid") ){
                     //console.log( " FALSE - " + jQuery(this).attr('class') );
@@ -1156,8 +1166,8 @@ jQuery( document ).ready(function() {
                 var profession = jQuery("#quote .quote-job").val();
                 var birthdate  = jQuery("#quote .quote-birthdate").val();
                 var gender = jQuery("#quote .quote-gender").val();
-                var height = jQuery("#quote .quote-height").val();
-                var weight = jQuery("#quote .quote-weight").val();
+                var height = jQuery("#quote #quote-height").val();
+                var weight = jQuery("#quote #quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
                 var duration = null;
                 if (window.PMduration != null)
@@ -1188,11 +1198,12 @@ jQuery( document ).ready(function() {
                 var covidUCICob = null;
                 var covidUCISub = null;
 
+
                 var franchise = null;
                 if (window.PMfranchise != null){
                     franchise = jQuery("#quote .quote-franchise").val();
                     if (franchise==''){
-                         franchise = null;
+                        franchise = null;
                     }
                 }
 
@@ -1203,7 +1214,6 @@ jQuery( document ).ready(function() {
 
                 var i = 1;
                 benefitsArray = window.PMproductConfig.coberturas;
-                //console.log(window.PMproductConfig);
                 Object.keys(benefitsArray).forEach(function(key) {
                     switch(i) {
                         case 1:
@@ -1230,6 +1240,7 @@ jQuery( document ).ready(function() {
                             covidUCICob = window.PMproductConfig.coberturas[key].name
                             covidUCISub  = jQuery("#quote .quote-benefit-covidUCI:checked").val();
                             break;
+
                     }
                     i++;
                 });
@@ -1261,13 +1272,16 @@ jQuery( document ).ready(function() {
                     accSub : accSub,
                     hospCob : hospCob,
                     hospSub : hospSub,
+                    hospSub : hospSub,
                     covidPrestacionCob : covidPrestacionCob,
                     covidPrestacionSub : covidPrestacionSub,
                     covidHospitalizacionCob : covidHospitalizacionCob,
                     covidHospitalizacionSub : covidHospitalizacionSub,
                     covidUCICob : covidUCICob,
-                    covidUCISub : covidUCISub
+                    covidUCISub : covidUCISub,
+                    franchise : franchise
                 }
+                //console.log(window.PMgetRatesData);
 
 
                 jQuery.ajax({
@@ -1311,12 +1325,9 @@ jQuery( document ).ready(function() {
                     success: function (response) {
                         if (response['success'] == true) {
                             // TODO: there are products that send information in a different structure and won't work
-                            if (!enfGraves){
-                              quote_load_Rates(response.data);
-                            }
-                            else {
-                              quote_load_Rates_EG(response.data);
-                            }
+
+                                quote_load_Rates(response.data);
+
                         } else {
                             console.error( response.e);
                             displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
@@ -1341,50 +1352,61 @@ jQuery( document ).ready(function() {
     // QUOTE - Process rates and display the table
     function quote_load_Rates(data){
 
-        //console.log(data);
         window.PMrates = data;
         product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
-        variation = data.name.trim().toUpperCase();
+        productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
 
+        //console.log("Rates ");
+        //console.log(data);
+        var startIcon = "<i class='fas fa-info-circle'"; //comment-alt'";
+        var endIcon = "></i>"
         var i;
         var j;
         var k;
 
+        //Create headers using column names
+        var headers = [];
+        headers.push(lang["quote.text.exemption"]);
+        Object.keys(data.messages).every(function(i) {
+            Object.keys(data.messages[i]).forEach(function(j) {
+                headers.push(j);
+            });
+            return false;
+        });
+
+        tableDescription = "<p>" + data.foot + "</p>" + "<p>" + data.description + "</p>";
+        tableFooter = "<p>" + data.foot + "</p>";
+
         head = "<thead>";
         head += "<tr>";
-        head += "<th colspan='" + data.headers.length + "'>" + product + " - " + variation + "</th>";
+        head += "<th colspan='" + headers.length + "'>" + product + " - " + productVariation + "</th>";
         head += "</tr>";
         head += "<tr>";
-        var i;
-        for( i=0;i<data.headers.length;i++ ){
-            head += "<th scope='col'>" + data.headers[i] + "</th>";
-        }
+
+        Object.keys(headers).forEach(function (j) {
+            head += "<th scope='col'>" + headers[j] + "</th>";
+        });
+
+
         head += "</tr>";
         head += "</thead>";
 
         rows = "<tbody>";
 
+        var numFila = 0;
 
         // Render rows
-        Object.keys(data.table).forEach(function(i) {
+        Object.keys(data.messages).forEach(function(i) {
 
-            rows += "<tr class='PM-row row-" + i + "'>";
-
+            rows += "<tr class='PM-row row-" + numFila + "'><td>" + i + "</td>";
+            numFila++;
             // Render columns
-            Object.keys(data.table[i]).forEach(function(j) {
-
-                // renders exemption (franquicia) as first column
-                if( j == 1 ){
-                    rows += "<td>" + i + " " + lang["quote.text.days"] + "</td>";
-                }
-
-                // Renders proper column
-
-                // Renders price to display
-                if( data.table[i][j].price == 0){
-                    amount = "-"
-                }else{
-                    let rawPrice = data.table[i][j].price;
+            Object.keys(data.messages[i]).forEach(function(j) {
+                //console.log(data.messages[i][j])
+                if (isNaN(data.messages[i][j])){
+                    rows += "<td>" + startIcon  + "title='" + data.messages[i][j] + "'" + endIcon;
+                } else {
+                    let rawPrice = data.messages[i][j];
                     let splitPrice = rawPrice.split(".");
 
                     var adjustedDecimal;
@@ -1398,39 +1420,43 @@ jQuery( document ).ready(function() {
 
 
                     amount = splitPrice[0] + "," + newDecimal + " &euro;";
-                }
-                rows += "<td class='product' ";
+                    rows += "<td class='product' ";
 
-                // Renders coverage (coberturas) data
-                // console.log(i + 'x' + j + ' coverages: ' + data.table[i][j].coverages.length);
-                for( k=0;k<data.table[i][j].coverages.length;k++ ) {
-                    rows += " data-capital-" + k + "='" + data.table[i][j].coverages[k].capital + "'";
-                    rows += " data-codigo-" + k + "='" + data.table[i][j].coverages[k].codigo + "'";
-                    rows += " data-descripcion-" + k + "='" + data.table[i][j].coverages[k].descripcion + "'";
-                    rows += " data-duracion-" + k + "='" + data.table[i][j].coverages[k].duracion + "'";
-                    rows += " data-franquicia-" + k + "='" + data.table[i][j].coverages[k].franquicia + "'";
-                    rows += " data-prima-neta-" + k + "='" + data.table[i][j].coverages[k].primaNeta + "'";
-                }
-
-                // Renders quotes (formas de pago) data
-                for( k=0;k<data.table[i][j].quotes.length;k++ ) {
-                    switch(k){
-                        case 0:
-                            rows += " data-annual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-annual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
-                            break;
-                        case 1:
-                            rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
-                            break;
-                        case 2:
-                            rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
-                            break;
-                        case 3:
-                            rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
-                            break;
+                    // Renders coverage (coberturas) data
+                    for( k=0;k<data.table[i][j].coverages.length;k++ ) {
+                        rows += " data-capital-" + k + "='" + data.table[i][j].coverages[k].capital + "'";
+                        rows += " data-codigo-" + k + "='" + data.table[i][j].coverages[k].codigo + "'";
+                        rows += " data-descripcion-" + k + "='" + data.table[i][j].coverages[k].descripcion + "'";
+                        rows += " data-duracion-" + k + "='" + data.table[i][j].coverages[k].duracion + "'";
+                        rows += " data-franquicia-" + k + "='" + data.table[i][j].coverages[k].franquicia + "'";
+                        rows += " data-prima-neta-" + k + "='" + data.table[i][j].coverages[k].primaNeta + "'";
                     }
-                }
 
-                rows += ">" + amount + "</td>";
+                    // Renders quotes (formas de pago) data
+                    for( k=0;k<data.table[i][j].quotes.length;k++ ) {
+                        switch(k){
+                            case 0:
+                                rows += " data-annual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-annual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                break;
+                            case 1:
+                                rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                break;
+                            case 2:
+                                rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                break;
+                            case 3:
+                                rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                break;
+                        }
+                    }
+
+                    //description
+                    rows += " data-product-description='" + data.messages[i][j] + "' ";
+
+                    rows += ">" + amount + "</td>";
+
+
+                }
             });
 
             rows += "</tr>";
@@ -1477,6 +1503,9 @@ jQuery( document ).ready(function() {
 
 
         window.PMquoteTable = table;
+        jQuery('#quote .rates-table-description').html(tableDescription);
+        jQuery('#quote .rates-table-footer').html(tableFooter);
+        jQuery('#quote .rates-table-description').fadeIn();
         jQuery('#quote .rates-table table').html(table);
         jQuery('#quote .rates-table .billing-cycle').html(billingCycles);
         jQuery('#quote .rates-table').fadeIn();
@@ -1489,65 +1518,65 @@ jQuery( document ).ready(function() {
     // QUOTE - Process rates and display the table (ENFERMEDADES GRAVES case)
     function quote_load_Rates_EG(data){
 
-     window.PMrates = data;
-     product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
-     variation = data.name.trim().toUpperCase();
+        window.PMrates = data;
+        product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
+        productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
 
-     var startIcon = "<i class='fas fa-info-circle'"; //comment-alt'";
-     var endIcon = "></i>"
-     var i;
-     var j;
-     var k;
+        var startIcon = "<i class='fas fa-info-circle'"; //comment-alt'";
+        var endIcon = "></i>"
+        var i;
+        var j;
+        var k;
 
-     //Create headers using column names
-     var headers = [];
-     headers.push(lang["quote.text.exemption"]);
-     Object.keys(data.messages).every(function(i) {
-          Object.keys(data.messages[i]).forEach(function(j) {
-               headers.push(j);
-          });
-          return false;
-     });
+        //Create headers using column names
+        var headers = [];
+        headers.push(lang["quote.text.exemption"]);
+        Object.keys(data.messages).every(function(i) {
+            Object.keys(data.messages[i]).forEach(function(j) {
+                headers.push(j);
+            });
+            return false;
+        });
 
-     tableDescription = "<p>" + data.optional + "</p>" + "<p>" + data.description + "</p>";
+        tableDescription = "<p>" + data.optional + "</p>" + "<p>" + data.description + "</p>";
 
-     head = "<thead>";
-     head += "<tr>";
-     head += "<th colspan='" + headers.length + "'>" + product + " - " + variation + "</th>";
-     head += "</tr>";
-     head += "<tr>";
+        head = "<thead>";
+        head += "<tr>";
+        head += "<th colspan='" + headers.length + "'>" + product + " - " + productVariation + "</th>";
+        head += "</tr>";
+        head += "<tr>";
 
-     Object.keys(headers).forEach(function (j) {
-          head += "<th scope='col'>" + headers[j] + "</th>";
-     });
+        Object.keys(headers).forEach(function (j) {
+            head += "<th scope='col'>" + headers[j] + "</th>";
+        });
 
 
-     head += "</tr>";
-     head += "</thead>";
+        head += "</tr>";
+        head += "</thead>";
 
-     rows = "<tbody>";
+        rows = "<tbody>";
 
-     var numFila = 0;
+        var numFila = 0;
 
-     // Render rows
-     Object.keys(data.messages).forEach(function(i) {
+        // Render rows
+        Object.keys(data.messages).forEach(function(i) {
 
-         rows += "<tr class='PM-row row-" + numFila + "'><td>" + i + "</td>";
-         numFila++;
-         // Render columns
-         Object.keys(data.messages[i]).forEach(function(j) {
+            rows += "<tr class='PM-row row-" + numFila + "'><td>" + i + "</td>";
+            numFila++;
+            // Render columns
+            Object.keys(data.messages[i]).forEach(function(j) {
 
-               if (isNaN(data.table[i][j].price)){
-                         rows += "<td>" + startIcon  + "title='" + data.messages[i][j] + "'" + endIcon;
-               } else {
-                    let rawPrice = data.table[i][j].price;
+                if (isNaN(data.messages[i][j])){
+                    rows += "<td>" + startIcon  + "title='" + data.messages[i][j] + "'" + endIcon;
+                } else {
+                    let rawPrice = data.messages[i][j];
                     let splitPrice = rawPrice.split(".");
 
                     var adjustedDecimal;
                     if( typeof splitPrice[1] !== 'undefined' ) {
-                         adjustedDecimal = splitPrice[1] + "00";
+                        adjustedDecimal = splitPrice[1] + "00";
                     }else{
-                         adjustedDecimal = "00";
+                        adjustedDecimal = "00";
                     }
 
                     let newDecimal = adjustedDecimal.slice(0,2);
@@ -1558,30 +1587,30 @@ jQuery( document ).ready(function() {
 
                     // Renders coverage (coberturas) data
                     for( k=0;k<data.table[i][j].coverages.length;k++ ) {
-                         rows += " data-capital-" + k + "='" + data.table[i][j].coverages[k].capital + "'";
-                         rows += " data-codigo-" + k + "='" + data.table[i][j].coverages[k].codigo + "'";
-                         rows += " data-descripcion-" + k + "='" + data.table[i][j].coverages[k].descripcion + "'";
-                         rows += " data-duracion-" + k + "='" + data.table[i][j].coverages[k].duracion + "'";
-                         rows += " data-franquicia-" + k + "='" + data.table[i][j].coverages[k].franquicia + "'";
-                         rows += " data-prima-neta-" + k + "='" + data.table[i][j].coverages[k].primaNeta + "'";
+                        rows += " data-capital-" + k + "='" + data.table[i][j].coverages[k].capital + "'";
+                        rows += " data-codigo-" + k + "='" + data.table[i][j].coverages[k].codigo + "'";
+                        rows += " data-descripcion-" + k + "='" + data.table[i][j].coverages[k].descripcion + "'";
+                        rows += " data-duracion-" + k + "='" + data.table[i][j].coverages[k].duracion + "'";
+                        rows += " data-franquicia-" + k + "='" + data.table[i][j].coverages[k].franquicia + "'";
+                        rows += " data-prima-neta-" + k + "='" + data.table[i][j].coverages[k].primaNeta + "'";
                     }
 
                     // Renders quotes (formas de pago) data
                     for( k=0;k<data.table[i][j].quotes.length;k++ ) {
-                         switch(k){
-                         case 0:
-                              rows += " data-annual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-annual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
-                              break;
-                         case 1:
-                              rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
-                              break;
-                         case 2:
-                              rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
-                              break;
-                         case 3:
-                              rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
-                              break;
-                         }
+                        switch(k){
+                            case 0:
+                                rows += " data-annual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-annual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                break;
+                            case 1:
+                                rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                break;
+                            case 2:
+                                rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                break;
+                            case 3:
+                                rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                break;
+                        }
                     }
 
                     //description
@@ -1590,63 +1619,63 @@ jQuery( document ).ready(function() {
                     rows += ">" + amount + "</td>";
 
 
-               }
-         });
+                }
+            });
 
-         rows += "</tr>";
+            rows += "</tr>";
 
-     });
+        });
 
-     rows += "</tbody>";
-     table = head + rows;
+        rows += "</tbody>";
+        table = head + rows;
 
-     // Billing cycles
-     var billingCycles = "";
-     cols = Math.floor( 12 / data.billingCycles.length );
-     for( i=0;i<data.billingCycles.length;i++ ) {
-         switch(i) {
-             case 0:
-                 description = lang["quote.annual.text"];
-                 dataField = lang["quote.annual.field"];
-                 break;
-             case 1:
-                 description = lang["quote.biannual.text"];
-                 dataField = lang["quote.biannual.field"];
-                 break;
-             case 2:
-                 description = lang["quote.quarterly.text"];
-                 dataField = lang["quote.quarterly.field"];
-                 break;
-             case 3:
-                 description = lang["quote.monthly.text"];
-                 dataField = lang["quote.monthly.field"];
-                 break;
-         }
+        // Billing cycles
+        var billingCycles = "";
+        cols = Math.floor( 12 / data.billingCycles.length );
+        for( i=0;i<data.billingCycles.length;i++ ) {
+            switch(i) {
+                case 0:
+                    description = lang["quote.annual.text"];
+                    dataField = lang["quote.annual.field"];
+                    break;
+                case 1:
+                    description = lang["quote.biannual.text"];
+                    dataField = lang["quote.biannual.field"];
+                    break;
+                case 2:
+                    description = lang["quote.quarterly.text"];
+                    dataField = lang["quote.quarterly.field"];
+                    break;
+                case 3:
+                    description = lang["quote.monthly.text"];
+                    dataField = lang["quote.monthly.field"];
+                    break;
+            }
 
-         billingCycles += "<div class='checkboxWithLabel col-" + cols + " pb-2'>";
-         billingCycles +=    "<label>";
-         billingCycles +=        "<input type='radio' class='form-control' name='quote-billing-cycle' value='" + data.billingCycles[i] + "' disabled>";
-         billingCycles +=        "<div>" + description + "</div>";
-         billingCycles +=    "</label>";
-         billingCycles +=    "<div class='data-info " + dataField + " w-100'>";
-         billingCycles +=        "<div class='quote-amount txt-navy-blue'></div>";
-         billingCycles +=        "<div class='total-quote-amount txt-navy-blue'></div>";
-         billingCycles +=    "</div>";
-         billingCycles += "</div>";
-     }
+            billingCycles += "<div class='checkboxWithLabel col-" + cols + " pb-2'>";
+            billingCycles +=    "<label>";
+            billingCycles +=        "<input type='radio' class='form-control' name='quote-billing-cycle' value='" + data.billingCycles[i] + "' disabled>";
+            billingCycles +=        "<div>" + description + "</div>";
+            billingCycles +=    "</label>";
+            billingCycles +=    "<div class='data-info " + dataField + " w-100'>";
+            billingCycles +=        "<div class='quote-amount txt-navy-blue'></div>";
+            billingCycles +=        "<div class='total-quote-amount txt-navy-blue'></div>";
+            billingCycles +=    "</div>";
+            billingCycles += "</div>";
+        }
 
 
-     window.PMquoteTable = table;
-     jQuery('#quote .rates-table-description').html(tableDescription);
-     jQuery('#quote .rates-table-description').fadeIn();
-     jQuery('#quote .rates-table table').html(table);
-     jQuery('#quote .rates-table .billing-cycle').html(billingCycles);
-     jQuery('#quote .rates-table').fadeIn();
-     jQuery('#quote .get-rates .loadingIcon').hide();
-     jQuery('#quote .form .loading-lock').hide();
-     jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+        window.PMquoteTable = table;
+        jQuery('#quote .rates-table-description').html(tableDescription);
+        jQuery('#quote .rates-table-description').fadeIn();
+        jQuery('#quote .rates-table table').html(table);
+        jQuery('#quote .rates-table .billing-cycle').html(billingCycles);
+        jQuery('#quote .rates-table').fadeIn();
+        jQuery('#quote .get-rates .loadingIcon').hide();
+        jQuery('#quote .form .loading-lock').hide();
+        jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
 
- }
+    }
 
 
     // QUOTE - Checks fields again and gets rates by price from WS
@@ -1680,11 +1709,12 @@ jQuery( document ).ready(function() {
                 var productId = jQuery("#quote input[name='quote-product-variation']:checked").val();
                 var startingDate = jQuery("#quote .quote-starting-date").val();
                 var price = jQuery("#quote .quote-price").val();
+
                 var franchise = null;
                 if (window.PMfranchise != null){
                     franchise = jQuery("#quote .quote-franchise").val();
                     if (franchise==''){
-                         franchise = null;
+                        franchise = null;
                     }
                 }
 
@@ -1692,8 +1722,8 @@ jQuery( document ).ready(function() {
                 var profession = jQuery("#quote .quote-job").val();
                 var birthdate  = jQuery("#quote .quote-birthdate").val();
                 var gender = jQuery("#quote .quote-gender").val();
-                var height = jQuery("#quote .quote-height").val();
-                var weight = jQuery("#quote .quote-weight").val();
+                var height = jQuery("#quote #quote-height").val();
+                var weight = jQuery("#quote #quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
 
                 var duration = null;
@@ -1722,6 +1752,7 @@ jQuery( document ).ready(function() {
                     commercialKey : commercialKey,
                     duration: duration
                 }
+                //console.log(window.PMgetRatesData);
 
 
                 jQuery.ajax({
@@ -1747,9 +1778,10 @@ jQuery( document ).ready(function() {
                     success: function (response) {
                         if (response['success'] == true) {
                             // TODO: there are products that send information in a different structure and won't work
+                            //console.log(response.data);
                             quote_load_RatesByPrice(response.data);
                         } else {
-                            console.error( response.e);
+                            //console.error( response.e);
                             displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
                             jQuery('#quote .get-rates .loadingIcon').hide();
                             jQuery('#quote .form .loading-lock').hide();
@@ -1757,7 +1789,7 @@ jQuery( document ).ready(function() {
                         }
                     },
                     error: function (response) {
-                        console.error( response.e);
+                        //console.error( response.e);
                         displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
                         jQuery('#quote .get-rates .loadingIcon').hide();
                         jQuery('#quote .form .loading-lock').hide();
@@ -1772,85 +1804,76 @@ jQuery( document ).ready(function() {
     // QUOTE - Process rates and display the table
     function quote_load_RatesByPrice(data){
 
-        //console.log(data);
         window.PMrates = data;
         product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
-        variation = data.name.trim().toUpperCase();
-
-        coberturasOpcionales = data.coberturasOpcionales;
-        riesgoTarificado = data.riesgoTarificado;
-
-        datosSalida = "<p>"+coberturasOpcionales+"</p>";
-        datosSalida += "<p>"+riesgoTarificado+"</p>";
-
-
+        productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
+        //console.log("Rates by price");
+        //console.log(data);
+        var startIcon = "<i class='fas fa-info-circle'"; //comment-alt'";
+        var endIcon = "></i>"
         var i;
         var j;
         var k;
-        var columnas;
-        columnas = data.rows.length + 1;
 
+        //Create headers using column names
+        var headers = [];
+        headers.push(lang["quote.text.exemption"]);
+        Object.keys(data.messages).every(function(i) {
+            Object.keys(data.messages[i]).forEach(function(j) {
+                headers.push(j);
+            });
+            return false;
+        });
+
+        tableDescription = "<p>" + data.optional + "</p>" + "<p>" + data.description + "</p>";
+        tableFooter = "<p>" + data.optional + "</p>";
         head = "<thead>";
         head += "<tr>";
-        if (columnas < 5) {
-            head += "<th colspan='" + columnas + "'>" + product + " - " + variation + "</th>";
-        }
-        if (columnas > 6) {
-            head += "<th colspan='5'>" + product + " - " + variation + "</th>";
-        }
+        head += "<th colspan='" + headers.length + "'>" + product + " - " + productVariation + "</th>";
         head += "</tr>";
         head += "<tr>";
-        var i;
-        Object.keys(data.table).forEach(function(i) {
-            if (i < 2) {
-                head += "<tr>";
-                Object.keys(data.table[i]).forEach(function (j) {
-                    if (j == 1) {
-                        head += "<th scope='col'>Franquincia</th>";
-                    }
-                    if (j => 1) {
-                        head += "<th scope='col'>" + data.table[i][j].tituloColumna + "</th>";
-                    }
-                });
-                head += "</tr>";
-            }
+
+        Object.keys(headers).forEach(function (j) {
+            head += "<th scope='col'>" + headers[j] + "</th>";
         });
+
+
+        head += "</tr>";
         head += "</thead>";
 
         rows = "<tbody>";
-        descriptionOption = "";
+
+        var numFila = 0;
 
         // Render rows
-        Object.keys(data.table).forEach(function(i) {
+        Object.keys(data.messages).forEach(function(i) {
 
-            rows += "<tr class='PM-row row-" + i + "'>";
-
+            rows += "<tr class='PM-row row-" + numFila + "'><td>" + i + "</td>";
+            numFila++;
             // Render columns
-            Object.keys(data.table[i]).forEach(function(j) {
+            Object.keys(data.messages[i]).forEach(function(j) {
+                //console.log(data.messages[i][j])
+                if (isNaN(data.messages[i][j])){
+                    rows += "<td>" + startIcon  + "title='" + data.messages[i][j] + "'" + endIcon;
+                } else {
+                    let rawPrice = data.messages[i][j];
+                    let splitPrice = rawPrice.split(".");
 
-                // renders exemption (franquicia) as first column
-                if( j == 1 ){
-                    rows += "<td>" + i + " " + lang["quote.text.days"] + "</td>";
-                }
-
-                // Renders proper column
-                if( j => 1 ){
-
-                    // Renders price to display
-                    if (data.table[i][j].price == 0) {
-                        amount = "-"
-                    } else {
-                        amount = data.table[i][j].capital + " &euro;";
+                    var adjustedDecimal;
+                    if( typeof splitPrice[1] !== 'undefined' ) {
+                        adjustedDecimal = splitPrice[1] + "00";
+                    }else{
+                        adjustedDecimal = "00";
                     }
-                    if (data.table[i][j].ayudaColumna != null) {
-                        rows += "<td id='td-"+i+j+"' class='product' data-toggle='tooltip' data-placement='top' title='"+data.table[i][j].ayudaColumna+"' ";
-                    } else {
-                        rows += "<td id='td-"+i+j+"' class='product' ";
-                    }
+
+                    let newDecimal = adjustedDecimal.slice(0,2);
+
+
+                    amount = splitPrice[0] + "," + newDecimal + " &euro;";
+                    rows += "<td class='product' ";
 
                     // Renders coverage (coberturas) data
-                    // console.log(i + 'x' + j + ' coverages: ' + data.table[i][j].coverages.length);
-                    for (k = 0; k < data.table[i][j].coverages.length; k++) {
+                    for( k=0;k<data.table[i][j].coverages.length;k++ ) {
                         rows += " data-capital-" + k + "='" + data.table[i][j].coverages[k].capital + "'";
                         rows += " data-codigo-" + k + "='" + data.table[i][j].coverages[k].codigo + "'";
                         rows += " data-descripcion-" + k + "='" + data.table[i][j].coverages[k].descripcion + "'";
@@ -1859,10 +1882,9 @@ jQuery( document ).ready(function() {
                         rows += " data-prima-neta-" + k + "='" + data.table[i][j].coverages[k].primaNeta + "'";
                     }
 
-
                     // Renders quotes (formas de pago) data
-                    for (k = 0; k < data.table[i][j].quotes.length; k++) {
-                        switch (k) {
+                    for( k=0;k<data.table[i][j].quotes.length;k++ ) {
+                        switch(k){
                             case 0:
                                 rows += " data-annual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-annual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
@@ -1870,17 +1892,21 @@ jQuery( document ).ready(function() {
                                 rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 2:
-                                rows += " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 3:
                                 rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                         }
                     }
-                    rows +=">" + amount + "</td>";
+
+                    //description
+                    rows += " data-product-description='" + data.messages[i][j] + "' ";
+
+                    rows += ">" + amount + "</td>";
+
+
                 }
-                descriptionOption += "<div id='div-"+i+j+"' class='display-none'>"+data.table[i][j].descripcionOpcion+"</div>";
-                descriptionOption += "<script>jQuery(document).ready(function(){jQuery('#td-"+i+j+"').on( 'click', function() {jQuery('.display-block').addClass('display-none').removeClass('display-block');jQuery('#div-"+i+j+"').addClass('display-block').removeClass('display-none'); });});</script>";
             });
 
             rows += "</tr>";
@@ -1927,9 +1953,10 @@ jQuery( document ).ready(function() {
 
 
         window.PMquoteTable = table;
+        jQuery('#quote .rates-table-description').html(tableDescription);
+        jQuery('#quote .rates-table-footer').html(tableFooter);
+        jQuery('#quote .rates-table-description').fadeIn();
         jQuery('#quote .rates-table table').html(table);
-        jQuery('#quote .rates-table .datos-salida').html(datosSalida);
-        jQuery('#quote .rates-table .descript-option').html(descriptionOption);
         jQuery('#quote .rates-table .billing-cycle').html(billingCycles);
         jQuery('#quote .rates-table').fadeIn();
         jQuery('#quote .get-rates .loadingIcon').hide();
@@ -1937,6 +1964,7 @@ jQuery( document ).ready(function() {
         jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
 
     }
+
 
     // QUOTE - Send mail button
     jQuery('#quote .rates-table .action-minibutton.send-email').click(function(e){
@@ -2005,20 +2033,20 @@ jQuery( document ).ready(function() {
                 jQuery('.modal-send-email .result').html(response['body']);
             },
             error: function(response){
-                console.error(response['e']);
+                //console.error(response['e']);
             }
         });
 
     });
 
 
-     // QUOTE - Print button
-     jQuery('#quote .rates-table .action-minibutton.print').click(function(e){
+    // QUOTE - Print button
+    jQuery('#quote .rates-table .action-minibutton.print').click(function(e){
 
-          window.print();
-     });
+        window.print();
+    });
 
- // QUOTE - Selects row from rates table and enable billing cycle
+    // QUOTE - Selects row from rates table and enable billing cycle
     jQuery("#quote .rates-table table").on('click', "td.product", function (e) {
 
         // Updates selected element classes
@@ -2120,13 +2148,13 @@ jQuery( document ).ready(function() {
 
         window.PMselectedFinalProductCoverages = coverages;
 
-          if (PMEnfGraves){
+        if (PMEnfGraves){
 
-               selectionDescription = "<p>" + jQuery(this).data("product-description") + "<p>";
-               jQuery('#quote .rates-table-selection-description').html(selectionDescription);
-               jQuery('#quote .rates-table-selection-description').fadeIn();
+            selectionDescription = "<p>" + jQuery(this).data("product-description") + "<p>";
+            jQuery('#quote .rates-table-selection-description').html(selectionDescription);
+            jQuery('#quote .rates-table-selection-description').fadeIn();
 
-          }
+        }
 
     });
 
@@ -2276,11 +2304,11 @@ jQuery( document ).ready(function() {
                                 break;
                         }
                     } else {
-                        console.error( response.e);
+                        //console.error( response.e);
                     }
                 },
                 error: function (response) {
-                    console.error( lang["WS.error"] );
+                    //console.error( lang["WS.error"] );
                 }
             });
 
@@ -2338,207 +2366,207 @@ jQuery( document ).ready(function() {
         '#quote #personal-info select' )
         .on("input change click keyup", function() {
 
-        // validates input texts
-        if (jQuery(this).hasClass("quote-first-name") ||
-            jQuery(this).hasClass("quote-last-name") ||
-            jQuery(this).hasClass("quote-address") ||
-            jQuery(this).hasClass("quote-company-name") ||
-            jQuery(this).hasClass("quote-company-address") ||
-            jQuery(this).hasClass("quote-legal-entity-name") ||
-            jQuery(this).hasClass("quote-legal-entity-address") ||
-            jQuery(this).hasClass("quote-another-insurance-name")  ){
+            // validates input texts
+            if (jQuery(this).hasClass("quote-first-name") ||
+                jQuery(this).hasClass("quote-last-name") ||
+                jQuery(this).hasClass("quote-address") ||
+                jQuery(this).hasClass("quote-company-name") ||
+                jQuery(this).hasClass("quote-company-address") ||
+                jQuery(this).hasClass("quote-legal-entity-name") ||
+                jQuery(this).hasClass("quote-legal-entity-address") ||
+                jQuery(this).hasClass("quote-another-insurance-name")  ){
 
-            if (jQuery(this).val().length > 0) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
+                if (jQuery(this).val().length > 0) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                }
             }
-        }
 
-        if ( jQuery(this).hasClass("quote-another-insurance-ends") ){
-            var valid;
+            if ( jQuery(this).hasClass("quote-another-insurance-ends") ){
+                var valid;
 
-            if( jQuery(this).val().length == 10) {
-                var splitDate = jQuery(this).val().split("/");
-                if (splitDate[0] >= 1 && splitDate[0] <= 31) {
-                    if (splitDate[1] >= 1 && splitDate[1] <= 12) {
-                        if (splitDate[2] >= 1920 && splitDate[2] <= 2025) {
-                            valid = true;
+                if( jQuery(this).val().length == 10) {
+                    var splitDate = jQuery(this).val().split("/");
+                    if (splitDate[0] >= 1 && splitDate[0] <= 31) {
+                        if (splitDate[1] >= 1 && splitDate[1] <= 12) {
+                            if (splitDate[2] >= 1920 && splitDate[2] <= 2025) {
+                                valid = true;
+                            } else {
+                                valid = false;
+                            }
                         } else {
                             valid = false;
                         }
                     } else {
                         valid = false;
                     }
-                } else {
+                }else {
                     valid = false;
                 }
-            }else {
-                valid = false;
+
+                if (valid) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                }
             }
 
-            if (valid) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-            }
-        }
-
-        if ( jQuery(this).hasClass("quote-another-insurance-price") ){
-            if (jQuery(this).val().length > 1) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-            }
-        }
-
-        if (jQuery(this).hasClass("quote-legal-entity-id") ){
-            if ( isValidCif( jQuery(this).val() ) ) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-            }
-        }
-
-        if (jQuery(this).hasClass("quote-personal-id") ){
-            if (isValidDoc( jQuery(this).val() ) ) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-                jQuery(this).next().hide();
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-                jQuery(this).next().show();
-            }
-        }
-
-        if (jQuery(this).hasClass("quote-city") ||
-            jQuery(this).hasClass("quote-province") ||
-            jQuery(this).hasClass("quote-company-city") ||
-            jQuery(this).hasClass("quote-company-province")) {
-            if (jQuery(this).children("option:selected").val() > 0) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-            }
-        }
-
-        if (jQuery(this).hasClass("quote-phone") ) {
-            if (jQuery(this).val().length == 9) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-                jQuery(this).next().hide();
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-                jQuery(this).next().show();
-            }
-        }
-
-        if ( jQuery(this).hasClass("quote-postal-code") ) {
-            if (jQuery(this).val().length == 5) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
+            if ( jQuery(this).hasClass("quote-another-insurance-price") ){
+                if (jQuery(this).val().length > 1) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                }
             }
 
-            if (jQuery("#quote .quote-city").children("option:selected").val() > 0) {
-                jQuery("#quote .quote-city").removeClass("invalid");
-                jQuery("#quote .quote-city").addClass("valid");
-            } else {
-                jQuery("#quote .quote-city").addClass("invalid");
-                jQuery("#quote .quote-city").removeClass("valid");
+            if (jQuery(this).hasClass("quote-legal-entity-id") ){
+                if ( isValidCif( jQuery(this).val() ) ) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                }
             }
 
-            if (jQuery("#quote .quote-province").children("option:selected").val() > 0) {
-                jQuery("#quote .quote-province").removeClass("invalid");
-                jQuery("#quote .quote-province").addClass("valid");
-            } else {
-                jQuery("#quote .quote-province").addClass("invalid");
-                jQuery("#quote .quote-province").removeClass("valid");
-            }
-        }
-
-        if ( jQuery(this).hasClass("quote-company-postal-code") ) {
-            if (jQuery(this).val().length == 5) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
+            if (jQuery(this).hasClass("quote-personal-id") ){
+                if (isValidDoc( jQuery(this).val() ) ) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                    jQuery(this).next().hide();
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                    jQuery(this).next().show();
+                }
             }
 
-            if (jQuery("#quote .quote-company-city").children("option:selected").val() > 0) {
-                jQuery("#quote .quote-company-city").removeClass("invalid");
-                jQuery("#quote .quote-company-city").addClass("valid");
-            } else {
-                jQuery("#quote .quote-company-city").addClass("invalid");
-                jQuery("#quote .quote-company-city").removeClass("valid");
+            if (jQuery(this).hasClass("quote-city") ||
+                jQuery(this).hasClass("quote-province") ||
+                jQuery(this).hasClass("quote-company-city") ||
+                jQuery(this).hasClass("quote-company-province")) {
+                if (jQuery(this).children("option:selected").val() > 0) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                }
             }
 
-            if (jQuery("#quote .quote-company-province").children("option:selected").val() > 0) {
-                jQuery("#quote .quote-company-province").removeClass("invalid");
-                jQuery("#quote .quote-company-province").addClass("valid");
-            } else {
-                jQuery("#quote .quote-company-province").addClass("invalid");
-                jQuery("#quote .quote-company-province").removeClass("valid");
-            }
-        }
-
-        if ( jQuery(this).hasClass("quote-legal-entity-postal-code") ) {
-            if (jQuery(this).val().length == 5) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
+            if (jQuery(this).hasClass("quote-phone") ) {
+                if (jQuery(this).val().length == 9) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                    jQuery(this).next().hide();
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                    jQuery(this).next().show();
+                }
             }
 
-            if (jQuery("#quote .quote-legal-entity-city").children("option:selected").val() > 0) {
-                jQuery("#quote .quote-legal-entity-city").removeClass("invalid");
-                jQuery("#quote .quote-legal-entity-city").addClass("valid");
-            } else {
-                jQuery("#quote .quote-legal-entity-city").addClass("invalid");
-                jQuery("#quote .quote-legal-entity-city").removeClass("valid");
+            if ( jQuery(this).hasClass("quote-postal-code") ) {
+                if (jQuery(this).val().length == 5) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                }
+
+                if (jQuery("#quote .quote-city").children("option:selected").val() > 0) {
+                    jQuery("#quote .quote-city").removeClass("invalid");
+                    jQuery("#quote .quote-city").addClass("valid");
+                } else {
+                    jQuery("#quote .quote-city").addClass("invalid");
+                    jQuery("#quote .quote-city").removeClass("valid");
+                }
+
+                if (jQuery("#quote .quote-province").children("option:selected").val() > 0) {
+                    jQuery("#quote .quote-province").removeClass("invalid");
+                    jQuery("#quote .quote-province").addClass("valid");
+                } else {
+                    jQuery("#quote .quote-province").addClass("invalid");
+                    jQuery("#quote .quote-province").removeClass("valid");
+                }
             }
 
-            if (jQuery("#quote .quote-legal-entity-province").children("option:selected").val() > 0) {
-                jQuery("#quote .quote-legal-entity-province").removeClass("invalid");
-                jQuery("#quote .quote-legal-entity-province").addClass("valid");
-            } else {
-                jQuery("#quote .quote-legal-entity-province").addClass("invalid");
-                jQuery("#quote .quote-legal-entity-province").removeClass("valid");
-            }
-        }
+            if ( jQuery(this).hasClass("quote-company-postal-code") ) {
+                if (jQuery(this).val().length == 5) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                }
 
-        if (jQuery(this).hasClass("quote-email") ||
-            jQuery(this).hasClass("quote-legal-entity-email")) {
-            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-            if ( regex.test( jQuery(this).val() ) ) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-                jQuery(this).next().hide();
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-                jQuery(this).next().show();
+                if (jQuery("#quote .quote-company-city").children("option:selected").val() > 0) {
+                    jQuery("#quote .quote-company-city").removeClass("invalid");
+                    jQuery("#quote .quote-company-city").addClass("valid");
+                } else {
+                    jQuery("#quote .quote-company-city").addClass("invalid");
+                    jQuery("#quote .quote-company-city").removeClass("valid");
+                }
+
+                if (jQuery("#quote .quote-company-province").children("option:selected").val() > 0) {
+                    jQuery("#quote .quote-company-province").removeClass("invalid");
+                    jQuery("#quote .quote-company-province").addClass("valid");
+                } else {
+                    jQuery("#quote .quote-company-province").addClass("invalid");
+                    jQuery("#quote .quote-company-province").removeClass("valid");
+                }
             }
-        }
-        //console.log( jQuery(this).attr("class") );
-        step2EnableNextButton();
-    });
+
+            if ( jQuery(this).hasClass("quote-legal-entity-postal-code") ) {
+                if (jQuery(this).val().length == 5) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                }
+
+                if (jQuery("#quote .quote-legal-entity-city").children("option:selected").val() > 0) {
+                    jQuery("#quote .quote-legal-entity-city").removeClass("invalid");
+                    jQuery("#quote .quote-legal-entity-city").addClass("valid");
+                } else {
+                    jQuery("#quote .quote-legal-entity-city").addClass("invalid");
+                    jQuery("#quote .quote-legal-entity-city").removeClass("valid");
+                }
+
+                if (jQuery("#quote .quote-legal-entity-province").children("option:selected").val() > 0) {
+                    jQuery("#quote .quote-legal-entity-province").removeClass("invalid");
+                    jQuery("#quote .quote-legal-entity-province").addClass("valid");
+                } else {
+                    jQuery("#quote .quote-legal-entity-province").addClass("invalid");
+                    jQuery("#quote .quote-legal-entity-province").removeClass("valid");
+                }
+            }
+
+            if (jQuery(this).hasClass("quote-email") ||
+                jQuery(this).hasClass("quote-legal-entity-email")) {
+                var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                if ( regex.test( jQuery(this).val() ) ) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                    jQuery(this).next().hide();
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                    jQuery(this).next().show();
+                }
+            }
+            //console.log( jQuery(this).attr("class") );
+            step2EnableNextButton();
+        });
 
     // QUOTE - postal code  and price (only numbers)
     jQuery( '#quote #personal-info').on('keypress', ".quote-postal-code, .quote-company-postal-code, .quote-legal-entity-postal-code, .quote-another-insurance-price", function (evt) {
@@ -2893,76 +2921,76 @@ jQuery( document ).ready(function() {
     // QUOTE - Detects changes on visible extra fields
     jQuery("#quote #health-form")
         .on('input change click keyup',
-        "label, input, textarea, select", function (e) {
+            "label, input, textarea, select", function (e) {
 
-        if (jQuery(this).is("select")) {
-            if (jQuery(this).val() != null ) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-            }
-        }
+                if (jQuery(this).is("select")) {
+                    if (jQuery(this).val() != null ) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
+                }
 
-        if (jQuery(this).is("input")) {
-            if (jQuery(this).val().length > 1) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-            }
-        }
+                if (jQuery(this).is("input")) {
+                    if (jQuery(this).val().length > 1) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
+                }
 
-        if (jQuery(this).is("textarea")) {
-            if (jQuery(this).val().length > 1) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-            }
-        }
+                if (jQuery(this).is("textarea")) {
+                    if (jQuery(this).val().length > 1) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
+                }
 
-        if (jQuery(this).is("label")) {
-            jQuery(this).parent().find('input').removeClass("invalid");
-            jQuery(this).parent().find('input').addClass("valid");
-        }
+                if (jQuery(this).is("label")) {
+                    jQuery(this).parent().find('input').removeClass("invalid");
+                    jQuery(this).parent().find('input').addClass("valid");
+                }
 
-        if ( jQuery(this).hasClass("date-input") ){
-            var valid;
+                if ( jQuery(this).hasClass("date-input") ){
+                    var valid;
 
-            if( jQuery(this).val().length == 10) {
-                var splitDate = jQuery(this).val().split("/");
-                if (splitDate[0] >= 1 && splitDate[0] <= 31) {
-                    if (splitDate[1] >= 1 && splitDate[1] <= 12) {
-                        if (splitDate[2] >= 1920 && splitDate[2] <= 2021) {
-                            valid = true;
+                    if( jQuery(this).val().length == 10) {
+                        var splitDate = jQuery(this).val().split("/");
+                        if (splitDate[0] >= 1 && splitDate[0] <= 31) {
+                            if (splitDate[1] >= 1 && splitDate[1] <= 12) {
+                                if (splitDate[2] >= 1920 && splitDate[2] <= 2021) {
+                                    valid = true;
+                                } else {
+                                    valid = false;
+                                }
+                            } else {
+                                valid = false;
+                            }
                         } else {
                             valid = false;
                         }
-                    } else {
+                    }else {
                         valid = false;
                     }
-                } else {
-                    valid = false;
+
+                    if (valid) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
                 }
-            }else {
-                valid = false;
-            }
 
-            if (valid) {
-                jQuery(this).removeClass("invalid");
-                jQuery(this).addClass("valid");
-            } else {
-                jQuery(this).addClass("invalid");
-                jQuery(this).removeClass("valid");
-            }
-        }
-
-        step3EnableNextButton();
-    });
+                step3EnableNextButton();
+            });
 
     // QUOTE - Validates all visible fields (extra fields when selecting yes)
     function step3EnableNextButton(){
@@ -3006,9 +3034,9 @@ jQuery( document ).ready(function() {
             // Gets form data
             var formData = {};
             jQuery( "#health-form input[type=number], " +
-                    "#health-form input[type=text], " +
-                    "#health-form textarea, " +
-                    "#health-form select").each(function() {
+                "#health-form input[type=text], " +
+                "#health-form textarea, " +
+                "#health-form select").each(function() {
                 if ( jQuery(this).val() != null ) {
                     formData[jQuery(this).attr("name")] = jQuery(this).val();
                 }
@@ -3712,16 +3740,16 @@ jQuery( document ).ready(function() {
     // ADVISOR - additional restrictions (freelancer fee - age)
     jQuery("#quote .recomendador").on('change', 'select:visible', function (e) {
 
-        console.log("check");
+        //console.log("check");
         if ( jQuery("#quote .recomendador .advisor-freelancer-fee").val() == 2 &&
             jQuery("#quote .recomendador .advisor-age").val() <= 47){
             jQuery("#quote .recomendador select:visible").addClass("invalid");
             jQuery("#quote .recomendador select:visible").removeClass("valid");
-            console.log("KO");
+            //console.log("KO");
         } else {
             jQuery("#quote .recomendador select:visible").addClass("valid");
             jQuery("#quote .recomendador select:visible").removeClass("invalid");
-            console.log("OK");
+            //console.log("OK");
         }
 
         enableAdviceButton();
@@ -3791,7 +3819,7 @@ jQuery( document ).ready(function() {
     jQuery('.get-advice .advice-button').click(function() {
 
         // Runs validation on all fields
-         jQuery( '#quote .recomendador input:visible, ' +
+        jQuery( '#quote .recomendador input:visible, ' +
             '#quote .recomendador select:visible' )
             .change();
 
@@ -3959,7 +3987,7 @@ jQuery( document ).ready(function() {
                 costeFranquicia30 : costeFranquicia30
             };
 
-            console.log(window.PMadvisorResult);
+            //console.log(window.PMadvisorResult);
 
             jQuery('#quote .advisor-results').fadeIn();
 
@@ -3977,41 +4005,41 @@ jQuery( document ).ready(function() {
             '#send-policy-request select:visible')
             .on("input change click keyup", function () {
 
-            // validates fields
+                // validates fields
 
-            if (jQuery(this).hasClass("productor")) {
-                if (jQuery(this).val() != "") {
-                    jQuery(this).removeClass("invalid");
-                    jQuery(this).addClass("valid");
-                } else {
-                    jQuery(this).addClass("invalid");
-                    jQuery(this).removeClass("valid");
+                if (jQuery(this).hasClass("productor")) {
+                    if (jQuery(this).val() != "") {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
                 }
-            }
 
-            if (jQuery(this).hasClass("doc")) {
-                if (jQuery(this).val() != "") {
-                    jQuery(this).removeClass("invalid");
-                    jQuery(this).addClass("valid");
-                } else {
-                    jQuery(this).addClass("invalid");
-                    jQuery(this).removeClass("valid");
+                if (jQuery(this).hasClass("doc")) {
+                    if (jQuery(this).val() != "") {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
                 }
-            }
 
-            if (jQuery(this).hasClass("refId")) {
-                if (jQuery(this).val() > 0) {
-                    jQuery(this).removeClass("invalid");
-                    jQuery(this).addClass("valid");
-                } else {
-                    jQuery(this).addClass("invalid");
-                    jQuery(this).removeClass("valid");
+                if (jQuery(this).hasClass("refId")) {
+                    if (jQuery(this).val() > 0) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
                 }
-            }
 
-            enableUploadPolicyRequestButton();
+                enableUploadPolicyRequestButton();
 
-        });
+            });
 
         function enableUploadPolicyRequestButton(){
             allValid = true;
@@ -4237,38 +4265,38 @@ jQuery( document ).ready(function() {
                 }
             });
 
-    });
+        });
     jQuery("#sliders .list-all")
         .on('click', "tr:not('.highlight') .delete-button.action-button", function (e) {
             jQuery(this).parent().parent().addClass("highlight");
 
             displayModal("delete-slider-modal", lang["slider.modal.delete.title"], "<p class='text-center'>" + lang["slider.modal.delete.message"] + "<br><b>" + jQuery(this).parent().parent().find("td:nth-child(2)").html() + "</b></p>", lang["slider.modal.delete.yes"], lang["slider.modal.delete.no"]);
-    });
+        });
     // PANEL - sliders delete slider
 
     if (jQuery('#PMmodal').length) {
         jQuery("#panel")
             .on('click', "#PMmodal.custom-delete-slider-modal .btn-primary", function (e) {
 
-            var url = "/slider-ajax";
-            var action = "delete";
-            var id = jQuery('.list-all tr.highlight td:first-child').html();
+                var url = "/slider-ajax";
+                var action = "delete";
+                var id = jQuery('.list-all tr.highlight td:first-child').html();
 
-            jQuery.ajax({
-                type: "POST",
-                url: url,
-                data: {
-                    action : action,
-                    id : id
-                },
-                success: function(response) {
-                    listAllSliders();
-                },
-                error: function(response){
-                    console.error(response);
-                }
+                jQuery.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        action : action,
+                        id : id
+                    },
+                    success: function(response) {
+                        listAllSliders();
+                    },
+                    error: function(response){
+                        console.error(response);
+                    }
+                });
             });
-        });
         jQuery("#panel")
             .on('click', "#PMmodal.custom-delete-slider-modal .btn-secondary", function (e) {
 
@@ -4302,32 +4330,32 @@ jQuery( document ).ready(function() {
             '#sliders form textarea' )
             .on("input change click keyup", function() {
 
-            // validates fields
-            if (jQuery(this).hasClass("slider-name")) {
+                // validates fields
+                if (jQuery(this).hasClass("slider-name")) {
 
-                if (jQuery(this).val().length > 3) {
-                    jQuery(this).removeClass("invalid");
-                    jQuery(this).addClass("valid");
-                } else {
-                    jQuery(this).addClass("invalid");
-                    jQuery(this).removeClass("valid");
+                    if (jQuery(this).val().length > 3) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
                 }
-            }
 
-            if (jQuery(this).hasClass("slider-color")){
-                if (jQuery(this).val().length == 7) {
-                    jQuery(this).removeClass("invalid");
-                    jQuery(this).addClass("valid");
-                } else {
-                    jQuery(this).addClass("invalid");
-                    jQuery(this).removeClass("valid");
+                if (jQuery(this).hasClass("slider-color")){
+                    if (jQuery(this).val().length == 7) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
                 }
-            }
 
 
-            // console.log( jQuery(this).attr("class") );
-            enableSliderSaveButton();
-        });
+                // console.log( jQuery(this).attr("class") );
+                enableSliderSaveButton();
+            });
 
     }
 
@@ -4382,9 +4410,7 @@ jQuery( document ).ready(function() {
                 color : color,
                 header : header,
                 description : description,
-                image : image,
-                fInicio : fInicio,
-                fFinal : fFinal
+                image : image
             },
             success: function(response) {
                 jQuery('#sliders .new-slider').hide();
@@ -4471,10 +4497,18 @@ jQuery( document ).ready(function() {
 
     function resetProductVariations(){
         jQuery('#quote .product-variations').hide();
+        jQuery('#quote .product-modalities').hide();
 
         resetProductExtraInfo();
         resetAdvisorResults();
+        resetProductModalities();
     }
+
+    function resetProductModalities(){
+        jQuery('#quote .product-modalities input').prop("checked", false);
+        window.PMSelectedProductModality = null;
+    }
+
     function resetAdvisorResults(){
         jQuery('#quote .advisor-results').hide();
 
