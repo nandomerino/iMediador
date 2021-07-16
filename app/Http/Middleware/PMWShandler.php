@@ -470,6 +470,7 @@ class PMWShandler
                     $productConfig[$row->nombre]["min"] = $row->valorMinimo;
                     $productConfig[$row->nombre]["max"] = $row->valorMaximo;
                     $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
+                    $productConfig[$row->nombre]["columns"] = $row->columnas;
                 }
 
                 if( $row->nombre == "P_PESO"){
@@ -479,6 +480,7 @@ class PMWShandler
                     $productConfig[$row->nombre]["min"] = $row->valorMinimo;
                     $productConfig[$row->nombre]["max"] = $row->valorMaximo;
                     $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
+                    $productConfig[$row->nombre]["columns"] = $row->columnas;
                 }
 
                 if( $row->nombre == "P_SEXO"){
@@ -491,6 +493,7 @@ class PMWShandler
                 if( $row->nombre == "P_FRANQUICIA"){
                     $productConfig[$row->nombre]["name"] = $row->etiquetaPre;
                     $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
+                    $productConfig[$row->nombre]["columns"] = $row->columnas;
                     foreach( $row->listaValores->listaValores as $innerRow ) {
                         $productConfig[$row->nombre]["values"][$innerRow->codigo] = $innerRow->descripcion;
                     }
@@ -501,6 +504,7 @@ class PMWShandler
                     $productConfig[$row->nombre]["hidden"] = $row->esOculto;
                     $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
                     $productConfig[$row->nombre]["attributes"] = $row->atributosHTML;
+                    $productConfig[$row->nombre]["columns"] = $row->columnas;
                     if( is_array( $row->listaValores->listaValores ) ){
                         $productConfig[$row->nombre]["array"] = true;
                         foreach( $row->listaValores->listaValores as $innerRow ) {
@@ -676,7 +680,7 @@ class PMWShandler
         $rates = [];
 
         $data = $response->return;
-        //app('debugbar')->info($data);
+        app('debugbar')->info($data);
         if( $data->correcto == "S" ){
 
             //Description prior to table and foot info
@@ -752,15 +756,30 @@ class PMWShandler
 
                     // Get coverages (coberturas)
                     $j = 0;
-                    foreach ($row->coberturas->array as $row2) {
-                        $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
-                        $j++;
+                    if (is_array($row->coberturas->array)){
+
+                        foreach ($row->coberturas->array as $row2) {
+                            $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
+                            $j++;
+                        }
+                    } else {
+
+                        foreach ($row->coberturas as $row2) {
+                            $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
+                            $j++;
+                        }
                     }
+
 
                     // Get quotes
                     $j = 0;

@@ -202,7 +202,7 @@
                                             </div>
 
                                             <div class="row pt-3 quote-price-wrapper">
-                                                <div class="col-4">
+                                                <div class="col-12">
                                                     <label class="quote-price-label mb-1" for="quote-price">{{ __('quote.amount') }}</label>
                                                     <input type='number' class="form-control w-100 quote-price" name="quote-price" autocomplete="off" required>
                                                 </div>

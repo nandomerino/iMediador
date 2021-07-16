@@ -627,12 +627,13 @@ jQuery( document ).ready(function() {
         if (data.P_FRANQUICIA ){//data.P_NOMBRE_PRODUCTO == "ENFERMEDADES GRAVES"){
             // Load franchise
             window.PMfranchise = data.P_FRANQUICIA;
-            window.PMEnfGraves = true;
+            //window.PMEnfGraves = true;
+            //console.log(data.P_FRANQUICIA);
             var hidden = "";
             if(data.P_FRANQUICIA.hidden == "S"){
                 hidden = " type='hidden' ";
             }
-            franchiseField += "<div class='col-4'>";
+            franchiseField += "<div class='col-6'>";
             franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
             franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
 
@@ -664,7 +665,7 @@ jQuery( document ).ready(function() {
             if(data.P_PERIODO_COBERTURA.hidden == "S"){
                 hidden = " type='hidden' ";
             }
-            var durationField = "<div class='col-4'>";
+            var durationField = "<div class='col-6'>";
             durationField += "<label class='mb-1 quote-duration-label' for='quote-duration'>" + data.P_PERIODO_COBERTURA.name + "</label>";
             durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
 
@@ -1752,7 +1753,7 @@ jQuery( document ).ready(function() {
                     commercialKey : commercialKey,
                     duration: duration
                 }
-                //console.log(window.PMgetRatesData);
+                console.log(window.PMgetRatesData);
 
 
                 jQuery.ajax({

@@ -238,7 +238,7 @@
     "quote.legalEntity" : "Persona jurídica",
     "quote.legalEntity.name" : "Razón social",
     "quote.legalEntity.id" : "CIF",
-    "quote.amount" : "Importe asegurado (€)",
+    "quote.amount" : "Coste mensual del Seguro",
     "quote.additionalInfo" : "Datos adicionales",
     "quote.increasedValue" : "Revaloración",
     "quote.holder" : "El Tomador",
