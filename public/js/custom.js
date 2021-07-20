@@ -1247,7 +1247,6 @@ jQuery( document ).ready(function() {
                             } else {
                                 covidPrestacionSub = jQuery("#quote .quote-benefit-covidPrestacion").val();
                             }
-
                             break;
                         case 5:
                             covidHospitalizacionCob = window.PMproductConfig.coberturas[key].name
@@ -1256,7 +1255,6 @@ jQuery( document ).ready(function() {
                             } else {
                                 covidHospitalizacionSub = jQuery("#quote .quote-benefit-covidHospitalizacion").val();
                             }
-
                             break;
                         case 6:
                             covidUCICob = window.PMproductConfig.coberturas[key].name
@@ -1265,7 +1263,6 @@ jQuery( document ).ready(function() {
                             } else {
                                 covidUCISub  = jQuery("#quote .quote-benefit-covidUCI").val();
                             }
-
                             break;
 
                     }
