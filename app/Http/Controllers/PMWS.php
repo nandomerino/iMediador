@@ -934,6 +934,7 @@ class PMWS extends controller
      * @param "accSub" - subsidio por accidente
      * @param "hospCob" - cobertura por hospitalizacion
      * @param "hospSub" - subsidio por hospitalizacion
+     * @param "covidPrestacionCob" - subsidio por hospitalizacion
      * @param "paymentMethod" - (optional) selected number of installments
      * @param "pmUserCode" - (optional)
      * @param "period" - (optional)
@@ -1094,7 +1095,13 @@ class PMWS extends controller
             $data["Cob4"],
             $data["Sub4"],
             $data["Cob5"],
-            $data["Sub5"]));
+            $data["Sub5"],
+            $data["covidPrestacionCob"],
+            $data["covidPrestacionSub"],
+            $data["covidUCICob"],
+            $data["covidUCISub"],
+            $data["covidHospitalizacionCob"],
+            $data["covidHospitalizacionSub"]));
 
         $cData = array();
         if ( isset($data["application"]) ) {
@@ -1119,15 +1126,15 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-//        app('debugbar')->info('$params');
-//        app('debugbar')->info($params);
-//        file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
-//        file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
+        app('debugbar')->info('$params');
+        app('debugbar')->info($params);
+        //file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
-//        file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
-//        file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
-//        app('debugbar')->info('$result');
-//        app('debugbar')->info($result);
+        //file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
+        //app('debugbar')->info('$result');
+        //app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -2111,7 +2118,7 @@ class PMWS extends controller
      * @param $hospSub
      * @return array
      */
-    private function getCapitalGarantia($enfCob, $enfSub, $accCob, $accSub, $hospCob, $hospSub, $Cob4, $Sub4, $Cob5, $Sub5) {
+    private function getCapitalGarantia($enfCob, $enfSub, $accCob, $accSub, $hospCob, $hospSub, $Cob4, $Sub4, $Cob5, $Sub5, $covidPrestacionCob, $covidPrestacionSub, $covidHospitalizacionCob, $covidHospitalizacionSub, $covidUCICob, $covidUCISub) {
 
         $fData = array();
         $fData[] = array(
@@ -2130,6 +2137,27 @@ class PMWS extends controller
             $fData[] = array(
                 "nombreParametro"	=> $hospCob,
                 "valorParametro"	=> $hospSub
+            );
+        }
+
+        if ( isset($covidPrestacionCob) && isset($covidPrestacionSub) ) {
+            $fData[] = array(
+                "nombreParametro"	=> $covidPrestacionCob,
+                "valorParametro"	=> $covidPrestacionSub
+            );
+        }
+
+        if ( isset($covidHospitalizacionCob) && isset($covidHospitalizacionSub) ) {
+            $fData[] = array(
+                "nombreParametro"	=> $covidHospitalizacionCob,
+                "valorParametro"	=> $covidHospitalizacionSub
+            );
+        }
+
+        if ( isset($covidUCICob) && isset($covidUCISub) ) {
+            $fData[] = array(
+                "nombreParametro"	=> $covidUCICob,
+                "valorParametro"	=> $covidUCISub
             );
         }
 

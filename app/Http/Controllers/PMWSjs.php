@@ -164,6 +164,12 @@ class PMWSjs extends Controller
         $parameters["accSub"] = $this->parameters["accSub"];
         $parameters["hospCob"] = $this->parameters["hospCob"];
         $parameters["hospSub"] = $this->parameters["hospSub"];
+        $parameters["covidPrestacionCob"] = $this->parameters["covidPrestacionCob"] ?? null;
+        $parameters["covidPrestacionSub"] = $this->parameters["covidPrestacionSub"] ?? null;
+        $parameters["covidUCICob"] = $this->parameters["covidUCICob"] ?? null;
+        $parameters["covidUCISub"] = $this->parameters["covidUCISub"] ?? null;
+        $parameters["covidHospitalizacionCob"] = $this->parameters["covidHospitalizacionCob"] ?? null;
+        $parameters["covidHospitalizacionSub"] = $this->parameters["covidHospitalizacionSub"] ?? null;
         $parameters["jobType"] = $this->parameters["jobType"];
         $parameters["duration"] = $this->parameters["duration"] ?? null;
 
@@ -249,16 +255,7 @@ class PMWSjs extends Controller
         $parameters["franchise"] = $this->parameters["franchise"] ?? null;
 
         //app('debugbar')->info($enf);
-        if ($this->parameters["enfGraves"] == "true"){
-             $data = $this->PMWShandler->getRatesEnfGraves($parameters);
-               //app('debugbar')->info($data);
-               if (is_array($data)) {
-                    return response()->json(['success' => true, 'data' => $data]);
-               } else {
-                    return response()->json(['success' => false, 'e' => $data]);
-               }
 
-        } else {
 
           $data = $this->PMWShandler->getRates($parameters);
           //app('debugbar')->info($data);
@@ -267,7 +264,7 @@ class PMWSjs extends Controller
           } else {
                return response()->json(['success' => false, 'e' => $data]);
           }
-        }
+
     }
 
     public function getRatesByPrice()
