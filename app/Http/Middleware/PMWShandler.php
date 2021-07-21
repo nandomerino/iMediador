@@ -682,7 +682,7 @@ class PMWShandler
         $rates = [];
 
         $data = $response->return;
-        //app('debugbar')->info($data);
+        app('debugbar')->info($data);
         if( $data->correcto == "S" ){
 
             //Description prior to table and foot info
@@ -761,8 +761,8 @@ class PMWShandler
                     // Get price
                     foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         if( $row2->formaPago == 1){
-                            $rates["table"][$fila][$columna]["price"] = $row2->primaNetaAnual;
-                            $messages[$fila][$columna] = $row2->primaNetaAnual;
+                            $rates["table"][$fila][$columna]["price"] = $row2->primaTotalAnual;
+                            $messages[$fila][$columna] = $row2->primaTotalAnual;
                         }
                     }
 
@@ -797,7 +797,7 @@ class PMWShandler
                     $j = 0;
                     foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         $rates["table"][$fila][$columna]["quotes"][$j]["formaPago"] = $row2->formaPago;
-                        $rates["table"][$fila][$columna]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                        $rates["table"][$fila][$columna]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["table"][$fila][$columna]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
                         $rates["table"][$fila][$columna]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["table"][$fila][$columna]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
@@ -811,7 +811,7 @@ class PMWShandler
                     $j = 0;
                     foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         $rates["rows"][$i]["quotes"][$j]["formaPago"] = $row2->formaPago;
-                        $rates["rows"][$i]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                        $rates["rows"][$i]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["rows"][$i]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
                         $rates["rows"][$i]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["rows"][$i]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
@@ -950,8 +950,8 @@ class PMWShandler
                     // Get price
                     foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         if( $row2->formaPago == 1){
-                            $rates["table"][$fila][$columna]["price"] = $row2->primaNetaAnual;
-                            $messages[$fila][$columna] = $row2->primaNetaAnual;
+                            $rates["table"][$fila][$columna]["price"] = $row2->primaTotalAnual;
+                            $messages[$fila][$columna] = $row2->primaTotalAnual;
                         }
                     }
 
@@ -971,7 +971,7 @@ class PMWShandler
                     $j = 0;
                     foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         $rates["table"][$fila][$columna]["quotes"][$j]["formaPago"] = $row2->formaPago;
-                        $rates["table"][$fila][$columna]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                        $rates["table"][$fila][$columna]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["table"][$fila][$columna]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
                         $rates["table"][$fila][$columna]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["table"][$fila][$columna]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
@@ -985,7 +985,7 @@ class PMWShandler
                     $j = 0;
                     foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         $rates["rows"][$i]["quotes"][$j]["formaPago"] = $row2->formaPago;
-                        $rates["rows"][$i]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                        $rates["rows"][$i]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["rows"][$i]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
                         $rates["rows"][$i]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["rows"][$i]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
@@ -1116,8 +1116,8 @@ class PMWShandler
                     // Get price
                     foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         if( $row2->formaPago == 1){
-                            $rates["table"][$fila][$columna]["price"] = $row2->primaNetaAnual;
-                            $messages[$fila][$columna] = $row2->primaNetaAnual;
+                            $rates["table"][$fila][$columna]["price"] = $row2->primaTotalAnual;
+                            $messages[$fila][$columna] = $row2->primaTotalAnual;
                         }
                     }
 
@@ -1146,7 +1146,7 @@ class PMWShandler
                     $j = 0;
                     foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         $rates["table"][$fila][$columna]["quotes"][$j]["formaPago"] = $row2->formaPago;
-                        $rates["table"][$fila][$columna]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                        $rates["table"][$fila][$columna]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["table"][$fila][$columna]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
                         $rates["table"][$fila][$columna]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["table"][$fila][$columna]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);
@@ -1160,7 +1160,7 @@ class PMWShandler
                     $j = 0;
                     foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         $rates["rows"][$i]["quotes"][$j]["formaPago"] = $row2->formaPago;
-                        $rates["rows"][$i]["quotes"][$j]["primaNetaAnual"] = str_replace(".", ",", $row2->primaNetaAnual);
+                        $rates["rows"][$i]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["rows"][$i]["quotes"][$j]["primaNetaFraccionada"] = str_replace(".", ",", $row2->primaNetaFraccionada);
                         $rates["rows"][$i]["quotes"][$j]["primaTotalAnual"] = str_replace(".", ",", $row2->primaTotalAnual);
                         $rates["rows"][$i]["quotes"][$j]["recargosImpuestos"] = str_replace(".", ",", $row2->recargosImpuestos);

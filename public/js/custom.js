@@ -1461,16 +1461,16 @@ jQuery( document ).ready(function() {
                     for( k=0;k<data.table[i][j].quotes.length;k++ ) {
                         switch(k){
                             case 0:
-                                rows += " data-annual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-annual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows += " data-annual='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-annual-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 1:
-                                rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 2:
-                                rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 3:
-                                rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                         }
                     }
@@ -1625,16 +1625,16 @@ jQuery( document ).ready(function() {
                     for( k=0;k<data.table[i][j].quotes.length;k++ ) {
                         switch(k){
                             case 0:
-                                rows += " data-annual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-annual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows += " data-annual='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-annual-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 1:
-                                rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 2:
-                                rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 3:
-                                rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                         }
                     }
@@ -1912,16 +1912,16 @@ jQuery( document ).ready(function() {
                     for( k=0;k<data.table[i][j].quotes.length;k++ ) {
                         switch(k){
                             case 0:
-                                rows += " data-annual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-annual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows += " data-annual='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-annual-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 1:
-                                rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 2:
-                                rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                             case 3:
-                                rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaNetaAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
+                                rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                         }
                     }

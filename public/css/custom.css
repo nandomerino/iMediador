@@ -603,10 +603,7 @@ table td{
 
 .app-core label svg{
     position: absolute;
-    bottom: -27px;
     right: 5px;
-    width: 17px !important;
-    height: 17px;
     cursor: pointer;
 }
 .app-core input::placeholder{
