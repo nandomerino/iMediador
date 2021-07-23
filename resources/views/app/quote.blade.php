@@ -153,7 +153,7 @@
                                                             // Dynamically filled with JS
                                                         @endphp
                                                     </select>
-                                                    <input class="form-control quote-job-picker" name="quote-job-picker" required>
+                                                    <input class="form-control quote-job-picker" data-index="1" name="quote-job-picker" required>
                                                     @php
                                                         // plugin loaded from JS quote_load_ProductConfiguration()
                                                     @endphp
@@ -179,7 +179,7 @@
                                                 </div>
                                                 <div class="col-3 align-self-end">
                                                     <label class="quote-gender-label mb-1 control-label" for="quote-gender"></label>
-                                                    <select class="form-control quote-gender" data-index="4" name="quote-gender" autocomplete="off" required>
+                                                    <select class="form-control quote-gender" data-index="3" name="quote-gender" autocomplete="off" required>
                                                         @php
                                                             // Dynamically filled with JS
                                                         @endphp
@@ -187,22 +187,50 @@
                                                 </div>
                                                 <div class="col-3 align-self-end">
                                                     <label class="quote-height-label mb-1 control-label" for="quote-height"></label>
-                                                    <input type="number" class="form-control w-100 quote-height" data-index="5" name="quote-height" min="50" max="300" step="1" autocomplete="off" required>
+                                                    <input type="number" class="form-control w-100 quote-height" data-index="3" name="quote-height" min="50" max="300" step="1" autocomplete="off" required>
                                                 </div>
                                                 <div class="col-3 align-self-end">
                                                     <label class="quote-weight-label mb-1 control-label" for="quote-weight"></label>
-                                                    <input type="number" class="form-control w-100 quote-weight" data-index="6" name="quote-weight" min="10" max="400" step="1" autocomplete="off" required>
+                                                    <input type="number" class="form-control w-100 quote-weight" data-index="3" name="quote-weight" min="10" max="400" step="1" autocomplete="off" required>
                                                 </div>
                                             </div>
 
                                             <div class="row pt-3 quote-price-wrapper">
                                                 <div class="col-4">
                                                     <label class="quote-price-label mb-1" for="quote-price">{{ __('quote.amount') }}</label>
-                                                    <input type='number' class="form-control w-100 quote-price" data-index="7" name="quote-price" autocomplete="off" required>
+                                                    <input type='number' class="form-control w-100 quote-price" data-index="3" name="quote-price" autocomplete="off" required>
                                                 </div>
                                             </div>
 
                                             <div class="quote-benefit-wrapper row pt-3 d-flex">
+                                                @php
+                                                    // Dynamically filled with JS
+                                                @endphp
+
+                                            </div>
+
+                                            <div class="quote-franchise-wrapper row pt-3 d-flex">
+                                                @php
+                                                    // Dynamically filled with JS
+                                                @endphp
+
+                                            </div>
+
+                                            <div class="quote-duration-wrapper row pt-3 d-flex">
+                                                @php
+                                                    // Dynamically filled with JS
+                                                @endphp
+
+                                            </div>
+
+                                            <div class="quote-durationField-wrapper row pt-3 d-flex">
+                                                @php
+                                                    // Dynamically filled with JS
+                                                @endphp
+
+                                            </div>
+
+                                            <div class="quote-discount-wrapper row pt-3 d-flex">
                                                 @php
                                                     // Dynamically filled with JS
                                                 @endphp

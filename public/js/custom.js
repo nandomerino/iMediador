@@ -522,7 +522,6 @@ jQuery( document ).ready(function() {
         // Loads jobs
         var jobsArray = data.P_PROFESION_CLIENTE.values;
         var modificaConfiguracion = data.P_PROFESION_CLIENTE.WS.modificaConfiguracion.toUpperCase()=="S";
-        alert(data.P_PROFESION_CLIENTE.WS.modificaConfiguracion);
         if (modificaConfiguracion){
             jQuery('select[name="quote-job"]').addClass("configChange");
             jQuery('input[name="quote-job-picker"]').addClass("configChange");
@@ -584,17 +583,18 @@ jQuery( document ).ready(function() {
 
         // Loads durations
         // There are no field names coming from the WS so we have to set them manually
-        var duration = "";
+        var duration = "<div class='col-12'>";
         if( typeof data.duracion !== 'undefined' ) {
             var durationArray = data.duracion;
             window.PMduracion = data.duracion;
 
             Object.keys(durationArray).forEach(function (key) {
                 FieldName = key;
-                duration += "<input type='hidden' class='form-control w-100 quote-duration valid quote-duration-" + FieldName + "' name='quote-duration-" + FieldName + "' data-name='" + durationArray[key].name + "' " + durationArray[key].attributes + ">\n";
+                duration += "<input type='hidden' class='form-control w-100 quote-duration valid quote-duration-" + FieldName + "' data-index='3' ' name='quote-duration-" + FieldName + "' data-name='" + durationArray[key].name + "' " + durationArray[key].attributes + ">\n";
                 i++;
             });
         }
+        duration += '</div>';
 
         // Load commercial key
         window.PMcommercialKey = data.P_CLAVE_COMERCIAL;
@@ -641,7 +641,7 @@ jQuery( document ).ready(function() {
           }
           franchiseField += "<div class='col-4'>";
           franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
-          franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='8' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
+          franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
 
           if( data.P_FRANQUICIA.fieldType == "select"){
 
@@ -679,7 +679,7 @@ jQuery( document ).ready(function() {
              }
              var durationField = "<div class='col-4'>";
              durationField += "<label class='mb-1 quote-duration-label' for='quote-duration'>" + data.P_PERIODO_COBERTURA.name + "</label>";
-             durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid" + modConfig + "' data-index='9' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
+             durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid" + modConfig + "' data-index='4' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
 
              if( data.P_PERIODO_COBERTURA.fieldType == "select"){
 
@@ -915,8 +915,19 @@ jQuery( document ).ready(function() {
         jQuery('#quote .product-extra-info .quote-height-label').html(data.P_TALLA.name);
 
 
-        extraFields = benefits + franchiseField + duration + durationField + discountFields;
-        jQuery('#quote .product-extra-info .quote-benefit-wrapper').html(extraFields);
+        //extraFields = benefits + franchiseField + duration + durationField + discountFields;
+        if (discountFields == ""){
+            discountFields = "<div class='col-12'></div>";
+        }
+        jQuery('#quote .product-extra-info .quote-benefit-wrapper').html(benefits);
+        if (franchiseField == "") {
+            franchiseField = "<div class='col-4'></div>";
+        }
+        jQuery('#quote .product-extra-info .quote-franchise-wrapper').html(franchiseField);
+        jQuery('#quote .product-extra-info .quote-duration-wrapper').html(duration);
+        jQuery('#quote .product-extra-info .quote-durationField-wrapper').html(durationField);
+        jQuery('#quote .product-extra-info .quote-discount-wrapper').html(discountFields);
+
 
 
         //jQuery('#quote .product-extra-info .dynamic-content .row').html(output);
@@ -927,10 +938,9 @@ jQuery( document ).ready(function() {
 
 //    jQuery("#quote .changeConfiguration").on('change', ".changeConfiguration", function (e) {
 //    jQuery("#quote .changeConfiguration").on('change', "#quote", function (e) {
-    jQuery("#quote").on('change', ".changeConfiguration", function (e) {
+    jQuery("#quote").on('change', ".configChange", function (e) {
 
-        alert ('En Evento changeConfiguration');
-        var index = $(e.target).data("index");
+        var index = jQuery(e.target).data("index");
 
         partialResetProductExtraInfo(index);
         
@@ -973,34 +983,37 @@ jQuery( document ).ready(function() {
 
         switch (index) {
         //Al no poner breaks e ir desde el último hasta el primero, se ejecutarán todos a partir de index
-            case 9:
-            case 8:
-            case 7:
-            case 6:     //P_PESO
+            case 4:     //
+            case 3:     //P_FRANQUICIA
+                        var pFranquicia = [];
+                        pPeso["nombreParametro"] = "P_FRANQUICIA";
+                        pPeso["valorParametro"] = jQuery("#quote .quote-franchise").val();
+                        modifiedField.push(pFranquicia);
+            case 2:     //P_PESO
                         var pPeso = [];
                         pPeso["nombreParametro"] = "P_PESO";
                         pPeso["valorParametro"] = jQuery("#quote .quote-weight").val();
                         modifiedField.push(pPeso);
 
-            case 5:     //P_TALLA
+                        //P_TALLA
                         var pTalla = [];
                         pTalla["nombreParametro"] = "P_TALLA";
                         pTalla["valorParametro"] = jQuery("#quote .quote-height").val();
                         modifiedField.push(pTalla);
 
-            case 4:     //P_SEXO
+                        //P_SEXO
                         var pSexo = [];
                         pSexo["nombreParametro"] = "P_SEXO";
                         pSexo["valorParametro"] = jQuery("#quote .quote-gender").val();
                         modifiedField.push(pSexo);
 
-            case 3:     //P_FECHA_NACIMIENTO_CLIENTE
+                        //P_FECHA_NACIMIENTO_CLIENTE
                         var pFechaNacimiento = [];
                         pFechaNacimiento["nombreParametro"] = "P_FECHA_NACIMIENTO_CLIENTE";
                         pFechaNacimiento["valorParametro"] = jQuery("#quote .quote-birthdate").val();
                         modifiedField.push(pFechaNacimiento);
 
-            case 2:     //P_CLAVE_COMERCIAL
+                        //P_CLAVE_COMERCIAL
                         var pClaveComercial = [];
                         pClaveComercial["nombreParametro"] = "P_CLAVE_COMERCIAL";
                         pClaveComercial["valorParametro"] = jQuery("#quote .quote-commercial-key").val();
@@ -1057,19 +1070,28 @@ jQuery( document ).ready(function() {
         }else{
             window.PMsigningMode = null;
         }
+        var benefits = "";
+        var franchiseField = "";
+        var duration = "<div class='col-12'>";
+        var durationField = "";
+        var discountFields = "";
+        var commercialKey = "";
+        var genderArray = null;
+        var genderSelect = "";
+        var jobLabel = "";
+        var jobSelect = "";
+        var jobPicker = [];
+        var modConfig = "";
 
         switch (index) {
             case 0:     // Loads jobs
                         var jobsArray = data.P_PROFESION_CLIENTE.values;
                         var modificaConfiguracion = data.P_PROFESION_CLIENTE.WS.modificaConfiguracion.toUpperCase()=="S";
-                        alert(data.P_PROFESION_CLIENTE.WS.modificaConfiguracion);
                         if (modificaConfiguracion){
                             jQuery('select[name="quote-job"]').addClass("configChange");
                         } else {
                             jQuery('select[name="quote-job"]').removeClass("configChange");
                         }
-                        var jobPicker = [];
-                        var jobSelect = "";
                         Object.keys(jobsArray).forEach(function(key) {
                             jobPicker.push(jobsArray[key]);
                             jobSelect += "<option value='" + key + "'>" + jobsArray[key] + "</option>";
@@ -1088,7 +1110,6 @@ jQuery( document ).ready(function() {
             case 1:     // Load commercial key
                         window.PMcommercialKey = data.P_CLAVE_COMERCIAL;
                         modificaConfiguracion = data.P_CLAVE_COMERCIAL.WS.modificaConfiguracion.toUpperCase()=="S";
-                        var modConfig = "";
                         if (modificaConfiguracion){
                             modConfig = " configChange";
                         }
@@ -1096,7 +1117,7 @@ jQuery( document ).ready(function() {
                         if(data.P_CLAVE_COMERCIAL.hidden == "S"){
                             hidden = " type='hidden' ";
                         }
-                        var commercialKey = "<div class='col-12'>";
+                        commercialKey += "<div class='col-12'>";
                         commercialKey += "<label class='mb-1 quote-commercial-key-label' for='quote-commercial-key'>" + data.P_CLAVE_COMERCIAL.name + "</label>";
                         commercialKey += "<" + data.P_CLAVE_COMERCIAL.fieldType + hidden + " class='form-control w-100 quote-commercial-key valid" + modConfig + "' data-index='2' name='quote-commercial-key' " + data.P_CLAVE_COMERCIAL.attributes + ">\n";
                 
@@ -1116,9 +1137,9 @@ jQuery( document ).ready(function() {
 
             case 2:     //Load birthdate
 
-            case 3:     //Load gender
-                        var genderArray = data.P_SEXO.values;
-                        var genderSelect = "<option value=''></option>";
+                        //Load gender
+                        genderArray = data.P_SEXO.values;
+                        genderSelect += "<option value=''></option>";
                         Object.keys(genderArray).forEach(function(key) {
                             genderSelect += "<option value='" + key + "'>" + genderArray[key] + "</option>";
                         });
@@ -1129,14 +1150,13 @@ jQuery( document ).ready(function() {
                             jQuery('select[name="quote-gender"]').removeClass("configChange");
                         }
 
-            case 4:     //Load height
+                        //Load height
     
-            case 5:     //Load Weight
+                        //Load Weight
 
-            case 6:     //¿load price?
+                        //¿load price?
 
-            case 7:     //Load franchise
-                        var franchiseField = "";
+                        //Load franchise
                         if (window.PMSelectedProductModality == 22 ){//data.P_NOMBRE_PRODUCTO == "ENFERMEDADES GRAVES"){
                         // Load franchise
                         window.PMfranchise = data.P_FRANQUICIA;
@@ -1152,7 +1172,7 @@ jQuery( document ).ready(function() {
                         }
                         franchiseField += "<div class='col-4'>";
                         franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
-                        franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='8' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
+                        franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
                 
                         if( data.P_FRANQUICIA.fieldType == "select"){
                 
@@ -1171,10 +1191,24 @@ jQuery( document ).ready(function() {
                             window.PMfranchise = null;
                             window.PMEnfGraves = false;
                         }
+
+                        // Loads durations
+                        // There are no field names coming from the WS so we have to set them manually
+                        if( typeof data.duracion !== 'undefined' ) {
+                            var durationArray = data.duracion;
+                            window.PMduracion = data.duracion;
+
+                            Object.keys(durationArray).forEach(function (key) {
+                                FieldName = key;
+                                duration += "<input type='hidden' class='form-control w-100 quote-duration valid quote-duration-" + FieldName + "'' data-index='3'  name='quote-duration-" + FieldName + "' data-name='" + durationArray[key].name + "' " + durationArray[key].attributes + ">\n";
+                                i++;
+                            });
+                        }
+                        duration += "</div>";
+
     
-            case 8:     //Load Duration
+            case 3:     //Load Duration
                         window.PMduration = null;
-                        var durationField = "";
                         if (data.P_PERIODO_COBERTURA){
                             // Load commercial key
                             window.PMduration = data.P_PERIODO_COBERTURA;
@@ -1185,13 +1219,12 @@ jQuery( document ).ready(function() {
                             }
                     
                             var hidden = "";
-                            var durationField = "";
                             if(data.P_PERIODO_COBERTURA.hidden == "S"){
                                 hidden = " type='hidden' ";
                             }
-                            var durationField = "<div class='col-4'>";
+                            durationField += "<div class='col-4'>";
                             durationField += "<label class='mb-1 quote-duration-label' for='quote-duration'>" + data.P_PERIODO_COBERTURA.name + "</label>";
-                            durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid" + modConfig + "' data-index='8' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
+                            durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid" + modConfig + "' data-index='4' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
                 
                             if( data.P_PERIODO_COBERTURA.fieldType == "select"){
                 
@@ -1208,35 +1241,10 @@ jQuery( document ).ready(function() {
                             durationField += "</div>";
                         }
     
-            case 9:     //
-            case 10:     //
-            case 11:     //
-            case 12:     //
-            case 13:     //
-            case 14:     //
-            case 15:     //
-            case 16:     //
-            case 17:     //
-            case 18:     //
-            case 19:     //
-            case 20:     //
+            case 4:     //
             default:     //
-                        // Loads durations
-                        // There are no field names coming from the WS so we have to set them manually
-                        var duration = "";
-                        if( typeof data.duracion !== 'undefined' ) {
-                            var durationArray = data.duracion;
-                            window.PMduracion = data.duracion;
-
-                            Object.keys(durationArray).forEach(function (key) {
-                                FieldName = key;
-                                duration += "<input type='hidden' class='form-control w-100 quote-duration valid quote-duration-" + FieldName + "' name='quote-duration-" + FieldName + "' data-name='" + durationArray[key].name + "' " + durationArray[key].attributes + ">\n";
-                                i++;
-                            });
-                        }
 
                         // Loads coverages if "subsidio" is selected
-                        var benefits = "";
                         if( jQuery(".toggles .subsidio.active").length == 1 ) {
                             // There are no field names coming from the WS so we have to set them manually
                             var benefitsArray = data.coberturas;
@@ -1276,51 +1284,7 @@ jQuery( document ).ready(function() {
                             });
                         }
 
-
-                        // Loads autocomplete input text.
-                        jQuery( function() {
-
-                            var accentMap = {
-                                "á": "a",
-                                "é": "e",
-                                "í": "i",
-                                "ó": "o",
-                                "ú": "u",
-                                "ü": "u"
-                            };
-
-                            // "Remove" accents
-                            var normalize = function(termOriginal) {
-                                var term = termOriginal.toLowerCase();
-                                var ret = "";
-                                for ( var i = 0; i < term.length; i++ ) {
-                                    ret += accentMap[ term.charAt(i) ] || term.charAt(i);
-                                }
-                                return ret;
-                            };
-
-                            jQuery( "#quote .quote-job-picker" ).autocomplete({
-                                minLength: 0,
-
-                                source: function( request, response ) {
-                                    var matcher = new RegExp( jQuery.ui.autocomplete.escapeRegex( request.term ), "i" );
-                                    response( jQuery.grep( jobPicker, function( value ) {
-                                        value = value.label || value.value || value;
-                                        return matcher.test( value ) || matcher.test( normalize( value ) );
-                                    }) );
-                                },
-
-                                select: function(event,ui) {
-                                    this.value=ui.item.value;
-                                    jQuery(this).trigger('change');
-                                    return false;
-                                }
-                            });
-                        });
-
-
                         // load discount fields for impersonator users
-                        var discountFields = "";
                         if( typeof data.P_DESCUENTO_06 !== 'undefined' ) {
                             var hidden = "";
                             if (data.P_DESCUENTO_06.hidden == "S") {
@@ -1464,40 +1428,40 @@ jQuery( document ).ready(function() {
             case 2:     //Load birthdate
                         jQuery('#quote .quote-birthdate-label').html(data.P_FECHA_NACIMIENTO_CLIENTE.name);
 
-            case 3:     //Load gender
+                       //Load gender
                         jQuery('#quote .product-extra-info .quote-gender').html(genderSelect);
                         jQuery('#quote .quote-gender-label').html(data.P_SEXO.name);
      
-            case 4:     //Load height
+                        //Load height
                         jQuery('#quote .product-extra-info .quote-height').prop("min", data.P_TALLA.min);
                         jQuery('#quote .product-extra-info .quote-height').prop("max", data.P_TALLA.max);
                         jQuery('#quote .product-extra-info .quote-height-label').html(data.P_TALLA.name);
         
-            case 5:     //Load Weight
+                         //Load Weight
                         jQuery('#quote .product-extra-info .quote-weight').prop("min", data.P_PESO.min);
                         jQuery('#quote .product-extra-info .quote-weight').prop("max", data.P_PESO.max);
                         jQuery('#quote .product-extra-info .quote-weight-label').html(data.P_PESO.name);
     
-            case 6:     //¿load price?
+                        //¿load price?
 
-            case 7:     //Load franchise
-            case 8:
-            case 9:
-            case 10:
-            case 11:
-            case 12:
-            case 13:
-            case 14:
-            case 15:
-            case 16:
-            case 17:
-            case 18:
-            case 19:
-            case 20:
-            default:    //Pensar forma de abordar esto:
-                        extraFields = benefits + franchiseField + duration + durationField + discountFields;
-                        jQuery('#quote .product-extra-info .quote-benefit-wrapper').html(extraFields);
-        
+            case 3:     //Load franchise
+                        jQuery('#quote .product-extra-info .quote-benefit-wrapper').html(benefits);
+                        if (franchiseField == "") {
+                            franchiseField = "<div class='col-4'></div>";
+                        }
+                        jQuery('#quote .product-extra-info .quote-franchise-wrapper').html(franchiseField);
+    
+            case 4:     //Load Duration
+                        jQuery('#quote .product-extra-info .quote-duration-wrapper').html(duration);
+
+            default:    //DurationField + discountFields
+                        //extraFields = benefits + franchiseField + duration + durationField + discountFields;
+                        jQuery('#quote .product-extra-info .quote-durationField-wrapper').html(durationField);
+                        if (discountFields == ""){
+                            discountFields = "<div class='col-12'></div>";
+                        }
+                        jQuery('#quote .product-extra-info .quote-discount-wrapper').html(discountFields);
+                        
         }
                         
         //jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.name);
@@ -5023,16 +4987,13 @@ jQuery( document ).ready(function() {
             '#quote .product-extra-info select').each(function() {
                 if( jQuery(this).data("index") > index ){
                     jQuery(this).val("");
-                    /*
                     jQuery(this).removeClass("valid");
                     jQuery(this).removeClass("invalid");
                     jQuery(this).addClass("valid");
-                    */
                 }else{
                 }
             });
             
-        //¿que hacemos con valid invalid???
         resetGetRatesButton();
     }
 
