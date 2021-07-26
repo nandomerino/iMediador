@@ -130,7 +130,7 @@ class LogaltyClient
 	private const CERT_FILENAME = 'WIREDANDLINKED_demo.pfx';
 	private const CERT_P12_FILENAME = 'WIREDANDLINKED_demo.p12';
 	private const CERT_PASS = 'logalty';
-	
+
 	private const RESOURCES_FOLDER = 'res';
 	private const PT_TEMPLATE_FILENAME = 'request_template.xml';
 	private const SAML_TEMPLATE_FILENAME = 'saml_template.xml';
@@ -259,7 +259,7 @@ class LogaltyClient
 		}
 
 		$request = $this->buildStatesRequestFile($guid); //Load request template and load user properties
-		
+
 		$output = $this->outputPath . DIRECTORY_SEPARATOR . 'signed_states_request_' . $guid . '.xml';
 		$signedRequest = $this->signFile($request, $output);
 
@@ -305,14 +305,14 @@ class LogaltyClient
 	public function createTransaction()
 	{
 		$request = $this->buildRequestFile(); //Load request template and load user properties
-		
+
 		$output = $this->outputPath . DIRECTORY_SEPARATOR . 'signed_request_' . $this->transaction->getExternalId() . '.xml';
 		$signedRequest = $this->signFile($request, $output);
 
 		$signedSoap = $this->buildSoapRequest($signedRequest);
 
 		$response = $this->post($this->incomingServiceUrl, utf8_decode($signedSoap));
-		
+
 		if ( empty($response) ) {
 			throw new Exception("Transaction error: Empty response from incoming service", 2);
 		}
@@ -335,7 +335,7 @@ class LogaltyClient
 		if ( empty($guid) ) {
 			$guid = $this->guid;
 		}
-		
+
 		$request = $this->buildSamlFile(); //Load saml template and load user properties
 		$output = $this->outputPath . DIRECTORY_SEPARATOR . 'signed_saml_' . $guid . '.xml';
 		$signedRequest = $this->signFile($request, $output);
@@ -355,7 +355,7 @@ class LogaltyClient
 
 	private function buildRequestFile()
 	{
-		
+
 		$requestTemplate = new DOMDocument();
 		$requestTemplate->preserveWhiteSpace = true;
 		$requestTemplate->formatOutput = false;
@@ -365,7 +365,7 @@ class LogaltyClient
 		$this->setRequestMeta($requestTemplate);
 		$this->setProcessMeta($requestTemplate);
 		$this->setFileData($requestTemplate);
-		
+
 		$filledFilePath = $this->outputPath . DIRECTORY_SEPARATOR . 'filled_' . $this->transaction->getExternalId() . '_' . LogaltyClient::PT_TEMPLATE_FILENAME;
 			// $requestTemplate->save($filledFilePath);
 		// file_put_contents($filledFilePath, $requestTemplate->saveXml($requestTemplate->documentElement));
@@ -422,7 +422,7 @@ class LogaltyClient
 		if ( !empty($this->transaction->getSubject()) ) {
 			$this->setNodeValue($doc, LogaltyClient::XML_SOAP_PT_PROCESS_META_NS, LogaltyClient::XML_SOAP_PT_PROCESS_META_SUBJECT_TAG_NAME, $this->transaction->getSubject());
 		}
-		
+
 		//set body
 		if ( !empty($this->transaction->getBody()) ) {
 			$this->setNodeValue($doc, LogaltyClient::XML_SOAP_PT_PROCESS_META_NS, LogaltyClient::XML_SOAP_PT_PROCESS_META_BODY_TAG_NAME, $this->transaction->getBody());
@@ -464,9 +464,9 @@ class LogaltyClient
 		if ( !empty($this->transaction->getNoticeMethod()) ) {
 			$this->setAttributeValue($doc, LogaltyClient::XML_SOAP_PT_PROCESS_META_CONTACT_TAG_NAME, LogaltyClient::XML_SOAP_PT_PROCESS_META_NOTICEMETHOD_ATTRIBUTE_NAME, $this->transaction->getNoticeMethod());
 		}
-		
+
 		$this->setNodeValue($doc, "*", LogaltyClient::XML_SOAP_PT_PROCESS_META_CONTACT_TAG_NAME, $this->getUUID(), "", "", LogaltyClient::XML_SOAP_PT_PROCESS_META_UUID_TAG_NAME);
-		
+
 		if ( !empty($this->transaction->getPhone()) ) {
 			$this->setNodeValue($doc, "*", LogaltyClient::XML_SOAP_PT_PROCESS_META_CONTACT_TAG_NAME, $this->transaction->getPhone(), "", "", LogaltyClient::XML_SOAP_PT_PROCESS_META_PHONE_TAG_NAME);
 		}
@@ -510,7 +510,7 @@ class LogaltyClient
 			} else if ( $element->getType() === FormElementDTO::FORM_ELEMENT_TYPE_TEXT ) {
 				$tag = LogaltyClient::XML_SOAP_PT_PROCESS_META_FORMELEMENTTEXT_TAG_NAME;
 			}
-			
+
 			$e = $doc->createElement($tag);
 			$e->setAttribute(LogaltyClient::XML_SOAP_PT_PROCESS_META_FORMELEMENTID_ATTRIBUTE_NAME, $element->getId());
 			if ( $element->getType() !== FormElementDTO::FORM_ELEMENT_TYPE_TEXT ) {
@@ -554,7 +554,7 @@ class LogaltyClient
 			$locationEl->appendChild(new DOMText($prop->getLocation()));
 			$locationsEl->appendChild($locationEl);
 			$pEl->appendChild($locationsEl);
-			
+
 			$metaProp->appendChild($pEl);
 		}
 
@@ -574,7 +574,7 @@ class LogaltyClient
 				$localizedPEl->appendChild($lpValueEl);
 				$localizedPsEl->appendChild($localizedPEl);
 			}
-			
+
 			$pEl->appendChild($localizedPsEl);
 
 			$locationsEl = $doc->createElement(LogaltyClient::XML_SOAP_PT_PROCESS_META_PROPERTYLOCATIONS_TAG_NAME);
@@ -582,7 +582,7 @@ class LogaltyClient
 			$locationEl->appendChild(new DOMText(PropertyDTO::PROPERTY_LOCATION_EMAIL));
 			$locationsEl->appendChild($locationEl);
 			$pEl->appendChild($locationsEl);
-			
+
 			$metaProp->appendChild($pEl);
 		}
 	}
@@ -595,10 +595,10 @@ class LogaltyClient
 	}
 
 
-	private function signFile($src, $output) 
+	private function signFile($src, $output)
 	{
 		$signCommand = 'xmlsec1 --sign --output ' . $output . ' --pkcs12 ' . $this->certPath . ' --pwd ' . $this->certPass . ' ' . $src;
-		
+
 		$r = shell_exec( $signCommand );
 
 		return $output;
@@ -612,7 +612,7 @@ class LogaltyClient
 		$samlTemplate->formatOutput = false;
 		$samlTemplate->load($this->samlRequestTemplate);
 		$samlTemplate->encoding = "UTF-8";
-		
+
 
 		//set creation date
 		$timestamp = time();
@@ -632,7 +632,7 @@ class LogaltyClient
 		$this->setNodeValue($samlTemplate, "*", LogaltyClient::XML_SAML_NAMEID_TAG_NAME, $this->getUUID());
 		//set guid
 		$this->setNodeValue($samlTemplate, "*", LogaltyClient::XML_SAML_ATTRIBUTE_TAG_NAME, $this->guid, LogaltyClient::XML_SAML_ATTRIBUTE_ATTRIBUTE_NAME, LogaltyClient::XML_SAML_ATTRIBUTE_GUID_ATTRIBUTE_VALUE, LogaltyClient::XML_SAML_ATTRIBUTE_VALUE_TAG_NAME);
-		
+
 		$filledFilePath = $this->outputPath . DIRECTORY_SEPARATOR . 'saml_filled_' . $this->guid . '_' . LogaltyClient::SAML_TEMPLATE_FILENAME;
 
 		// file_put_contents($filledFilePath, $samlTemplate->saveXml($samlTemplate->documentElement));
@@ -724,7 +724,7 @@ class LogaltyClient
 			);
 
 			return $state;
-			
+
 		} else {
 			throw new Exception("States error: " . $this->getUniqueNodeByTag($result, "reason")->textContent, 1);
 		}
@@ -738,17 +738,17 @@ class LogaltyClient
 		curl_setopt($curl, CURLOPT_URL, $host);
 		curl_setopt($curl, CURLOPT_HEADER, 0);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
-		curl_setopt($curl, CURLOPT_TIMEOUT, 60);
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 90);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 90);
 		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $REQUEST);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-		
+
 		$output = curl_exec($curl);
 		$info = curl_getinfo($curl);
 		curl_close($curl);
 
 		if ( !empty($output) ) {
-			return $output;	
+			return $output;
 		}
 		return $info;
 	}
@@ -778,9 +778,9 @@ class LogaltyClient
 						if ( !empty($node->firstChild) ) {
 							$node->removeChild($node->firstChild);
 						}
-						$node->appendChild(new DOMText($value));				
+						$node->appendChild(new DOMText($value));
 					}
-				}	
+				}
 			} else {
 				if ( !empty($innerTagName) ) {
 					$n = $this->getUniqueNodeByTag($node, $innerTagName);
@@ -792,9 +792,9 @@ class LogaltyClient
 					if ( !empty($node->firstChild) ) {
 						$node->removeChild($node->firstChild);
 					}
-					$node->appendChild(new DOMText($value));				
+					$node->appendChild(new DOMText($value));
 				}
-			}	
+			}
 		}
 	}
 
@@ -812,7 +812,7 @@ class LogaltyClient
 		if ( count($nodes) == 1 ){
 			return $nodes->item(0);
 		} else if ( count($nodes) > 1 ) {
-			throw new Exception("Wrong document. Duplicated node", 1);	
+			throw new Exception("Wrong document. Duplicated node", 1);
 		}
 		throw new Exception("Wrong document. Node does not exist", 2);
 	}

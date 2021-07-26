@@ -24,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        ini_set('default_socket_timeout', 600);
     }
 }

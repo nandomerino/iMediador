@@ -34,10 +34,12 @@
                                 return false;
                             }
                         @endphp
-                        @if( $productores )
+                        @if(empty($productores["id"]))
                             @foreach( $productores as $row )
-                                <option value="{{ $row["id"] }}">{{ $row["name"] }}</option>
+                                <option value="{{ $row["id"] }}">{{ $row["id"] }} - {{ $row["name"] }}</option>
                             @endforeach
+                        @else
+                            <option value="{{ $productores["id"] }}">{{ $productores["id"] }} - {{ $productores["name"] }}</option>
                         @endif
                     </select>
                 </div>

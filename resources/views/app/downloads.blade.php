@@ -5,7 +5,7 @@
     $currentLanguage = App::getLocale();
 
     $filesList = $pm->getFilesList();
-    // app('debugbar')->info($filesList);
+    app('debugbar')->info($filesList);
 
 
 @endphp
@@ -23,7 +23,7 @@
 
     <section id="downloads" class="pb-5 row">
         <div class="col">
-            @if( is_array($filesList) )
+           
 
                 <table id="download-documents-table" class="w-100">
                     <thead>
@@ -34,6 +34,7 @@
                             <th class="px-1 txt-navy-blue"><img src="/img/download-blue.png"></th>
                         </tr>
                     </thead>
+                     @if( is_array($filesList) )
                     <tbody>
 
                         @foreach( $filesList as $row )
@@ -53,9 +54,10 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    @endif
                 </table>
 
-            @endif
+            
         </div>
     </section>
 

@@ -603,10 +603,7 @@ table td{
 
 .app-core label svg{
     position: absolute;
-    bottom: -27px;
     right: 5px;
-    width: 17px !important;
-    height: 17px;
     cursor: pointer;
 }
 .app-core input::placeholder{
@@ -746,9 +743,6 @@ table.ui-datepicker-calendar tbody td span{
     font-size: 0.8rem
 }
 
-#quote .quote-benefit-label{
-    max-width: 100px;
-}
 
 #quote .get-rates,
 #quote .get-advice{
@@ -1548,11 +1542,11 @@ label{
 
 
 @media print {
-  
+
      .hiddenprint {
           display: none;
      }
-  
+
      .app-core table td.selected,
      .app-core table th.selected{
           /*background-color: #D1D546 !important;*/
