@@ -633,7 +633,6 @@ jQuery( document ).ready(function() {
         modificaConfiguracion = data.P_CLAVE_COMERCIAL.WS.modificaConfiguracion.toUpperCase()=="S";
         var modConfig = "";
         if (modificaConfiguracion){
-            alert('clave comercial modifica');
             modConfig = " configChange";
         }
         var hidden = "";
@@ -1024,125 +1023,112 @@ jQuery( document ).ready(function() {
 
 //    jQuery("#quote .changeConfiguration").on('change', ".changeConfiguration", function (e) {
 //    jQuery("#quote .changeConfiguration").on('change', "#quote", function (e) {
+    var changingConfiguration = false;
+
     jQuery("#quote").on('change', ".configChange", function (e) {
 
-        var index = jQuery(e.target).data("index");
+        if(!changingConfiguration) {
+            var index = jQuery(e.target).data("index");
 
-        partialResetProductExtraInfo(index);
-        
+            changingConfiguration = true;
 
-        jQuery('#quote #step-1 .loader-wrapper').fadeIn();
+            partialResetProductExtraInfo(index);
 
-        // Then retrieves extra info of selected product variation in the background
-        var url = "/get-data";
-        var ws = "getProductConfiguration";
-        var productor = jQuery("#quote-productor").val();
-        var product = jQuery("#quote input[name='quote-product']:checked").val();
-        //var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
-        var productModality = jQuery("#quote input[name='quote-product-modality']:checked").val();
-        window.PMSelectedProductModality = productModality;
 
-        var modifiedField = [];
+            jQuery('#quote #step-1 .loader-wrapper').fadeIn();
 
-                    /*
-                "nombreParametro"	=> "P_FORMA_PAGO",
-                "nombreParametro"	=> "P_PERIODO_COBERTURA",
-                "nombreParametro"	=> "P_DESCUENTO_06",
-                "nombreParametro"	=> "P_ANYOS_DTO_06",
-                "nombreParametro"	=> "P_DTO_COMISION_MED",
-                "nombreParametro"	=> "P_DTO_COMISION_DEL",
-                "nombreParametro"	=> "P_SOBREPRIMA_DEL",
-                "nombreParametro"	=> "P_RECARGO_FINANCIACION",
-                "nombreParametro"	=> "P_CANAL_COBRO",
-        $fData = array_merge($fData, $this->getCapitalGarantia(
-            $data["enfCob"],
-            $data["enfSub"],
-            $data["accCob"],
-            $data["accSub"],
-            $data["hospCob"],
-            $data["hospSub"],
-            $data["Cob4"],
-            $data["Sub4"],
-            $data["Cob5"],
-            $data["Sub5"]));
- */
+            // Then retrieves extra info of selected product variation in the background
+            var url = "/get-data";
+            var ws = "getProductConfiguration";
+            var productor = jQuery("#quote-productor").val();
+            var product = jQuery("#quote input[name='quote-product']:checked").val();
+            //var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
+            var productModality = jQuery("#quote input[name='quote-product-modality']:checked").val();
+            window.PMSelectedProductModality = productModality;
 
-        switch (index) {
-        //Al no poner breaks e ir desde el último hasta el primero, se ejecutarán todos a partir de index
-            case 4:     //
-            case 3:     //P_FRANQUICIA
-                        var pFranquicia = [];
-                        pPeso["nombreParametro"] = "P_FRANQUICIA";
-                        pPeso["valorParametro"] = jQuery("#quote .quote-franchise").val();
-                        modifiedField.push(pFranquicia);
-            case 2:     //P_PESO
-                        var pPeso = [];
-                        pPeso["nombreParametro"] = "P_PESO";
-                        pPeso["valorParametro"] = jQuery("#quote .quote-weight").val();
-                        modifiedField.push(pPeso);
+            var modifiedField = [];
 
-                        //P_TALLA
-                        var pTalla = [];
-                        pTalla["nombreParametro"] = "P_TALLA";
-                        pTalla["valorParametro"] = jQuery("#quote .quote-height").val();
-                        modifiedField.push(pTalla);
+            switch (index) {
+            //Al no poner breaks e ir desde el último hasta el primero, se ejecutarán todos a partir de index
+                case 4:     //
+                case 3:     //P_FRANQUICIA
+                            var pFranquicia = {};
+                            pPeso["nombreParametro"] = "P_FRANQUICIA";
+                            pPeso["valorParametro"] = jQuery("#quote .quote-franchise").val();
+                            modifiedField.push(pFranquicia);
+                case 2:     //P_PESO
+                            var pPeso = {};
+                            pPeso["nombreParametro"] = "P_PESO";
+                            pPeso["valorParametro"] = jQuery("#quote .quote-weight").val();
+                            modifiedField.push(pPeso);
 
-                        //P_SEXO
-                        var pSexo = [];
-                        pSexo["nombreParametro"] = "P_SEXO";
-                        pSexo["valorParametro"] = jQuery("#quote .quote-gender").val();
-                        modifiedField.push(pSexo);
+                            //P_TALLA
+                            var pTalla = {};
+                            pTalla["nombreParametro"] = "P_TALLA";
+                            pTalla["valorParametro"] = jQuery("#quote .quote-height").val();
+                            modifiedField.push(pTalla);
 
-                        //P_FECHA_NACIMIENTO_CLIENTE
-                        var pFechaNacimiento = [];
-                        pFechaNacimiento["nombreParametro"] = "P_FECHA_NACIMIENTO_CLIENTE";
-                        pFechaNacimiento["valorParametro"] = jQuery("#quote .quote-birthdate").val();
-                        modifiedField.push(pFechaNacimiento);
+                            //P_SEXO
+                            var pSexo = {};
+                            pSexo["nombreParametro"] = "P_SEXO";
+                            pSexo["valorParametro"] = jQuery("#quote .quote-gender").val();
+                            modifiedField.push(pSexo);
 
-                        //P_CLAVE_COMERCIAL
-                        var pClaveComercial = [];
-                        pClaveComercial["nombreParametro"] = "P_CLAVE_COMERCIAL";
-                        pClaveComercial["valorParametro"] = jQuery("#quote .quote-commercial-key").val();
-                        modifiedField.push(pClaveComercial);
-                        
-            case 1:     //P_PROFESION_CLIENTE
-                        var pProfesionCliente = [];
-                        pProfesionCliente["nombreParametro"] = "P_PROFESION_CLIENTE";
-                        pProfesionCliente["valorParametro"] = jQuery("#quote .quote-job").val();
-                        modifiedField.push(pProfesionCliente);
+                            //P_FECHA_NACIMIENTO_CLIENTE
+                            var pFechaNacimiento = {};
+                            pFechaNacimiento["nombreParametro"] = "P_FECHA_NACIMIENTO_CLIENTE";
+                            pFechaNacimiento["valorParametro"] = jQuery("#quote .quote-birthdate").val();
+                            modifiedField.push(pFechaNacimiento);
 
-            case 0:     //P_REGIMEN_SEG_SOCIAL
-                        var pRegimenSeguridadSocial = [];
-                        pRegimenSeguridadSocial["nombreParametro"] = "P_REGIMEN_SEG_SOCIAL";
-                        pRegimenSeguridadSocial["valorParametro"] = jQuery('#quote .quote-job-type').val();
-                        modifiedField.push(pRegimenSeguridadSocial);
+                            //P_CLAVE_COMERCIAL
+                            var pClaveComercial = {};
+                            pClaveComercial["nombreParametro"] = "P_CLAVE_COMERCIAL";
+                            pClaveComercial["valorParametro"] = jQuery("#quote .quote-commercial-key").val();
+                            modifiedField.push(pClaveComercial);
+                            
+                case 1:     //P_PROFESION_CLIENTE
+                            var pProfesionCliente = {};
+                            pProfesionCliente["nombreParametro"] = "P_PROFESION_CLIENTE";
+                            pProfesionCliente["valorParametro"] = jQuery("#quote .quote-job").val();
+                            modifiedField.push(pProfesionCliente);
+
+                case 0:     //P_REGIMEN_SEG_SOCIAL
+                            var pRegimenSeguridadSocial = {};
+                            pRegimenSeguridadSocial["nombreParametro"] = "P_REGIMEN_SEG_SOCIAL";
+                            pRegimenSeguridadSocial["valorParametro"] = jQuery('#quote .quote-job-type').val();
+                            modifiedField.push(pRegimenSeguridadSocial);
+
+            }
+
+
+            jQuery.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    ws: ws,
+                    productor: productor,
+                    product: product,
+                // productVariation: productVariation,
+                    productModality: productModality,
+                    modifiedField: JSON.stringify(modifiedField)
+                },
+                success: function (response) {
+                    if (response['success'] == true) {
+                        quote_load_PartialProductConfiguration(response.data, index);
+                    } else {
+                        console.error( response.e);
+                    }
+                    changingConfiguration = false;
+
+                },
+                error: function (response) {
+                    console.error( lang["WS.error"] );
+                    changingConfiguration = false;
+
+                }
+            });
 
         }
-
-        jQuery.ajax({
-            type: "POST",
-            url: url,
-            data: {
-                ws: ws,
-                productor: productor,
-                product: product,
-               // productVariation: productVariation,
-                productModality: productModality,
-                modifiedField: modifiedField
-            },
-            success: function (response) {
-                if (response['success'] == true) {
-                    quote_load_PartialProductConfiguration(response.data, index);
-                } else {
-                    console.error( response.e);
-                }
-            },
-            error: function (response) {
-                console.error( lang["WS.error"] );
-            }
-        });
-
-
     });
 
     // QUOTE - Loads extra info dynamically from WS
