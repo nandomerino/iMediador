@@ -188,7 +188,7 @@ class MailController extends Controller
         $this->mail->setFrom(config('mail.from.sendDocument.address'), config('mail.from.sendDocument.name'));
         $this->mail->addAddress($this->JSdata['email']);
 
-        $this->mail->Subject = $this->JSdata['body'] ;
+        $this->mail->Subject = "Previsión Mallorquina - Información Seguro de " . $this->JSdata['product'] ;
 
         // Sends an email with the data
 
@@ -221,7 +221,7 @@ class MailController extends Controller
         $this->body = $this->JSdata["body"];
         $this->html = $this->JSdata["html"];
 
-        $this->generatePDF("Tarifas");
+        $this->generatePDF("coste-seguro");
         $this->document();
 
         //Server settings
@@ -248,10 +248,10 @@ class MailController extends Controller
         );
 
         if (!$this->mail->send()) {
-            unlink('tarifas.pdf');
+            unlink('coste-seguro.pdf');
             return response()->json(['error' => 'KO', 'customClass'=> $this->modalKOClass, 'title'=> $this->modalKOTitle, 'body'=> $this->modalKOBody, 'button'=> $this->modalKOButton1, 'e' => $this->mail->ErrorInfo]);
         } else {
-            unlink('tarifas.pdf');
+            unlink('coste-seguro.pdf');
             return response()->json(['success' => 'OK', 'customClass'=>  $this->modalOKClass, 'title'=> $this->modalOKTitle, 'body'=> $this->modalOKBody, 'button'=> $this->modalOKButton1]);
         }
         
@@ -280,8 +280,8 @@ class MailController extends Controller
         $dompdf->loadHtml($content);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        file_put_contents('tarifas.pdf', $dompdf->output());
-        $this->JSdata['attachment'] = 'tarifas.pdf';
+        file_put_contents('coste-seguro.pdf', $dompdf->output());
+        $this->JSdata['attachment'] = 'coste-seguro.pdf';
     }
 
 

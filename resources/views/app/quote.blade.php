@@ -30,7 +30,7 @@
         <section id="step-1" class="pb-5 row">
             <div class="col">
                 <div class="row">
-                    <div class="form col-12 col-md-6 col-lg-6 col-xl-6">
+                    <div class="form col-12 col-md-6 col-lg-6 col-xl-6 hiddenprint">
                         <form autocomplete="off">
                             <div class="loading-lock"></div>
                             <div class="container-fluid">
@@ -324,7 +324,8 @@
                         </form>
                     </div>
 
-                    <div class="data col-12 col-md-6 col-lg-6 col-xl-6 rates-table pt-5 pt-md-0" style="display: none;">
+                    <div class="data col-12 col-md-6 col-lg-6 col-xl-6 rates-table pt-5 pt-md-0 print-center" style="display: none;">
+                        <h4 style="display: none;" class="showprint">{{ __('quote.printTitle.uno') }}</h4>
                         <div class="row">
                             <div class="col datos-salida">
                                 @php
@@ -339,7 +340,7 @@
                                 @endphp
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row print1">
                             <div class="col">
                                 <div class="rates-table-description"></div>
                                 <table class="table" >
@@ -350,7 +351,7 @@
 
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row print2">
                             <style type="text/css">
                                 .display-block {
                                     display: block;
@@ -392,7 +393,7 @@
                         </div>
                         <div class="row">
                             <div class="col instructions hiddenprint">
-                                {!! __("quote.instructions.selectRowAndBillingCycle") !!}
+                                <p>{!! __("quote.instructions.selectRowAndBillingCycle") !!}</p>
                             </div>
                         </div>
                     </div>
@@ -578,21 +579,22 @@
 
                 <div id="selected-product-info" class="row" style="display: none;">
                     <div class="col wrapper m-5">
-                        <div class="row">
+                        <div class="row print3">
                             {{--<div class="col-12 col-md-6 col-lg-6 col-xl-6 text-center discount-code py-0 my-0 py-md-5 my-md-5">
                                 <p class="txt-dark-grey mt-5">{{ __('quote.discountCodeInput') }}</p>
                                 <input type="text" class="quote-discount-code w-100" name="quote-discount-code">
                             </div>--}}
                             <div class="col product-info-card text-center my-5">
-                                <h4>{{ __('quote.productInfo') }}</h4>
-                                <div class="card border-white">
+                                <h4 style="display: none;" class="showprint">{{ __('quote.printTitle.dos') }}</h4>
+                                <h4 class="hiddenprint" style="text-align: center !important;">{{ __('quote.productInfo') }}</h4>
+                                <div class="card border-white" style="border: 1px solid #002A66; border-radius: 5px; max-width: 300px; margin: auto;">
                                     <div class="card-body text-left">
-                                        <p class="card-text product-name txt-dark-grey text-center">{{ __('quote.productInfo.name') }} <br><span class="dynamic-content txt-navy-blue"></span></p>
-                                        <p class="card-text product-variation txt-dark-grey text-center">{{ __('quote.productInfo.variation') }} <br><span class="dynamic-content txt-navy-blue"></span></p>
-                                        <p class="card-text product-coverage txt-dark-grey text-center">{{ __('quote.productInfo.coverage') }} <br><span class="dynamic-content txt-navy-blue"></span></p>
-                                        <p class="card-text product-exemption txt-dark-grey text-center">{{ __('quote.productInfo.exemption') }} <br><span class="dynamic-content txt-navy-blue"></span></p>
-                                        <p class="card-text billing txt-dark-grey text-center">{{ __('quote.productInfo.billing') }} <span class="dynamic-content txt-navy-blue"></span></p>
-                                        <p class="card-text billing-total txt-dark-grey text-center">{{ __('quote.productInfo.billingTotal') }} <span class="dynamic-content txt-navy-blue"></span></p>
+                                        <p class="card-text product-name txt-dark-grey text-center" style="text-align: center !important;">{{ __('quote.productInfo.name') }} <br><span class="dynamic-content txt-navy-blue" style="color: #002A66 !important;"></span></p>
+                                        <p class="card-text product-variation txt-dark-grey text-center" style="text-align: center !important;">{{ __('quote.productInfo.variation') }} <br><span class="dynamic-content txt-navy-blue" style="color: #002A66 !important;"></span></p>
+                                        <p class="card-text product-coverage txt-dark-grey text-center" style="text-align: center !important;">{{ __('quote.productInfo.coverage') }} <br><span class="dynamic-content txt-navy-blue" style="color: #002A66 !important;"></span></p>
+                                        <p class="card-text product-exemption txt-dark-grey text-center" style="text-align: center !important;">{{ __('quote.productInfo.exemption') }} <br><span class="dynamic-content txt-navy-blue" style="color: #002A66 !important;"></span></p>
+                                        <p class="card-text billing txt-dark-grey text-center" style="text-align: center !important;">{{ __('quote.productInfo.billing') }} <span class="dynamic-content txt-navy-blue" style="color: #002A66 !important;"></span></p>
+                                        <p class="card-text billing-total txt-dark-grey text-center" style="text-align: center !important;">{{ __('quote.productInfo.billingTotal') }} <span class="dynamic-content txt-navy-blue" style="color: #002A66 !important;"></span></p>
                                     </div>
                                 </div>
                             </div>
@@ -615,6 +617,28 @@
                             <div class="col d-none d-md-block">
                             </div>
                         </div>
+                        <div class="row mb-5">
+                            <div class="col-12 col-md-12 text-center">
+                                <h4 class="hiddenprint">{{ __('quote.createBudget') }}</h4>
+                            </div>
+                            <div class="col d-none d-md-block">
+                            </div>
+                            <div class="col-6 col-md-3 text-center">
+                                <button class="action-minibutton send-email text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded hiddenprint active">
+                                    {{ __('quote.sendBudget') }}
+                                    <img class="button-icon right" src="/img/paper-airplane-white.png">
+                                </button>
+                            </div>
+                            <div class="col-6 col-md-3 text-center">
+                                <button class="action-minibutton print text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded hiddenprint active">
+                                    {{ __('quote.printBudget') }}
+                                    <img class="button-icon right" src="/img/print.png">
+                                </button>
+                            </div>
+                            <div class="col d-none d-md-block">
+                            </div>
+                        </div>
+                        <div style="position: absolute;right: 0; display: none" class="showprint"><img src="/img/logo-pm.png"></div>
                     </div>
                 </div>
             </div>

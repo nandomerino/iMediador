@@ -1546,11 +1546,29 @@ label{
      .hiddenprint {
           display: none;
      }
+    .showprint {
+        display: block !important;
+    }
+    .print-center {
+        margin: auto !important;
+    }
+    #quote #selected-product-info .wrapper {
+        box-shadow: none !important;
+    }
 
      .app-core table td.selected,
      .app-core table th.selected{
           /*background-color: #D1D546 !important;*/
           border: 3px solid #000000 !important;
      }
+    .row.print3 {
+        text-align: center !important;
+    }
+    .card.border-white {
+        border-color: #002A66 !important;
+    }
+    .txt-navy-blue, .txt-navy-blue h1, .txt-navy-blue h2, .txt-navy-blue h3, .txt-navy-blue:hover {
+        color: #002A66 !important;
+    }
 
-   }
+}

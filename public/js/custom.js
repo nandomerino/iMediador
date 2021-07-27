@@ -1209,6 +1209,7 @@ jQuery( document ).ready(function() {
                 var covidHospitalizacionSub = null;
                 var covidUCICob = null;
                 var covidUCISub = null;
+                var date = jQuery('#quote .quote-starting-date').val();
 
 
                 var franchise = null;
@@ -1303,7 +1304,8 @@ jQuery( document ).ready(function() {
                     covidHospitalizacionSub : covidHospitalizacionSub,
                     covidUCICob : covidUCICob,
                     covidUCISub : covidUCISub,
-                    franchise : franchise
+                    franchise : franchise,
+                    date: date
                 }
 
 
@@ -1348,10 +1350,7 @@ jQuery( document ).ready(function() {
                     success: function (response) {
 
                         if (response['success'] == true) {
-                            // TODO: there are products that send information in a different structure and won't work
-
-                                quote_load_Rates(response.data);
-
+                            quote_load_Rates(response.data);
                         } else {
                             console.error( response.e);
                             displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
@@ -1759,7 +1758,6 @@ jQuery( document ).ready(function() {
                 }
 
 
-
                 // Stores it to use later
                 window.PMgetRatesData = {
                     productor : productor,
@@ -2025,46 +2023,7 @@ jQuery( document ).ready(function() {
 
     });
 
-    // MODAL - SEND EMAIL send
-    jQuery("#PMmodal").on('click', '.modal-send-email button', function(e){
-        e.preventDefault(); // prevent native submit
-        //jQuery(this).attr("disabled");
 
-        jQuery('.modal-send-email .loader-wrapper').show();
-        jQuery('.modal-send-email .result').html();
-
-
-        // NEED TO GET INFO of the file FROM WS
-        var fileId = ""; // 323785;
-        var filename = ""; // "6600031_201911_2.pdf";
-        var tipoFichero = "" // 2;
-
-
-        var html = window.PMquoteTable;
-
-        var email = jQuery(".modal-send-email input[type=email]").val();
-        var body = lang["email.sendInfo.body"];
-
-        // Send email with attachment from /downloads
-        jQuery.ajax({
-            type: "POST",
-            url: "/send-mail-html",
-            data: {
-                email : email,
-                body : body,
-                html : html
-
-            },
-            success: function(response) {
-                jQuery('.modal-send-email .loader-wrapper').hide();
-                jQuery('.modal-send-email .result').html(response['body']);
-            },
-            error: function(response){
-                //console.error(response['e']);
-            }
-        });
-
-    });
 
 
     // QUOTE - Print button
@@ -2090,7 +2049,7 @@ jQuery( document ).ready(function() {
         // Enables action buttons
         resetRatesTableActionsBilling();
         jQuery('#quote .rates-table .billing-cycle input').removeAttr("disabled");
-        jQuery('#quote .table-actions .action-minibutton').removeAttr("disabled").addClass("active");
+
 
         // Loads selected payment methods
         if( jQuery(this).data("monthly") ){
@@ -2180,9 +2139,79 @@ jQuery( document ).ready(function() {
         jQuery('#quote .rates-table-selection-description').fadeIn();
 
     });
+    function getBudget() {
+        var url = "/get-data";
+        var ws = "getBudget";
 
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                ws: ws,
+                productor: window.PMgetRatesData.productor,
+                option: window.PMgetRatesData.option,
+                productId: window.PMgetRatesData.productId,
+                profession: window.PMgetRatesData.profession,
+                birthdate: window.PMgetRatesData.birthdate,
+                gender: window.PMgetRatesData.gender,
+                height: window.PMgetRatesData.height,
+                weight: window.PMgetRatesData.weight,
+                commercialKey : window.PMgetRatesData.commercialKey,
+                jobType : window.PMgetRatesData.jobType,
+                duration: window.PMgetRatesData.duration,
+                discount : window.PMgetRatesData.discount,
+                date : window.PMgetRatesData.date,
+                discountYears : window.PMgetRatesData.discountYears,
+                discountSobreprima : window.PMgetRatesData.discountSobreprima,
+                discountCommisionMed : window.PMgetRatesData.discountCommisionMed,
+                discountCommisionDel : window.PMgetRatesData.discountCommisionDel,
+                discountRecargoFinanciacion : window.PMgetRatesData.discountRecargoFinanciacion,
+                discountCobro : window.PMgetRatesData.discountCobro,
+                coverages : window.PMselectedFinalProductCoverages
+            },
+            success: function (response) {
+                if (response['success'] == true) {
+                    window.PMbudgetNumber = response.data.budgetNumber;
+                    console.log(PMbudgetNumber);
+                } else {
+                    console.error( response.e);
+                    displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
+                    jQuery('#quote .get-rates .loadingIcon').hide();
+                    jQuery('#quote .form .loading-lock').hide();
+                    jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+                }
+            },
+            error: function (response) {
+                console.error( response.e);
+                displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
+                jQuery('#quote .get-rates .loadingIcon').hide();
+                jQuery('#quote .form .loading-lock').hide();
+                jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+            }
+        });
+    }
+    function getBudgetDocument() {
+        var url = "/get-data";
+        var ws = "getBudgetDocument";
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                ws: ws,
+                productor: window.PMgetRatesData.productor,
+                budgetNumber : window.PMbudgetNumber
+            },
+
+        });
+    }
     // QUOTE - Stores selected billing cycle and displays Next step button
     jQuery("#quote .billing-cycle").on('click', "input", function (e) {
+        getBudget();
+        getBudgetDocument();
+
+
+        jQuery('#quote .table-actions .action-minibutton').removeAttr("disabled").addClass("active");
         window.PMbillingCycle = jQuery(this).val(); // forma de pago
 
         window.PMselectedProduct = jQuery("#quote input[name='quote-product']:checked").next().html().trim().toUpperCase();
@@ -2215,6 +2244,51 @@ jQuery( document ).ready(function() {
         jQuery('html, body').animate({
             scrollTop: jQuery("#selected-product-info").offset().top
         }, 1000);
+
+    });
+
+    // MODAL - SEND EMAIL send
+    jQuery("#PMmodal").on('click', '.modal-send-email button', function(e){
+        e.preventDefault(); // prevent native submit
+        //jQuery(this).attr("disabled");
+
+        jQuery('.modal-send-email .loader-wrapper').show();
+        jQuery('.modal-send-email .result').html();
+
+
+        // NEED TO GET INFO of the file FROM WS
+        var fileId = ""; // 323785;
+        var filename = ""; // "6600031_201911_2.pdf";
+        var tipoFichero = "" // 2;
+
+
+        var html = jQuery('#quote #selected-product-info .print3').html();
+        html += jQuery('#quote #step-1 .print2').html();
+        html += jQuery('#quote #step-1 .print1').html();
+        var email = jQuery(".modal-send-email input[type=email]").val();
+        var product = jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html();
+        var body = "Le remitimos información del coste de su Seguro de " + jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html() +", solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
+
+        // Send email with attachment from /downloads
+        jQuery.ajax({
+            type: "POST",
+            url: "/send-mail-html",
+            data: {
+                email : email,
+                product : product,
+                body : body,
+                html : html
+
+            },
+            success: function(response) {
+                jQuery('.modal-send-email .loader-wrapper').hide();
+                jQuery('.modal-send-email .result').html(response['body']);
+            },
+            error: function(response){
+                //console.error(response['e']);
+            }
+        });
+
     });
 
     // QUOTES - Stores step 1 data into JS
@@ -2246,7 +2320,7 @@ jQuery( document ).ready(function() {
             discount: jQuery('#quote .quote-discount-code').val()
 
         }
-
+        console.log(PMquoteStep1);
     }
 
     // QUOTES - step 1 next button

@@ -32,6 +32,9 @@ class PMWSjs extends Controller
             case "getRatesByPrice":
                 $response = $this->getRatesByPrice();
                 break;
+            case "getBudget":
+                $response = $this->getBudget();
+                break;
             case "getCityProvince":
                 $response = $this->getCityProvince();
                 break;
@@ -295,6 +298,154 @@ class PMWSjs extends Controller
         } else {
             return response()->json(['success' => false, 'e' => $data]);
         }
+    }
+
+    public function getBudget()
+    {
+        //app('debugbar')->info($this->parameters);
+
+        // Call PM WS
+        $parameters = array();
+        $parameters["productor"] = $this->parameters["productor"];
+        $parameters["option"] = $this->parameters["option"];
+        $parameters["productId"] = $this->parameters["productId"];
+        $parameters["profession"] = $this->parameters["profession"];
+        $parameters["birthdate"] = $this->parameters["birthdate"];
+        $parameters["gender"] = $this->parameters["gender"];
+        $parameters["height"] = $this->parameters["height"];
+        $parameters["weight"] = $this->parameters["weight"];
+        $parameters["jobType"] = $this->parameters["jobType"];
+        $parameters["duration"] = $this->parameters["duration"] ?? null;
+        $parameters["date"] = $this->parameters["date"];
+        $parameters["coverages"] = $this->parameters["coverages"];
+
+
+
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["discount"]) ){
+            $this->parameters["discount"] = null;
+        }
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["discountYears"]) ){
+            $this->parameters["discountYears"] = null;
+        }
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["discountSobreprima"]) ){
+            $this->parameters["discountSobreprima"] = null;
+        }
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["discountCommisionMed"]) ){
+            $this->parameters["discountCommisionMed"] = null;
+        }
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["discountCommisionDel"]) ){
+            $this->parameters["discountCommisionDel"] = null;
+        }
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["discountRecargoFinanciacion"]) ){
+            $this->parameters["discountRecargoFinanciacion"] = null;
+        }
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["discountCobro"]) ){
+            $this->parameters["discountCobro"] = null;
+        }
+        $parameters["discount"] = $this->parameters["discount"];
+        $parameters["discountYears"] = $this->parameters["discountYears"];
+        $parameters["sobreprimaDel"] = $this->parameters["discountSobreprima"];
+        $parameters["discountComMed"] = $this->parameters["discountCommisionMed"];
+        $parameters["discountComDel"] = $this->parameters["discountCommisionDel"];
+        $parameters["financeCharge"] = $this->parameters["discountRecargoFinanciacion"];
+        $parameters["paymentChannel"] = $this->parameters["discountCobro"];
+
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["commercialKey"]) ){
+            $this->parameters["commercialKey"] = null;
+        }
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["entryChannel"]) ){
+            $this->parameters["entryChannel"] = null;
+        }
+        if( !isset( $this->parameters["application"]) ) {
+            $this->parameters["application"] = null;
+        }
+        $parameters["commercialKey"] = $this->parameters["commercialKey"];
+        $parameters["entryChannel"] = $this->parameters["entryChannel"];
+        $parameters["application"] = $this->parameters["application"];
+
+        if( !isset( $this->parameters["u"]) ){
+            $this->parameters["u"] = null;
+        }
+        if( !isset( $this->parameters["p"]) ) {
+            $this->parameters["p"] = null;
+        }
+        $parameters["u"] = $this->parameters["u"];
+        $parameters["p"] = $this->parameters["p"];
+
+
+        if( !isset( $this->parameters["Cob4"]) ) {
+            $this->parameters["Cob4"] = null;
+        }
+        if( !isset( $this->parameters["Sub4"]) ) {
+            $this->parameters["Sub4"] = null;
+        }
+        if( !isset( $this->parameters["Cob5"]) ) {
+            $this->parameters["Cob5"] = null;
+        }
+        if( !isset( $this->parameters["Sub5"]) ) {
+            $this->parameters["Sub5"] = null;
+        }
+        $parameters["Cob4"] = $this->parameters["Cob4"];
+        $parameters["Sub4"] = $this->parameters["Sub4"];
+        $parameters["Cob5"] = $this->parameters["Cob5"];
+        $parameters["Sub5"] = $this->parameters["Sub5"];
+        $parameters["franchise"] = $this->parameters["franchise"] ?? null;
+
+        app('debugbar')->info($parameters);
+
+
+        $data = $this->PMWShandler->getBudget($parameters);
+        //app('debugbar')->info($data);
+        if (is_array($data)) {
+            return response()->json(['success' => true, 'data' => $data]);
+        } else {
+            return response()->json(['success' => false, 'e' => $data]);
+        }
+
+    }
+
+    public function getBudgetDocument()
+    {
+        app('debugbar')->info($this->parameters);
+
+        // Call PM WS
+        $parameters = array();
+        $parameters["productor"] = $this->parameters["productor"];
+        $parameters["entryChannel"] = $this->parameters["entryChannel"];
+        $parameters["budgetNumber"] = $this->parameters["budgetNumber"];
+        $parameters["application"] = $this->parameters["application"];
+
+
+        if( !isset( $this->parameters["u"]) ){
+            $this->parameters["u"] = null;
+        }
+        if( !isset( $this->parameters["p"]) ) {
+            $this->parameters["p"] = null;
+        }
+        $parameters["u"] = $this->parameters["u"];
+        $parameters["p"] = $this->parameters["p"];
+
+
+        app('debugbar')->info($parameters);
+
+
+        $data = $this->PMWShandler->getBudgetDocument($parameters);
+        //app('debugbar')->info($data);
+        if (is_array($data)) {
+            return response()->json(['success' => true, 'data' => $data]);
+        } else {
+            return response()->json(['success' => false, 'e' => $data]);
+        }
+
     }
 
     public function getCityProvince()

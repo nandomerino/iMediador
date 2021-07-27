@@ -1126,8 +1126,8 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        app('debugbar')->info('$params');
-        app('debugbar')->info($params);
+        //app('debugbar')->info('$params');
+        //app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
@@ -1261,6 +1261,245 @@ class PMWS extends controller
         //app('debugbar')->info($result);
         //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - result:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', json_encode($result) . PHP_EOL , FILE_APPEND );
+
+        if (is_soap_fault($result)) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $data - array with data for request. Available arguments:
+     * @param "user" - logged in username
+     * @param "pass" - logged in password
+     * @param "language" - logged in language
+     * @param "productor" - (optional) selected productor
+     * @param "jobType" - (optional) regimen seguridad social. Default: A
+     * @param "option" - Proporcionada con las variaciones
+     * @param "productId" - selected product
+     * @param "franchise" - (optional) selected franchise or null for all franchises
+     * @param "profession" - selected profession
+     * @param "birthdate" - user birthdate
+     * @param "gender" - user gender
+     * @param "height" - user height
+     * @param "weight" - user weigth
+     * @param "coverages" -
+     * @return bool - false or rates list
+     * @throws \SoapFault
+     */
+    function getBudget($data) {
+
+        $endpoint = $this->baseUrl . "/v4/wspresupuesto" . $this->environment . "/Presupuesto?WSDL";
+        $client = new SoapClient($endpoint);
+
+        $inputData = array();
+        if ( isset($data["jobType"]) ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_REGIMEN_SEG_SOCIAL",
+                "valorParametro"	=> $data["jobType"]);
+        }
+        if ( isset($data["profession"]) ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_PROFESION_CLIENTE",
+                "valorParametro"	=> $data["profession"]);
+        }
+        if ( isset($data["gender"]) ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_SEXO",
+                "valorParametro"	=> $data["gender"]);
+        }
+        if ( isset($data["birthdate"]) ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_FECHA_NACIMIENTO_CLIENTE",
+                "valorParametro"	=> $data["birthdate"]);
+        }
+        if ( isset($data["height"]) ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_TALLA",
+                "valorParametro"	=> $data["height"]);
+        }
+        if ( isset($data["weight"]) ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_PESO",
+                "valorParametro"	=> $data["weight"]);
+        }
+        if ( isset($data["commercialKey"]) ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CLAVE_COMERCIAL",
+                "valorParametro"	=> $data["commercialKey"]);
+        }else{
+            $inputData[] = array(
+                "nombreParametro"	=> "P_CLAVE_COMERCIAL",
+                "valorParametro"	=> ""
+            );
+        }
+        if( !$data["entryChannel"] ){
+            $data["entryChannel"] = $this->getChannel($data["pmUserCode"]);
+        }
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_CANAL_ENTRADA",
+            "valorParametro"	=> $data["entryChannel"]);
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_CODIGO_PRODUCTO",
+            "valorParametro"	=> $data["productId"]);
+        if ( isset($data["productor"]) ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CODIGO_PRODUCTOR",
+                "valorParametro"	=> $data["productor"]);
+        }
+        if ( isset($data["date"]) ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_FECHA_EFECTO",
+                "valorParametro"	=> $data["date"]);
+        }
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_IDIOMA_PRESUPUESTO",
+            "valorParametro"	=> $data["language"]);
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_ALTA_AUTOMATICA",
+            "valorParametro"	=> "N");
+
+        $inputData[] = array(
+            "nombreParametro"	=> "P_FORMA_PAGO",
+            "valorParametro"	=> "1");
+        $fData = array();
+        $fData[] = array(
+            "capital"	=> "50",
+            "codigo"	=> "120",
+            "descripcion"	=> "Subsidio diario",
+            "duracion"	=> "365",
+            "franquicia"	=> "0"
+        );
+        $fData[] = array(
+            "capital"	=> "50",
+            "codigo"	=> "121",
+            "descripcion"	=> "Subsidio diario",
+            "duracion"	=> "365",
+            "franquicia"	=> "0"
+        );
+        $fData[] = array(
+            "capital"	=> "0",
+            "codigo"	=> "122",
+            "descripcion"	=> "Hospitalizacion",
+            "duracion"	=> "365",
+            "franquicia"	=> "0"
+        );
+        $fData[] = array(
+            "coverages"	=> $data["coverages"]);
+
+        $cData = array();
+        if ( isset($data["application"]) ) {
+            $cData[] = array(
+                "nombreParametro"	=> "P_APLICACION",
+                "valorParametro"	=> $data["application"]
+            );
+        } else {
+            $cData[] = array(
+                "nombreParametro"	=> "P_APLICACION",
+                "valorParametro"	=> "IMEDIADOR"
+            );
+        }
+
+        $params = array(
+            "pTipoAcceso"	=> "GEN",
+            "pUsuario"		=> $data["user"],
+            "pPassword"		=> $data["pass"],
+            "pIdioma"		=> $data["language"],
+            "pDatosEntrada"	=> $inputData,
+            "pDatosCobertura"=> $data["coverages"],
+            "pDatosConexion"=> $cData
+        );
+
+        //app('debugbar')->info('getBudget');
+        //app('debugbar')->info($params);
+        //file_put_contents('d:\logs\test.txt', 'getBudget - params:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
+        $result = $client->altaPresupuesto($params);
+        //file_put_contents('d:\logs\test.txt', 'getBudget - result:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
+        //app('debugbar')->info('$result');
+        //app('debugbar')->info($result);
+
+        if (is_soap_fault($result)) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $data - array with data for request. Available arguments:
+     * @param "user" - logged in username
+     * @param "pass" - logged in password
+     * @param "language" - logged in language
+     * @param "productor" - (optional) selected productor
+     * @return bool - false or rates list
+     * @throws \SoapFault
+     */
+    function getBudgetDocument($data) {
+
+        $endpoint = $this->baseUrl . "/v4/wsdocumentacion" . $this->environment . "/Documentacion?WSDL";
+        $client = new SoapClient($endpoint);
+
+        $inputData = array();
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_DOBLE_CODIFICACION",
+            "valorParametro"	=> "N");
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_TIPO_NUMERACION",
+            "valorParametro"	=> "PARCIAL");
+        if ( isset($data["productor"]) ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CODIGO_PRODUCTOR",
+                "valorParametro"	=> $data["productor"]);
+        }
+        if( !$data["entryChannel"] ){
+            $data["entryChannel"] = $this->getChannel($data["pmUserCode"]);
+        }
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_CANAL_ENTRADA",
+            "valorParametro"	=> $data["entryChannel"]);
+
+        $fData = array();
+        $fData[] = array(
+            "codigo"	=> $data["budgetNumber"],
+            "formato"	=> "A4",
+            "origen"	=> "3",
+            "tipo"	=> "PR"
+        );
+        $cData = array();
+        if ( isset($data["application"]) ) {
+            $cData[] = array(
+                "nombreParametro"	=> "P_APLICACION",
+                "valorParametro"	=> $data["application"]
+            );
+        } else {
+            $cData[] = array(
+                "nombreParametro"	=> "P_APLICACION",
+                "valorParametro"	=> "IMEDIADOR"
+            );
+        }
+
+        $params = array(
+            "pTipoAcceso"	=> "GEN",
+            "pUsuario"		=> $data["user"],
+            "pPassword"		=> $data["pass"],
+            "pIdioma"		=> $data["language"],
+            "pDatosEntrada"	=> $inputData,
+            "listaDocumentos"=> $fData,
+            "pDatosConexion"=> $cData
+        );
+
+        app('debugbar')->info('getBudgetDocument');
+        app('debugbar')->info($params);
+        //file_put_contents('d:\logs\test.txt', 'getBudget - params:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
+        $result = $client->getDocumento($params);
+        //file_put_contents('d:\logs\test.txt', 'getBudget - result:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
+        app('debugbar')->info('$result');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;

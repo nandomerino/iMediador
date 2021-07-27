@@ -266,7 +266,7 @@ class PMWShandler
                     $productVariations[$i]['WS'] = $row;
                 }
             }else{
-                app('debugbar')->info($response);
+                //app('debugbar')->info($response);
                 $i = $data->datosProductos->listaProductos->codigo;
                 $productVariations[$i]['name'] = $data->datosProductos->listaProductos->descripcion;
                 $productVariations[$i]['default'] = $data->datosProductos->listaProductos->porDefecto;
@@ -682,7 +682,7 @@ class PMWShandler
         $rates = [];
 
         $data = $response->return;
-        app('debugbar')->info($data);
+        //app('debugbar')->info($data);
         if( $data->correcto == "S" ){
 
             //Description prior to table and foot info
@@ -837,6 +837,65 @@ class PMWShandler
         //app('debugbar')->info("rates:");
         //app('debugbar')->info($rates);
         return $rates;
+    }
+
+    function getBudget( $parameters )
+    {
+        if ($parameters["u"] != null && $parameters["p"] != null) {
+            $parameters["user"] = $parameters["u"];
+            $parameters["pass"] = $parameters["p"];
+        } else {
+            $parameters["user"] = $this->user;
+            $parameters["pass"] = $this->pass;
+        }
+
+        $parameters["language"] = $this->language;
+        $parameters["pmUserCode"] = $this->userPM;
+
+        //app('debugbar')->info('$parameters');
+        //app('debugbar')->info($parameters);
+        $response = $this->PMWS->getBudget($parameters);
+        //app('debugbar')->info('$response');
+        //app('debugbar')->info($response);
+
+        $budget = [];
+        $data = $response->return;
+        if( $data->correcto == "S" ){
+            //Description prior to table and foot info
+            if ($data->datosSalida->listaParametros->nombreParametro == "ID_PRESUPUESTO"){
+                $budgetNumber = $data->datosSalida->listaParametros->valorParametro;
+                $budget["budgetNumber"] = $budgetNumber;
+            }
+        } else{
+            $budget = $data->mensajeError;
+        }
+        session([
+            'budget' => $budget
+        ]);
+        //app('debugbar')->info("budget:");
+        //app('debugbar')->info($budget);
+        return $budget;
+    }
+
+    function getBudgetDocument( $parameters )
+    {
+        if ($parameters["u"] != null && $parameters["p"] != null) {
+            $parameters["user"] = $parameters["u"];
+            $parameters["pass"] = $parameters["p"];
+        } else {
+            $parameters["user"] = $this->user;
+            $parameters["pass"] = $this->pass;
+        }
+
+        $parameters["language"] = $this->language;
+        $parameters["pmUserCode"] = $this->userPM;
+
+        app('debugbar')->info('$parameters');
+        app('debugbar')->info($parameters);
+        $response = $this->PMWS->getBudgetDocument($parameters);
+        app('debugbar')->info('$response');
+        app('debugbar')->info($response);
+
     }
 
 
@@ -1039,8 +1098,8 @@ class PMWShandler
         $rates = [];
 
         $data = $response->return;
-        app('debugbar')->info('Data:');
-        app('debugbar')->info($data);
+        //app('debugbar')->info('Data:');
+        //app('debugbar')->info($data);
         if( $data->correcto == "S" ){
 
             //Description prior to table and foot info
@@ -1183,8 +1242,8 @@ class PMWShandler
         session([
             'rates' => $rates
         ]);
-        app('debugbar')->info("rates:");
-        app('debugbar')->info($rates);
+        //app('debugbar')->info("rates:");
+        //app('debugbar')->info($rates);
         return $rates;
     }
 
