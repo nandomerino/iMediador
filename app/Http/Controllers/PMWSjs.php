@@ -19,8 +19,8 @@ class PMWSjs extends Controller
         // Gets sent variables variables
         $this->parameters = $request->all();
 
-        app('debugbar')->info('getData');
-        app('debugbar')->info($this->parameters);
+        //app('debugbar')->info('getData');
+        //app('debugbar')->info($this->parameters);
 
         switch ($this->parameters["ws"]) {
             case "getProductVariations":
