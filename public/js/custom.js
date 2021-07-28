@@ -1050,11 +1050,14 @@ jQuery( document ).ready(function() {
 
             switch (index) {
             //Al no poner breaks e ir desde el último hasta el primero, se ejecutarán todos a partir de index
-                case 4:     //
+                case 4:     //P_PERIODO_COBERTURA
+                            var pPeriodoCobertura = {};
+                            pPeriodoCobertura["nombreParametro"] = "P_PERIODO_COBERTURA";
+                            pPeriodoCobertura["valorParametro"] = jQuery("#quote .quote-duration").val();
                 case 3:     //P_FRANQUICIA
                             var pFranquicia = {};
-                            pPeso["nombreParametro"] = "P_FRANQUICIA";
-                            pPeso["valorParametro"] = jQuery("#quote .quote-franchise").val();
+                            pFranquicia["nombreParametro"] = "P_FRANQUICIA";
+                            pFranquicia["valorParametro"] = jQuery("#quote .quote-franchise").val();
                             modifiedField.push(pFranquicia);
                 case 2:     //P_PESO
                             var pPeso = {};
@@ -1536,7 +1539,7 @@ jQuery( document ).ready(function() {
                         }
 
     
-        }//switch
+        }//switch (index)
 
         //console.log(data);
 
@@ -1562,20 +1565,21 @@ jQuery( document ).ready(function() {
                         jQuery('#quote .product-extra-info .quote-weight-wrapper').html(weightProduct);
                 
                         //¿load price?
-
-            case 3:     //Load franchise
+                        
+                        //Load franchise
                         jQuery('#quote .product-extra-info .quote-benefit-wrapper').html(benefits);
                         if (franchiseField == "") {
                             franchiseField = "<div class='col-4'></div>";
                         }
                         jQuery('#quote .product-extra-info .quote-franchise-wrapper').html(franchiseField);
-    
-            case 4:     //Load Duration
+                        //Load Duration
                         jQuery('#quote .product-extra-info .quote-duration-wrapper').html(duration);
 
-            default:    //DurationField + discountFields
-                        //extraFields = benefits + franchiseField + duration + durationField + discountFields;
+            case 3:     //DurationField
                         jQuery('#quote .product-extra-info .quote-durationField-wrapper').html(durationField);
+
+            case 4:     
+            default:    // discountFields
                         if (discountFields == ""){
                             discountFields = "<div class='col-12'></div>";
                         }
@@ -1583,9 +1587,6 @@ jQuery( document ).ready(function() {
                         
         }
                         
-        //jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.name);
-        //jQuery('#quote .product-extra-info .quote-job-type').html(jobTypeSelect);
-
         //jQuery('#quote .product-extra-info .dynamic-content .row').html(output);
         jQuery('#quote #step-1 .loader-wrapper').hide();
         jQuery('#quote .product-extra-info').fadeIn();
