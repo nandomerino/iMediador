@@ -401,10 +401,9 @@ class PMWS extends controller
                 "valorParametro"	=> $pmUserCode);
         }
 
+        $valueData = array();
         if ( $modifiedField !==  null ) {
-            $inputData[] =  array(
-                "nombreParametro"	=> "P_CAMPO_MODIFICADO",
-                "valorParametro"	=> $modifiedField);
+            $valueData = $modifiedField;
         }
 
 
@@ -427,11 +426,18 @@ class PMWS extends controller
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
+
+        if (!empty($valueData)){
+            $params["pValoresCampos"] = $valueData;
+        }
+
         //app('debugbar')->info($params);
-        //file_put_contents('d:\logs\test.txt', 'productList - params:' . PHP_EOL, FILE_APPEND );
-        //file_put_contents('d:\logs\test.txt' . PHP_EOL, serialize($params), FILE_APPEND );
+        //file_put_contents('d:\logs\modifiedField.txt', 'productList - params:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\modifiedField.txt', serialize($params) . PHP_EOL, FILE_APPEND );
 
         $result = $client->obtenerConfiguracionProducto($params);
+        //file_put_contents('d:\logs\modifiedField.txt', 'El servicio devuelve:' . PHP_EOL, FILE_APPEND );
+        //file_put_contents('d:\logs\modifiedField.txt', serialize($result) . PHP_EOL, FILE_APPEND );
         //app('debugbar')->info('resultado servicio obtenerConfiguracionProducto:');
         //app('debugbar')->info($result);
 
