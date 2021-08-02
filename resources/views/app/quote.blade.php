@@ -230,7 +230,7 @@
                                             <div class="row pt-3">
                                                 <div class="col">
                                                     <label class="quote-starting-date-label mb-1" for="quote-starting-date">{{ __('quote.startDate') }}</label>
-                                                    <input type="text" class="form-control w-100 quote-starting-date" name="quote-starting-date" maxlength="10" autocomplete="off" required>
+                                                    <input type="date" class="form-control w-100 quote-starting-date" name="quote-starting-date" id="quote-starting-date" maxlength="10" autocomplete="off" required>
                                                 </div>
                                             </div>
                                         </div>

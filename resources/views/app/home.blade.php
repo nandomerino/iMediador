@@ -177,8 +177,8 @@
 
                 @foreach( session('home.recentActivity') as $row )
                     <div class="item">
-                        <h3 class="txt-lime-yellow mt-4 mb-2">{{ $row["name"] }}</h3>
-                        <div class="data-list">
+                        <h3 class="txt-lime-yellow mt-4 mb-2">{{ $row["name"] }} <a class="primary-color arrow-collapse collapsed" data-toggle="collapse" data-target="#collapse{{ $row["data"] }}" aria-expanded="false" aria-controls="collapse{{ $row["data"] }}" style="float: right;"><i class="fas fa-plus"></i></a> </h3>
+                        <div class="data-list collapse" id="collapse{{ $row["data"] }}">
                             <table>
                                 <thead>
                                 <tr>

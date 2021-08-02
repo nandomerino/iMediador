@@ -977,7 +977,7 @@ jQuery( document ).ready(function() {
 
     // QUOTE - Date field behavior (only numbers and /)
     jQuery("#quote").on('keypress',
-        ".quote-birthdate, .quote-another-insurance-ends, .datetimepickerHealth input, .quote-starting-date, .quote-another-insurance-ends, .date-input",
+        ".quote-birthdate, .quote-another-insurance-ends, .datetimepickerHealth input, .quote-starting-date,  .quote-another-insurance-ends, .date-input",
         function (evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -1059,7 +1059,7 @@ jQuery( document ).ready(function() {
                     }
                 }
 
-                if (jQuery(this).hasClass("quote-birthdate") ||
+                if (jQuery(this).hasClass("quote-birthdate")||
                     jQuery(this).hasClass("quote-starting-date")) {
                     var valid;
 
@@ -1090,7 +1090,6 @@ jQuery( document ).ready(function() {
                         jQuery(this).removeClass("valid");
                     }
                 }
-
 
                 //console.log( jQuery(this).attr("class") );
                 enableQuoteButton();
@@ -2172,7 +2171,7 @@ jQuery( document ).ready(function() {
             success: function (response) {
                 if (response['success'] == true) {
                     window.PMbudgetNumber = response.data.budgetNumber;
-                    console.log(PMbudgetNumber);
+                    //console.log(PMbudgetNumber);
                 } else {
                     console.error( response.e);
                     displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
@@ -2202,13 +2201,32 @@ jQuery( document ).ready(function() {
                 productor: window.PMgetRatesData.productor,
                 budgetNumber : window.PMbudgetNumber
             },
+            success: function (response) {
+                if (response['success'] == true) {
+                    window.PMbudgetNumber = response.data.budgetNumber;
+                    console.log(PMbudgetNumber);
+                } else {
+                    console.error( response.e);
+                    displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
+                    jQuery('#quote .get-rates .loadingIcon').hide();
+                    jQuery('#quote .form .loading-lock').hide();
+                    jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+                }
+            },
+            error: function (response) {
+                console.error( response.e);
+                displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
+                jQuery('#quote .get-rates .loadingIcon').hide();
+                jQuery('#quote .form .loading-lock').hide();
+                jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+            }
 
         });
     }
     // QUOTE - Stores selected billing cycle and displays Next step button
     jQuery("#quote .billing-cycle").on('click', "input", function (e) {
-        getBudget();
-        getBudgetDocument();
+        //getBudget();
+        //getBudgetDocument();
 
 
         jQuery('#quote .table-actions .action-minibutton').removeAttr("disabled").addClass("active");

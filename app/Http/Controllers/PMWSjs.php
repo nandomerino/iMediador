@@ -35,6 +35,9 @@ class PMWSjs extends Controller
             case "getBudget":
                 $response = $this->getBudget();
                 break;
+            case "getBudgetDocument":
+                $response = $this->getBudgetDocument();
+                break;
             case "getCityProvince":
                 $response = $this->getCityProvince();
                 break;
@@ -420,9 +423,8 @@ class PMWSjs extends Controller
         // Call PM WS
         $parameters = array();
         $parameters["productor"] = $this->parameters["productor"];
-        $parameters["entryChannel"] = $this->parameters["entryChannel"];
         $parameters["budgetNumber"] = $this->parameters["budgetNumber"];
-        $parameters["application"] = $this->parameters["application"];
+
 
 
         if( !isset( $this->parameters["u"]) ){

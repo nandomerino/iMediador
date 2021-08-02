@@ -1538,6 +1538,11 @@ label{
     }
 }
 
+/* collapse */
+.collapse {
+    display: block;
+}
+
 /* ^^^^^^ MEDIA QUERIES ^^^^^^ */
 
 
