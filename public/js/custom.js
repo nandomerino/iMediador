@@ -1641,77 +1641,7 @@ jQuery( document ).ready(function() {
         jQuery("#quote .product-extra-info").on('input change click keyup',
             "input[required]:visible, select[required]:visible",
             function (e) {
-
-                // basic field validation
-                if( jQuery(this).attr("type") == "text" ||
-                    jQuery(this).is("select") ){
-                    if (jQuery(this).val() != "") {
-                        jQuery(this).removeClass("invalid");
-                        jQuery(this).addClass("valid");
-                    } else {
-                        jQuery(this).addClass("invalid");
-                        jQuery(this).removeClass("valid");
-                    }
-                }
-
-                if( jQuery(this).attr("type") == "number"){
-                    if (jQuery(this).val() > 0) {
-                        jQuery(this).removeClass("invalid");
-                        jQuery(this).addClass("valid");
-                    } else {
-                        jQuery(this).addClass("invalid");
-                        jQuery(this).removeClass("valid");
-                    }
-                }
-
-                // Specific field validation
-                if (jQuery(this).hasClass("quote-height") ||
-                    jQuery(this).hasClass("quote-weight")) {
-                    if (jQuery(this).val() >= parseInt( jQuery(this).prop( "min" ) ) &&
-                        jQuery(this).val() <= parseInt( jQuery(this).prop( "max" ) ) ) {
-                        jQuery(this).removeClass("invalid");
-                        jQuery(this).addClass("valid");
-                    } else {
-                        jQuery(this).addClass("invalid");
-                        jQuery(this).removeClass("valid");
-                    }
-                }
-
-                if (jQuery(this).hasClass("quote-birthdate") ||
-                    jQuery(this).hasClass("quote-starting-date")) {
-                    var valid;
-
-                    if( jQuery(this).val().length == 10) {
-                        var splitDate = jQuery(this).val().split("/");
-                        if (splitDate[0] >= 1 && splitDate[0] <= 31) {
-                            if (splitDate[1] >= 1 && splitDate[1] <= 12) {
-                                if (splitDate[2] >= 1920 && splitDate[2] <= 2021) {
-                                    valid = true;
-                                } else {
-                                    valid = false;
-                                }
-                            } else {
-                                valid = false;
-                            }
-                        } else {
-                            valid = false;
-                        }
-                    }else {
-                        valid = false;
-                    }
-
-                    if (valid) {
-                        jQuery(this).removeClass("invalid");
-                        jQuery(this).addClass("valid");
-                    } else {
-                        jQuery(this).addClass("invalid");
-                        jQuery(this).removeClass("valid");
-                    }
-                }
-
-
-                //console.log( jQuery(this).attr("class") );
-                enableQuoteButton();
+                validateFormField(e.target);
             });
 
         // QUOTE - benefits only numbers
@@ -1738,6 +1668,82 @@ jQuery( document ).ready(function() {
 
                  enableQuoteButton();
              });*/
+    }
+
+    //Validates form fieds on input/keyup/click/change event and before sending
+
+    function validateFormField(element){
+        // basic field validation
+        if( jQuery(element).attr("type") == "text" ||
+            jQuery(element).is("select") ){
+            if (jQuery(element).val() != "") {
+                jQuery(element).removeClass("invalid");
+                jQuery(element).addClass("valid");
+            } else {
+                jQuery(element).addClass("invalid");
+                jQuery(element).removeClass("valid");
+            }
+        }
+
+        if( jQuery(element).attr("type") == "number"){
+            if (jQuery(element).val() > 0) {
+                jQuery(element).removeClass("invalid");
+                jQuery(element).addClass("valid");
+            } else {
+                jQuery(element).addClass("invalid");
+                jQuery(element).removeClass("valid");
+            }
+        }
+
+        // Specific field validation
+        if (jQuery(element).hasClass("quote-height") ||
+            jQuery(element).hasClass("quote-weight")) {
+            if (jQuery(element).val() >= parseInt( jQuery(element).prop( "min" ) ) &&
+                jQuery(element).val() <= parseInt( jQuery(element).prop( "max" ) ) ) {
+                jQuery(element).removeClass("invalid");
+                jQuery(element).addClass("valid");
+            } else {
+                jQuery(element).addClass("invalid");
+                jQuery(element).removeClass("valid");
+            }
+        }
+
+        if (jQuery(element).hasClass("quote-birthdate") ||
+            jQuery(element).hasClass("quote-starting-date")) {
+            var valid;
+
+            if( jQuery(element).val().length == 10) {
+                var splitDate = jQuery(element).val().split("/");
+                if (splitDate[0] >= 1 && splitDate[0] <= 31) {
+                    if (splitDate[1] >= 1 && splitDate[1] <= 12) {
+                        if (splitDate[2] >= 1920 && splitDate[2] <= 2021) {
+                            valid = true;
+                        } else {
+                            valid = false;
+                        }
+                    } else {
+                        valid = false;
+                    }
+                } else {
+                    valid = false;
+                }
+            }else {
+                valid = false;
+            }
+
+            if (valid) {
+                jQuery(element).removeClass("invalid");
+                jQuery(element).addClass("valid");
+            } else {
+                jQuery(element).addClass("invalid");
+                jQuery(element).removeClass("valid");
+            }
+        }
+
+
+        //console.log( jQuery(this).attr("class") );
+        enableQuoteButton();
+
     }
 
     // QUOTE - Validates extra info and enables getRate button
@@ -1773,7 +1779,9 @@ jQuery( document ).ready(function() {
             // Runs validation on all fields
             jQuery( '#quote .product-extra-info input:visible, ' +
                 '#quote .product-extra-info select:visible' )
-                .change();
+                .each(function( index, element ) {
+                    validateFormField(element);
+                });
 
             allValid = enableQuoteButton();
 
@@ -2329,8 +2337,9 @@ jQuery( document ).ready(function() {
             // Runs validation on all fields
             jQuery( '#quote .product-extra-info input:visible, ' +
                 '#quote .product-extra-info select:visible' )
-                .change();
-
+                .each(function( index, element ) {
+                    validateFormField(element);
+                });
             allValid = enableQuoteButton();
 
             // If all valid gets rates
