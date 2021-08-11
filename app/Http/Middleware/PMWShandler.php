@@ -545,7 +545,6 @@ class PMWShandler
                     }
                 }
 
-                //cambiar los keys de row->cobertura a indice++
                 if( $row->tipoCampoCobertura == "C"){
                     $productConfig["coberturas"][$index]["name"] = $row->nombre;
                     $productConfig["coberturas"][$index]["min"] = $row->valorMinimo;
@@ -582,8 +581,6 @@ class PMWShandler
 
 
                 }
-                $index++;
-
                 $index++;
 
                 if( $row->nombre == "P_CLAVE_COMERCIAL"){

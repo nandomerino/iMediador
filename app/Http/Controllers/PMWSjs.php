@@ -19,9 +19,6 @@ class PMWSjs extends Controller
         // Gets sent variables variables
         $this->parameters = $request->all();
 
-        //app('debugbar')->info('getData');
-        //app('debugbar')->info($this->parameters);
-
         switch ($this->parameters["ws"]) {
             case "getProductVariations":
                 $response = $this->getProductVariations();
@@ -115,8 +112,6 @@ class PMWSjs extends Controller
 
     public function getProductConfiguration()
     {
-        $modField = null;
-
         // extra parameters for quote widget
         if( !isset( $this->parameters["entryChannel"]) ){
             $this->parameters["entryChannel"] = null;
@@ -124,13 +119,9 @@ class PMWSjs extends Controller
         if( !isset( $this->parameters["application"]) ) {
             $this->parameters["application"] = null;
         }
-
         if( !isset( $this->parameters["modifiedField"]) ) {
             $this->parameters["modifiedField"] = null;
-        } else {
-            $modField = json_decode($this->parameters["modifiedField"]);
         }
-
         if( !isset( $this->parameters["u"]) ) {
             $this->parameters["u"] = null;
         }
@@ -146,7 +137,7 @@ class PMWSjs extends Controller
             $this->parameters["productModality"],
             $this->parameters["entryChannel"],
             $this->parameters["application"],
-            $modField,//$this->parameters["modifiedField"],
+            $this->parameters["modifiedField"],
             $this->parameters["u"],
             $this->parameters["p"]
         );
