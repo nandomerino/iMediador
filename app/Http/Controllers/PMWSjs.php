@@ -403,7 +403,7 @@ class PMWSjs extends Controller
         $parameters["Sub5"] = $this->parameters["Sub5"];
         $parameters["franchise"] = $this->parameters["franchise"] ?? null;
 
-        app('debugbar')->info($parameters);
+        //app('debugbar')->info($parameters);
 
 
         $data = $this->PMWShandler->getBudget($parameters);
@@ -416,16 +416,12 @@ class PMWSjs extends Controller
 
     }
 
-    public function getBudgetDocument()
+   public function getBudgetDocument()
     {
-        app('debugbar')->info($this->parameters);
-
         // Call PM WS
         $parameters = array();
         $parameters["productor"] = $this->parameters["productor"];
         $parameters["budgetNumber"] = $this->parameters["budgetNumber"];
-
-
 
         if( !isset( $this->parameters["u"]) ){
             $this->parameters["u"] = null;
@@ -435,15 +431,11 @@ class PMWSjs extends Controller
         }
         $parameters["u"] = $this->parameters["u"];
         $parameters["p"] = $this->parameters["p"];
-
-
         app('debugbar')->info($parameters);
-
-
         $data = $this->PMWShandler->getBudgetDocument($parameters);
-        //app('debugbar')->info($data);
+        app('debugbar')->info($data);
         if (is_array($data)) {
-            return response()->json(['success' => true, 'data' => $data]);
+            return response()->json(['success' => true, 'data' => $data,  'budgetNumber' => $parameters["budgetNumber"]]);
         } else {
             return response()->json(['success' => false, 'e' => $data]);
         }

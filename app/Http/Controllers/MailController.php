@@ -257,6 +257,54 @@ class MailController extends Controller
         
     }
 
+    public function sendBudget(Request $request)
+    {
+        app('debugbar')->info('En sendBudget');
+        app('debugbar')->info($request);
+        // Gets sent variables variables
+        $this->JSdata = $request->all();
+
+        //$this->type = $this->JSdata["type"];
+        $this->toAddress = $this->JSdata["email"];
+        $this->body = $this->JSdata["body"];
+        $this->html = $this->JSdata["html"];
+
+        $this->generatePDF("prueba");
+        $this->document();
+
+        //Server settings
+        $this->mail->SMTPDebug = 0;                                       // Enable verbose debug output
+        $this->mail->isSMTP();                                            // Set mailer to use SMTP
+        $this->mail->Host = config('mail.host');               // Specify main and backup SMTP servers
+        $this->mail->SMTPAuth = true;                                   // Enable SMTP authentication
+        $this->mail->Username = config('mail.username');           // SMTP username
+        $this->mail->Password = config('mail.password');           // SMTP password
+        $this->mail->SMTPSecure = config('mail.encryption');         // Enable TLS encryption, `ssl` also accepted
+        $this->mail->Port = config('mail.port');               // TCP port to connect to
+        $this->mail->CharSet = 'UTF-8';
+
+        // Content
+        $this->mail->isHTML(true);                                  // Set email format to HTML
+
+        // Fixes connection errors
+        $this->mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+
+        if (!$this->mail->send()) {
+            unlink('prueba.pdf');
+            return response()->json(['error' => 'KO', 'customClass'=> $this->modalKOClass, 'title'=> $this->modalKOTitle, 'body'=> $this->modalKOBody, 'button'=> $this->modalKOButton1, 'e' => $this->mail->ErrorInfo]);
+        } else {
+            unlink('prueba.pdf');
+            return response()->json(['success' => 'OK', 'customClass'=>  $this->modalOKClass, 'title'=> $this->modalOKTitle, 'body'=> $this->modalOKBody, 'button'=> $this->modalOKButton1]);
+        }
+        
+    }
+
     public function generatePDF($title)
     {
 

@@ -890,11 +890,36 @@ class PMWShandler
         $parameters["language"] = $this->language;
         $parameters["pmUserCode"] = $this->userPM;
 
-        app('debugbar')->info('$parameters');
+        app('debugbar')->info('getBudgetDocument PMWS HANDLER $parameters');
         app('debugbar')->info($parameters);
         $response = $this->PMWS->getBudgetDocument($parameters);
-        app('debugbar')->info('$response');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('getBudgetDocument PMWS HANDLER $response');
+        //app('debugbar')->info($response);
+
+        $budgetDocument = [];
+        $data = $response->return;
+        if( $data->correcto == "S" ){
+            if ($data->datosSalida->array->nombre == "P_CODIGO_PETICION") {
+                $budgetId = $data->datosSalida->array->valor;
+            }
+            //Content file
+            $dataDocument = $data->contenidoFichero;
+            $base = base64_decode($dataDocument);
+            $budgetURL = "/WP/wp-content/uploads/presupuestos/p".$budgetId.".pdf";
+            $destinationPath = public_path() . "/WP/wp-content/uploads/presupuestos/p".$budgetId.".pdf";
+            file_put_contents($destinationPath, $base);
+            $budgetDocument["data"] = "OK";
+            $budgetDocument["url"] = $budgetURL;
+
+        } else{
+            $budgetDocument= $data->mensajeError;
+        }
+        session([
+            'budgetDocument' => $budgetURL,
+        ]);
+        //app('debugbar')->info("budget:");
+        //app('debugbar')->info($budget);
+        return $budgetDocument;
 
     }
 

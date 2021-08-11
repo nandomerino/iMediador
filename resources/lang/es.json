@@ -197,6 +197,7 @@
     "quote.stepNext" : "Continuar >>",
     "quote.stepBuy" : "Contratar >>",
     "quote.sendBudget" : "Enviar presupuesto",
+    "quote.generateBudget" : "Generar presupuesto",
     "quote.printBudget" : "Imprimir presupuesto",
     "quote.createBudget" : "Generar presupuesto",
     "quote.printTitle.uno" : "Según los datos indicados detallamos el coste del siguiente producto de seguro:",

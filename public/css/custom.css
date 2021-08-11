@@ -1531,6 +1531,13 @@ label{
 
 }
 
+.rates-table-description p, .col.descript-option p {
+    text-align: justify;
+}
+button#print-budget.active, button#send-budget.active {
+    background-color: #D1D546;
+}
+
 /* xs */
 @media (max-width: 575.98px) {
     .advisor-results table{

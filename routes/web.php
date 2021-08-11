@@ -76,7 +76,8 @@ Route::post('/send-mail-request-data', 'MailController@sendFromRequest');
 Route::post('/send-mail-this-data', 'MailController@sendThis');
 Route::view('lang.js', 'localization.lang');
 Route::view('/download','download.file');
-Route::post('/send-mail-html', 'MailController@sendHTML');	
+Route::post('/send-mail-html', 'MailController@sendHTML');
+Route::post('/send-mail-budget', 'MailController@sendBudget');	
 /* ^^^^^^ OTHERS ^^^^^^ */
 
 

@@ -697,7 +697,7 @@ jQuery( document ).ready(function() {
         if( jQuery(".toggles .subsidio.active").length == 1 ) {
             // There are no field names coming from the WS so we have to set them manually
             var benefitsArray = data.coberturas;
-            console.log(data.coberturas);
+            //console.log(data.coberturas);
             var cols;
 
             var i = 1;
@@ -1375,6 +1375,7 @@ jQuery( document ).ready(function() {
     function quote_load_Rates(data){
 
         window.PMrates = data;
+
         product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
         productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
 
@@ -1396,7 +1397,7 @@ jQuery( document ).ready(function() {
             return false;
         });
 
-        tableDescription = "<p>" + data.name + "</p>" + "<p>" + data.description + "</p>";
+        tableDescription = "<p>" + data.optional + "</p>" + "<p>" + data.description + "</p>";
         tableFooter = "<p>" + data.foot + "</p>";
 
         head = "<thead>";
@@ -1828,10 +1829,11 @@ jQuery( document ).ready(function() {
     function quote_load_RatesByPrice(data){
 
         window.PMrates = data;
+        //console.log(data);
         product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
         productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
-        console.log("Rates by price");
-        console.log(data);
+        //console.log("Rates by price");
+        //console.log(data);
         var startIcon = "<i class='fas fa-info-circle'"; //comment-alt'";
         var endIcon = "></i>"
         var i;
@@ -1848,8 +1850,8 @@ jQuery( document ).ready(function() {
             return false;
         });
 
-        tableDescription = "<p>" + data.name + "</p>" + "<p>" + data.description + "</p>";
-        tableFooter = "<p>" + data.optional + "</p>";
+        tableDescription = "<p>" + data.optional + "</p>" + "<p>" + data.description + "</p>";
+
         head = "<thead>";
         head += "<tr>";
         head += "<th colspan='" + headers.length + "'>" + product + " - " + productVariation + "</th>";
@@ -1978,7 +1980,6 @@ jQuery( document ).ready(function() {
 
         window.PMquoteTable = table;
         jQuery('#quote .rates-table-description').html(tableDescription);
-        jQuery('#quote .rates-table-footer').html(tableFooter);
         jQuery('#quote .rates-table-description').fadeIn();
         jQuery('#quote .rates-table table').html(table);
         jQuery('#quote .rates-table .billing-cycle').html(billingCycles);
@@ -1998,7 +1999,26 @@ jQuery( document ).ready(function() {
         form += "<form class='modal-send-email'>";
         form += "<label class='mt-4'>" + lang["modal.input.email"] + "</label>";
         form += "<input class='my-2' type='email' required>";
-        form += "<button type='submit' class='my-2 bg-lime-yellow text-white mx-auto d-block rounded border-0 px-3 py-2' disabled>" + lang['modal.send'] + "</button>";
+        form += "<button type='submit' id='rates-table' class='my-2 bg-lime-yellow text-white mx-auto d-block rounded border-0 px-3 py-2' disabled>" + lang['modal.send'] + "</button>";
+        form += "<div class='loader-wrapper w-100 pt-5 text-center' style='display:none;'>";
+        form += "<i class='fas fa-circle-notch fa-spin fa-2x txt-navy-blue'></i>";
+        form += "</div>";
+        form += "<p class='result text-center txt-navy-blue mt-4'></p>";
+        form += "</form>";
+
+        displayModal("send-email", lang["modal.title.sendEmail"], form, lang['quote.modal.close']);
+
+    });
+
+    // QUOTE - Send mail button
+    jQuery('#selected-product-info button#send-budget').click(function(e){
+        e.preventDefault(); // prevent native submit
+
+        var form = "";
+        form += "<form class='modal-send-email'>";
+        form += "<label class='mt-4'>" + lang["modal.input.email"] + "</label>";
+        form += "<input class='my-2' type='email' required>";
+        form += "<button type='submit' id='budget' class='my-2 bg-lime-yellow text-white mx-auto d-block rounded border-0 px-3 py-2' disabled>" + lang['modal.send'] + "</button>";
         form += "<div class='loader-wrapper w-100 pt-5 text-center' style='display:none;'>";
         form += "<i class='fas fa-circle-notch fa-spin fa-2x txt-navy-blue'></i>";
         form += "</div>";
@@ -2171,21 +2191,17 @@ jQuery( document ).ready(function() {
             success: function (response) {
                 if (response['success'] == true) {
                     window.PMbudgetNumber = response.data.budgetNumber;
-                    //console.log(PMbudgetNumber);
+                    getBudgetDocument();
                 } else {
                     console.error( response.e);
                     displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
-                    jQuery('#quote .get-rates .loadingIcon').hide();
-                    jQuery('#quote .form .loading-lock').hide();
-                    jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+
                 }
             },
             error: function (response) {
                 console.error( response.e);
                 displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
-                jQuery('#quote .get-rates .loadingIcon').hide();
-                jQuery('#quote .form .loading-lock').hide();
-                jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+
             }
         });
     }
@@ -2202,33 +2218,32 @@ jQuery( document ).ready(function() {
                 budgetNumber : window.PMbudgetNumber
             },
             success: function (response) {
+                console.log(response);
                 if (response['success'] == true) {
-                    window.PMbudgetNumber = response.data.budgetNumber;
-                    console.log(PMbudgetNumber);
+                    console.log(response['data']['url']);
+                    jQuery('#quote #step-1 #send-budget').removeAttr("disabled");
+                    jQuery('#quote #step-1 #send-budget').addClass("active");
+                    jQuery('#quote #step-1 #print-budget').removeAttr("disabled");
+                    jQuery('#quote #step-1 #print-budget').addClass("active");
+                    jQuery('a.print-budget').attr("href", response['data']['url']);
+
+
                 } else {
-                    console.error( response.e);
-                    displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
-                    jQuery('#quote .get-rates .loadingIcon').hide();
-                    jQuery('#quote .form .loading-lock').hide();
-                    jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+                    jQuery('#quote #step-1 #send-budget').attr("disabled", "disabled");
+                    jQuery('#quote #step-1 #send-budget').removeClass("active");
+                    jQuery('#quote #step-1 #print-budget').attr("disabled", "disabled");
+                    jQuery('#quote #step-1 #print-budget').removeClass("active");
                 }
             },
             error: function (response) {
                 console.error( response.e);
                 displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
-                jQuery('#quote .get-rates .loadingIcon').hide();
-                jQuery('#quote .form .loading-lock').hide();
-                jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
             }
 
         });
     }
     // QUOTE - Stores selected billing cycle and displays Next step button
     jQuery("#quote .billing-cycle").on('click', "input", function (e) {
-        //getBudget();
-        //getBudgetDocument();
-
-
         jQuery('#quote .table-actions .action-minibutton').removeAttr("disabled").addClass("active");
         window.PMbillingCycle = jQuery(this).val(); // forma de pago
 
@@ -2264,9 +2279,13 @@ jQuery( document ).ready(function() {
         }, 1000);
 
     });
+    // Generate budget
+    jQuery('#quote #step-1 #generate-budget').click(function(e){
+        getBudget();
+    });
 
     // MODAL - SEND EMAIL send
-    jQuery("#PMmodal").on('click', '.modal-send-email button', function(e){
+    jQuery("#PMmodal").on('click', '.modal-send-email button#rates-table', function(e){
         e.preventDefault(); // prevent native submit
         //jQuery(this).attr("disabled");
 
@@ -2295,7 +2314,51 @@ jQuery( document ).ready(function() {
                 email : email,
                 product : product,
                 body : body,
-                html : html
+                html : html,
+
+            },
+            success: function(response) {
+                jQuery('.modal-send-email .loader-wrapper').hide();
+                jQuery('.modal-send-email .result').html(response['body']);
+            },
+            error: function(response){
+                //console.error(response['e']);
+            }
+        });
+
+    });
+
+    // MODAL - SEND EMAIL send
+    jQuery("#PMmodal").on('click', '.modal-send-email button#budget', function(e){
+        e.preventDefault(); // prevent native submit
+        //jQuery(this).attr("disabled");
+
+        jQuery('.modal-send-email .loader-wrapper').show();
+        jQuery('.modal-send-email .result').html();
+
+
+        // NEED TO GET INFO of the file FROM WS
+        var fileId = ""; // 323785;
+        var filename = ""; // "6600031_201911_2.pdf";
+        var tipoFichero = "" // 2;
+
+
+        var html = jQuery('#quote #selected-product-info .print3').html();
+        html += jQuery('#quote #step-1 .print2').html();
+        html += jQuery('#quote #step-1 .print1').html();
+        var email = jQuery(".modal-send-email input[type=email]").val();
+        var product = jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html();
+        var body = "Aro aro aro " + jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html() +", solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
+
+        // Send email with attachment from /downloads
+        jQuery.ajax({
+            type: "POST",
+            url: "/send-mail-budget",
+            data: {
+                email : email,
+                product : product,
+                body : body,
+                html : html,
 
             },
             success: function(response) {

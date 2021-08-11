@@ -1364,27 +1364,7 @@ class PMWS extends controller
             "nombreParametro"	=> "P_FORMA_PAGO",
             "valorParametro"	=> "1");
         $fData = array();
-        $fData[] = array(
-            "capital"	=> "50",
-            "codigo"	=> "120",
-            "descripcion"	=> "Subsidio diario",
-            "duracion"	=> "365",
-            "franquicia"	=> "0"
-        );
-        $fData[] = array(
-            "capital"	=> "50",
-            "codigo"	=> "121",
-            "descripcion"	=> "Subsidio diario",
-            "duracion"	=> "365",
-            "franquicia"	=> "0"
-        );
-        $fData[] = array(
-            "capital"	=> "0",
-            "codigo"	=> "122",
-            "descripcion"	=> "Hospitalizacion",
-            "duracion"	=> "365",
-            "franquicia"	=> "0"
-        );
+
         $fData[] = array(
             "coverages"	=> $data["coverages"]);
 
@@ -1439,7 +1419,8 @@ class PMWS extends controller
      */
     function getBudgetDocument($data) {
 
-        $endpoint = $this->baseUrl . "/v4/wsdocumentacion" . $this->environment . "/Documentacion?WSDL";
+
+        $endpoint = $this->baseUrl . "/v3/wsdocumentacion" . $this->environment . "/Documentacion?WSDL";
         $client = new SoapClient($endpoint);
 
         $inputData = array();
@@ -1454,12 +1435,9 @@ class PMWS extends controller
                 "nombreParametro"	=> "P_CODIGO_PRODUCTOR",
                 "valorParametro"	=> $data["productor"]);
         }
-        if( !$data["entryChannel"] ){
-            $data["entryChannel"] = $this->getChannel($data["pmUserCode"]);
-        }
         $inputData[] =  array(
             "nombreParametro"	=> "P_CANAL_ENTRADA",
-            "valorParametro"	=> $data["entryChannel"]);
+            "valorParametro"	=> "IM");
 
         $fData = array();
         $fData[] = array(
@@ -1487,19 +1465,19 @@ class PMWS extends controller
             "pPassword"		=> $data["pass"],
             "pIdioma"		=> $data["language"],
             "pDatosEntrada"	=> $inputData,
-            "listaDocumentos"=> $fData,
+            "pDatosDocumento"=> $fData,
             "pDatosConexion"=> $cData
         );
 
-        app('debugbar')->info('getBudgetDocument');
-        app('debugbar')->info($params);
+        //app('debugbar')->info('getBudgetDocument');
+        //app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'getBudget - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->getDocumento($params);
         //file_put_contents('d:\logs\test.txt', 'getBudget - result:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
-        app('debugbar')->info('$result');
-        app('debugbar')->info($result);
+        //app('debugbar')->info('$result');
+        //app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
