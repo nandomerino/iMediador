@@ -254,7 +254,7 @@ class MailController extends Controller
             unlink('coste-seguro.pdf');
             return response()->json(['success' => 'OK', 'customClass'=>  $this->modalOKClass, 'title'=> $this->modalOKTitle, 'body'=> $this->modalOKBody, 'button'=> $this->modalOKButton1]);
         }
-        
+
     }
 
     public function sendBudget(Request $request)
@@ -269,7 +269,7 @@ class MailController extends Controller
         $this->body = $this->JSdata["body"];
         $this->html = $this->JSdata["html"];
 
-        $this->generatePDF("prueba");
+        $this->generatePDF("presupuesto");
         $this->document();
 
         //Server settings
@@ -296,13 +296,13 @@ class MailController extends Controller
         );
 
         if (!$this->mail->send()) {
-            unlink('prueba.pdf');
+            unlink('presupuesto.pdf');
             return response()->json(['error' => 'KO', 'customClass'=> $this->modalKOClass, 'title'=> $this->modalKOTitle, 'body'=> $this->modalKOBody, 'button'=> $this->modalKOButton1, 'e' => $this->mail->ErrorInfo]);
         } else {
-            unlink('prueba.pdf');
+            unlink('presupuesto.pdf');
             return response()->json(['success' => 'OK', 'customClass'=>  $this->modalOKClass, 'title'=> $this->modalOKTitle, 'body'=> $this->modalOKBody, 'button'=> $this->modalOKButton1]);
         }
-        
+
     }
 
     public function generatePDF($title)
@@ -315,7 +315,7 @@ class MailController extends Controller
 		if ($html_content){
 			$content = str_replace(
 						array("{TITLE}", "{DATA_TABLE}"),
-						array($title, $this->html), 
+						array($title, $this->html),
 						$html_content);
         }
 
@@ -330,6 +330,33 @@ class MailController extends Controller
         $dompdf->render();
         file_put_contents('coste-seguro.pdf', $dompdf->output());
         $this->JSdata['attachment'] = 'coste-seguro.pdf';
+    }
+
+    public function generatePDFBudget($title)
+    {
+
+        //app('debugbar')->info('En generatePDF');
+        //app('debugbar')->info($this->html);
+
+        $html_content = file_get_contents('../resources/views/app/mail/layouts/prices.table.php');
+        if ($html_content){
+            $content = str_replace(
+                array("{TITLE}", "{DATA_TABLE}"),
+                array($title, $this->html),
+                $html_content);
+        }
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', TRUE);
+        //Esto es necesario para que funcionen las css en el pdf
+        $options->setDpi(150);
+        $dompdf = new Dompdf($options);
+        $dompdf->setBasePath(url()->current());
+        $dompdf->loadHtml($content);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        file_put_contents('presupuesto.pdf', $dompdf->output());
+        $this->JSdata['attachment'] = 'presupuesto.pdf';
     }
 
 

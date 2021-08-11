@@ -401,11 +401,11 @@ class PMWS extends controller
                 "valorParametro"	=> $pmUserCode);
         }
 
+        $valueData = array();
         if ( $modifiedField !==  null ) {
-            $inputData[] =  array(
-                "nombreParametro"	=> "P_CAMPO_MODIFICADO",
-                "valorParametro"	=> $modifiedField);
+            $valueData = $modifiedField;
         }
+
 
 
         $cData = array();
@@ -427,10 +427,13 @@ class PMWS extends controller
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
+        if (!empty($valueData)){
+            $params["pValoresCampos"] = $valueData;
+        }
+
         //app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'productList - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt' . PHP_EOL, serialize($params), FILE_APPEND );
-
         $result = $client->obtenerConfiguracionProducto($params);
         //app('debugbar')->info('resultado servicio obtenerConfiguracionProducto:');
         //app('debugbar')->info($result);
