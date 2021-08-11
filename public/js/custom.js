@@ -1407,8 +1407,6 @@ jQuery( document ).ready(function() {
 
                         }
                         i++;
-                        // TODO: min/max values received are not the ones that the WS is using,
-                        //  sometimes we get a WS response telling us it exceeds the max while it's within provided range.
                     });
                 }
 
