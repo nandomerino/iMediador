@@ -276,6 +276,10 @@
                                     <div class="loader-wrapper w-100 pt-5 text-center" style="display:none;">
                                         <i class="fas fa-circle-notch fa-spin fa-2x txt-navy-blue"></i>
                                     </div>
+                                    <div class="loader-wrapper-get-rates w-100 pt-5 text-center" style="display:none;">
+                                        <h3 class="w-100 text-center">En unos instantes te mostraremos tu oferta de seguro.</h3>
+                                        <i class="fas fa-circle-notch fa-spin fa-2x txt-navy-blue"></i>
+                                    </div>
 
 
                                 </div>
@@ -1242,6 +1246,7 @@
 
 
     </div>
+
 @endsection
 
 @include('app.layouts.modal')

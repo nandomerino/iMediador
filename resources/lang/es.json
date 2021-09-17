@@ -109,9 +109,9 @@
     "app.home.metrics" : "Métricas",
     "app.home.latestNews" : "Últimas noticias",
 
-    "campaigns.rewards.title" : "Incentivos",
-    "campaigns.rewards.current" : "Ganados",
-    "campaigns.rewards.next" : "Siguiente",
+    "campaigns.rewards.title" : "Objetivos",
+    "campaigns.rewards.current" : "Conseguidos",
+    "campaigns.rewards.next" : "Próximo a alcanzar",
     "campaigns.progress.title" : "Progreso",
 
 
