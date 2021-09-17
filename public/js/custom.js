@@ -775,7 +775,7 @@ jQuery( document ).ready(function() {
                     helpBenefits = '<i class="fas fa-info-circle" title="' + benefitsArray[key].helpField + '"></i>';
                 }
                 if (hiddenBenefits == "S") {
-                    benefits += "<div class='col-" + cols + "' align-self-end >";
+                    benefits += "<div class='' align-self-end >";
                     benefits += "<input type='hidden' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                     benefits += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('#"+benefitsArray[key].valueCopy+"').keyup(function (){var value = jQuery(this).val();jQuery('#"+benefitsArray[key].name+"').val(value);});});</script>";
                     benefits += "</div>";
@@ -1238,33 +1238,32 @@ jQuery( document ).ready(function() {
 
                     // Load franchise
                     window.PMfranchise = data.P_FRANQUICIA;
-                    modificaConfiguracion = data.P_FRANQUICIA.WS.modificaConfiguracion.toUpperCase()=="S";
-                    modConfig = "";
-                    if (modificaConfiguracion){
-                        modConfig = " configChange";
+                    if (data.P_FRANQUICIA) {
+                        modificaConfiguracion = data.P_FRANQUICIA.WS.modificaConfiguracion.toUpperCase()==="S";
+                        modConfig = "";
+                        if (modificaConfiguracion){
+                            modConfig = " configChange";
+                        }
+                        window.PMEnfGraves = true;
+
+                        franchiseField += "";
+                        franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
+                        franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
+
+                        if( data.P_FRANQUICIA.fieldType == "select"){
+
+                            var franchiseArray = data.P_FRANQUICIA.values;
+                            var franchiseSelect = "<option value=''>Todas las Franquicias</option>";
+
+                            Object.keys(franchiseArray).forEach(function(key) {
+                                franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
+                            });
+                            franchiseField += franchiseSelect;
+
+                            franchiseField += "</select>";
+                        }
+                        franchiseField += "";
                     }
-                    window.PMEnfGraves = true;
-                    var hidden = "";
-                    if(data.P_FRANQUICIA.hidden == "S"){
-                        hidden = " type='hidden' ";
-                    }
-                    franchiseField += "";
-                    franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
-                    franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
-
-                    if( data.P_FRANQUICIA.fieldType == "select"){
-
-                        var franchiseArray = data.P_FRANQUICIA.values;
-                        var franchiseSelect = "<option value=''>Todas las Franquicias</option>";
-
-                        Object.keys(franchiseArray).forEach(function(key) {
-                            franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
-                        });
-                        franchiseField += franchiseSelect;
-
-                        franchiseField += "</select>";
-                    }
-                    franchiseField += "";
 
 
                 // Loads durations
@@ -1370,7 +1369,7 @@ jQuery( document ).ready(function() {
                             helpBenefits = '<i class="fas fa-info-circle" title="' + benefitsArray[key].helpField + '"></i>';
                         }
                         if (hiddenBenefits == "S") {
-                            benefits += "<div class='col-" + cols + "' align-self-end >";
+                            benefits += "<div class='' align-self-end >";
                             benefits += "<input type='hidden' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                             benefits += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('#"+benefitsArray[key].valueCopy+"').keyup(function (){var value = jQuery(this).val();jQuery('#"+benefitsArray[key].name+"').val(value);});});</script>";
                             benefits += "</div>";
@@ -1800,6 +1799,7 @@ jQuery( document ).ready(function() {
                 //getRates
                 resetRatesTable();
                 jQuery('#quote .get-rates .loadingIcon').fadeIn();
+                jQuery(".loader-wrapper-get-rates").show();
                 jQuery('#quote .form .loading-lock').fadeIn();
                 jQuery('#quote .get-rates .quote-button').attr("disabled","disabled");
                 jQuery('#quote .table-actions .action-minibutton').attr("disabled", "disabled").removeClass("active");
@@ -1987,12 +1987,14 @@ jQuery( document ).ready(function() {
 
                         if (response['success'] == true) {
                             quote_load_Rates(response.data);
+                            jQuery(".loader-wrapper-get-rates").hide();
                         } else {
                             console.error( response.e);
                             displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
                             jQuery('#quote .get-rates .loadingIcon').hide();
                             jQuery('#quote .form .loading-lock').hide();
                             jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+                            jQuery(".loader-wrapper-get-rates").hide();
                         }
                     },
                     error: function (response) {
@@ -2001,6 +2003,7 @@ jQuery( document ).ready(function() {
                         jQuery('#quote .get-rates .loadingIcon').hide();
                         jQuery('#quote .form .loading-lock').hide();
                         jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
+                        jQuery(".loader-wrapper-get-rates").hide();
                     }
                 });
             }
@@ -2012,7 +2015,7 @@ jQuery( document ).ready(function() {
     function quote_load_Rates(data){
 
         window.PMrates = data;
-
+        console.log(data);
         product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
         productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
 
@@ -2358,6 +2361,7 @@ jQuery( document ).ready(function() {
                 //getRates
                 resetRatesTable();
                 jQuery('#quote .get-rates .loadingIcon').fadeIn();
+                jQuery(".loader-wrapper-get-rates").show();
                 jQuery('#quote .form .loading-lock').fadeIn();
                 jQuery('#quote .get-rates .quote-button').attr("disabled","disabled");
                 jQuery('#quote .table-actions .action-minibutton').attr("disabled", "disabled").removeClass("active");
@@ -2441,12 +2445,13 @@ jQuery( document ).ready(function() {
                     success: function (response) {
                         if (response['success'] == true) {
                             // TODO: there are products that send information in a different structure and won't work
-                            //console.log(response.data);
+                            jQuery(".loader-wrapper-get-rates").hide();
                             quote_load_RatesByPrice(response.data);
                         } else {
                             //console.error( response.e);
                             displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
                             jQuery('#quote .get-rates .loadingIcon').hide();
+                            jQuery(".loader-wrapper-get-rates").hide();
                             jQuery('#quote .form .loading-lock').hide();
                             jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
                         }
@@ -2455,6 +2460,7 @@ jQuery( document ).ready(function() {
                         //console.error( response.e);
                         displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
                         jQuery('#quote .get-rates .loadingIcon').hide();
+                        jQuery(".loader-wrapper-get-rates").hide();
                         jQuery('#quote .form .loading-lock').hide();
                         jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
                     }

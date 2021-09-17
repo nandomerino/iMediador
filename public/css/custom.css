@@ -662,6 +662,11 @@ table td{
      min-width: 60px;
 }
 
+.rates-table .table td:first-of-type {
+    width: 70px;
+    padding: 5px 15px;
+}
+
 .rates-table .table tfoot td {
      font-size: 0.7rem;
 }
@@ -1548,6 +1553,25 @@ button#print-budget.active, button#send-budget.active {
 /* collapse */
 .collapse {
     display: block;
+}
+/* loader */
+.loader-wrapper-get-rates.w-100.pt-5.text-center {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: rgb(249,249,249);
+    opacity: .8;
+}
+.loader-wrapper-get-rates.w-100.pt-5.text-center svg {
+    top: 50%;
+    position: fixed;
+}
+.loader-wrapper-get-rates.w-100.pt-5.text-center h3 {
+    top: 55%;
+    position: fixed;
 }
 
 /* ^^^^^^ MEDIA QUERIES ^^^^^^ */
