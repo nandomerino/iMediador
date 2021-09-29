@@ -495,6 +495,7 @@ class PMWShandler
                 if( $row->nombre == "P_FRANQUICIA"){
                     $productConfig[$row->nombre]["name"] = $row->etiquetaPre;
                     $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
+                    $productConfig[$row->nombre]["attributes"] = $row->atributosHTML;
                     $productConfig[$row->nombre]["columns"] = $row->columnas;
                     foreach( $row->listaValores->listaValores as $innerRow ) {
                         $productConfig[$row->nombre]["values"][$innerRow->codigo] = $innerRow->descripcion;
@@ -556,6 +557,7 @@ class PMWShandler
                     $productConfig["coberturas"][$index]["dependsOn"] = $row->dependeDe;
                     $productConfig["coberturas"][$index]["hidden"] = $row->esOculto;
                     $productConfig["coberturas"][$index]["helpField"] = $row->textoAyuda;
+                    $productConfig["coberturas"][$index]["columns"] = $row->columnas;
                     if ($row->listaValores != null){
                         $i=0;
                         foreach( $row->listaValores->listaValores as $innerRow ) {
@@ -609,12 +611,14 @@ class PMWShandler
                     $row->nombre == "P_DTO_COMISION_MED" ||
                     $row->nombre == "P_DTO_COMISION_DEL" ||
                     $row->nombre == "P_RECARGO_FINANCIACION" ||
-                    $row->nombre == "P_CANAL_COBRO" ){
+                    $row->nombre == "P_CANAL_COBRO" ||
+                    $row->nombre == "P_FORMA_PAGO" ){
 
                     $productConfig[$row->nombre]["name"] = $row->etiquetaPre;
                     $productConfig[$row->nombre]["hidden"] = $row->esOculto;
                     $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
                     $productConfig[$row->nombre]["attributes"] = $row->atributosHTML;
+                    $productConfig[$row->nombre]["columns"] = $row->columnas;
                     if( $row->listaValores != null ) {
                         if (is_array($row->listaValores->listaValores)) {
                             $productConfig[$row->nombre]["array"] = true;

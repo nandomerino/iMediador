@@ -199,7 +199,7 @@
     "quote.sendBudget" : "Enviar presupuesto",
     "quote.generateBudget" : "Generar presupuesto",
     "quote.printBudget" : "Imprimir presupuesto",
-    "quote.createBudget" : "Generar presupuesto",
+    "quote.createBudget" : "Presupuesto",
     "quote.printTitle.uno" : "Según los datos indicados detallamos el coste del siguiente producto de seguro:",
     "quote.printTitle.dos" : "Siendo el resultado de su elección la siguiente:",
     "quote.stepNext.final" : "Finalizar",
@@ -268,6 +268,8 @@
     "quote.sign.logalty.notFormalized" : "Procedemos a revisar la solicitud de seguro para que todo esté correcto. En breve te informaremos.",
     "quote.sign.logalty.synchronous" : "Firmar ahora (Logalty)",
     "quote.policyRequest" : "PM_Solicitud_",
+    "quote.loadGetBudget" : "Estamos generando el presupuesto.",
+    "quote.loadGetRates" : "En unos instantes te mostraremos tu oferta de seguro.",
 
 
     "advisor.title" : "Recomendador",

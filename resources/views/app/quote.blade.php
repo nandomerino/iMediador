@@ -251,7 +251,7 @@
                                             <div class="row pt-3">
                                                 <div class="col">
                                                     <label class="quote-starting-date-label mb-1" for="quote-starting-date">{{ __('quote.startDate') }}</label>
-                                                    <input type="text" class="form-control w-100 quote-starting-date" name="quote-starting-date" id="quote-starting-date" maxlength="10" autocomplete="off" required>
+                                                    <input type="text" class="form-control w-100 quote-starting-date" name="quote-starting-date" id="quote-starting-date" maxlength="10" autocomplete="off" required readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -277,7 +277,7 @@
                                         <i class="fas fa-circle-notch fa-spin fa-2x txt-navy-blue"></i>
                                     </div>
                                     <div class="loader-wrapper-get-rates w-100 pt-5 text-center" style="display:none;">
-                                        <h3 class="w-100 text-center">En unos instantes te mostraremos tu oferta de seguro.</h3>
+                                        <h3 class="w-100 text-center">{{ __('quote.loadGetRates') }}</h3>
                                         <i class="fas fa-circle-notch fa-spin fa-2x txt-navy-blue"></i>
                                     </div>
 
@@ -604,6 +604,43 @@
 
                 <div id="selected-product-info" class="row" style="display: none;">
                     <div class="col wrapper m-5">
+                        <div class="row py-5">
+                            <div class="col-12 col-md-12 text-center">
+                                <h4 class="hiddenprint">{{ __('quote.createBudget') }}</h4>
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col d-none d-md-block">
+                            </div>
+                            <div class="col-12 col-md-3 text-center">
+                                <button id="generate-budget" class="bg-lime-yellow text-white bold py-3 px-3 px-md-5 border-0 rounded mt-0 position-relative font-weight-bold hiddenprint">
+                                    {{ __('quote.generateBudget') }}
+                                    <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
+                                </button>
+                            </div>
+                            <div class="col d-none d-md-block">
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col d-none d-md-block">
+                            </div>
+                            <div class="col-6 col-md-3 text-center">
+                                <button id="send-budget" class="action-button budget text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded hiddenprint" disabled>
+                                    {{ __('quote.sendBudget') }}
+                                    <img class="button-icon right" src="/img/paper-airplane-white.png">
+                                </button>
+                            </div>
+                            <div class="col-6 col-md-3 text-center">
+                                <a href="" target="_blank" class="print-budget">
+                                    <button id="print-budget" class="action-button budget text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded hiddenprint" disabled>
+                                        {{ __('quote.printBudget') }}
+                                        <img class="button-icon right" src="/img/print.png">
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="col d-none d-md-block">
+                            </div>
+                        </div>
                         <div class="row print3">
                             {{--<div class="col-12 col-md-6 col-lg-6 col-xl-6 text-center discount-code py-0 my-0 py-md-5 my-md-5">
                                 <p class="txt-dark-grey mt-5">{{ __('quote.discountCodeInput') }}</p>
@@ -642,44 +679,12 @@
                             <div class="col d-none d-md-block">
                             </div>
                         </div>
-                        <div class="row mb-5">
-                            <div class="col-12 col-md-12 text-center">
-                                <h4 class="hiddenprint">{{ __('quote.createBudget') }}</h4>
-                            </div>
-                        </div>
-                        <div class="row mb-5">
-                            <div class="col d-none d-md-block">
-                            </div>
-                            <div class="col-12 col-md-3 text-center">
-                                <button id="generate-budget" class="bg-lime-yellow text-white bold py-3 px-3 px-md-5 border-0 rounded mt-0 position-relative font-weight-bold hiddenprint">
-                                    {{ __('quote.generateBudget') }}
-                                    <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
-                                </button>
-                            </div>
-                            <div class="col d-none d-md-block">
-                            </div>
-                        </div>
-                        <div class="row mb-5">
-                            <div class="col d-none d-md-block">
-                            </div>
-                            <div class="col-6 col-md-3 text-center">
-                                <button id="send-budget" class="action-button budget text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded hiddenprint" disabled>
-                                    {{ __('quote.sendBudget') }}
-                                    <img class="button-icon right" src="/img/paper-airplane-white.png">
-                                </button>
-                            </div>
-                            <div class="col-6 col-md-3 text-center">
-                                <a href="" target="_blank" class="print-budget">
-                                    <button id="print-budget" class="action-button budget text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded hiddenprint" disabled>
-                                    {{ __('quote.printBudget') }}
-                                    <img class="button-icon right" src="/img/print.png">
-                                    </button>
-                                </a>
-                            </div>
-                            <div class="col d-none d-md-block">
-                            </div>
-                        </div>
+
                         <div style="position: absolute;right: 0; display: none" class="showprint"><img src="/img/logo-pm.png"></div>
+                    </div>
+                    <div class="loader-wrapper-get-budget w-100 pt-5 text-center" style="display:none;">
+                        <h3 class="w-100 text-center"> {{ __('quote.loadGetBudget') }}</h3>
+                        <i class="fas fa-circle-notch fa-spin fa-2x txt-navy-blue"></i>
                     </div>
                 </div>
             </div>

@@ -1554,8 +1554,15 @@ button#print-budget.active, button#send-budget.active {
 .collapse {
     display: block;
 }
+/* datepicker */
+div#ui-datepicker-div {
+    z-index: 9 !important;
+}
+input#quote-starting-date[readonly] {
+    background: none;
+}
 /* loader */
-.loader-wrapper-get-rates.w-100.pt-5.text-center {
+.loader-wrapper-get-rates.w-100.pt-5.text-center, .loader-wrapper-get-budget.w-100.pt-5.text-center {
     position: fixed;
     left: 0px;
     top: 0px;
@@ -1565,11 +1572,11 @@ button#print-budget.active, button#send-budget.active {
     background: rgb(249,249,249);
     opacity: .8;
 }
-.loader-wrapper-get-rates.w-100.pt-5.text-center svg {
+.loader-wrapper-get-rates.w-100.pt-5.text-center svg, .loader-wrapper-get-budget.w-100.pt-5.text-center svg {
     top: 50%;
     position: fixed;
 }
-.loader-wrapper-get-rates.w-100.pt-5.text-center h3 {
+.loader-wrapper-get-rates.w-100.pt-5.text-center h3, .loader-wrapper-get-budget.w-100.pt-5.text-center h3 {
     top: 55%;
     position: fixed;
 }
