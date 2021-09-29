@@ -734,12 +734,8 @@ jQuery( document ).ready(function() {
             var benefitsArray = data.coberturas;
             //console.log(data.coberturas);
             var cols;
-
             var i = 1;
-            cols = Math.floor(12 / Object.keys(benefitsArray).length);
-            if (cols < 4) {
-                cols = 4;
-            }
+
             Object.keys(benefitsArray).forEach(function (key) {
                 switch (i) {
                     case 1:
@@ -767,6 +763,7 @@ jQuery( document ).ready(function() {
                         FieldName = "covidUCI";
                         break;
                 }
+                cols = Math.floor(12 / benefitsArray[key].columns);
                 hiddenBenefits = benefitsArray[key].hidden;
                 FieldDescription = benefitsArray[key].label;
                 FieldType = benefitsArray[key].fieldType;
@@ -775,12 +772,12 @@ jQuery( document ).ready(function() {
                     helpBenefits = '<i class="fas fa-info-circle" title="' + benefitsArray[key].helpField + '"></i>';
                 }
                 if (hiddenBenefits == "S") {
-                    benefits += "<div class='' align-self-end >";
+                    benefits += "<div class=' align-self-end' >";
                     benefits += "<input type='hidden' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                     benefits += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('#"+benefitsArray[key].valueCopy+"').keyup(function (){var value = jQuery(this).val();jQuery('#"+benefitsArray[key].name+"').val(value);});});</script>";
                     benefits += "</div>";
                 } else {
-                    benefits += "<div class='col-" + cols + "' align-self-end >";
+                    benefits += "<div class='col-" + cols + " align-self-end' >";
                     benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + benefitsArray[key].label + ""+ helpBenefits +"</label>";
                     /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
                     if (FieldType == 'select') {
@@ -811,10 +808,52 @@ jQuery( document ).ready(function() {
                     benefits += "</div>";
 
                 }
+
                 i++;
-                // TODO: min/max values received are not the ones that the WS is using,
-                //  sometimes we get a WS response telling us it exceeds the max while it's within provided range.
             });
+            jQuery(function(){
+                jQuery("#quote-starting-date").datepicker({ minDate: 0, maxDate: 30 });
+            });
+
+            if( typeof data.P_CANAL_COBRO !== 'undefined' ) {
+                var hidden = "";
+                if (data.P_CANAL_COBRO.hidden == "S") {
+                    hidden = " type='hidden' ";
+                }
+                cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
+                discountFields += "<div class='col-"+cols+" impersonator-field'>";
+                discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+                discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+
+                if (data.P_CANAL_COBRO.fieldType == "select") {
+                    var cobroArray = data.P_CANAL_COBRO.values;
+                    Object.keys(cobroArray).forEach(function (key) {
+                        discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                    });
+                    discountFields += "</select>";
+                }
+                discountFields += "</div>";
+            }
+
+            if( typeof data.P_FORMA_PAGO !== 'undefined' ) {
+                var hidden = "";
+                if (data.P_FORMA_PAGO.hidden == "S") {
+                    hidden = " type='hidden' ";
+                }
+                cols = Math.floor(12 / data.P_FORMA_PAGO.columns);
+                benefits += "<div class='col-"+cols+" impersonator-field'>";
+                benefits += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_FORMA_PAGO.name + "</label>";
+                benefits += "<" + data.P_FORMA_PAGO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_FORMA_PAGO.attributes + ">\n";
+
+                if (data.P_FORMA_PAGO.fieldType == "select") {
+                    var cobroArray = data.P_FORMA_PAGO.values;
+                    Object.keys(cobroArray).forEach(function (key) {
+                        benefits += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                    });
+                    benefits += "</select>";
+                }
+                benefits += "</div>";
+            }
         }
 
         // load info button if there is text for it
@@ -943,39 +982,22 @@ jQuery( document ).ready(function() {
             if(data.P_RECARGO_FINANCIACION.hidden == "S"){
                 hidden = " type='hidden' ";
             }
-            discountFields +=  "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='quote-discount-recargo-financiacion-label mb-1' for='quote-discount-recargo-financiacion'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
-            discountFields +=  "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-recargo-financiacion valid' name='quote-discount-recargo-financiacion' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
+            benefits +=  "<div class='col-6 impersonator-field'>";
+            benefits += "<label class='quote-discount-recargo-financiacion-label mb-1' for='quote-discount-recargo-financiacion'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
+            benefits +=  "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-recargo-financiacion valid' name='quote-discount-recargo-financiacion' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
 
             if (data.P_RECARGO_FINANCIACION.fieldType == "select") {
 
                 var recargoArray = data.P_RECARGO_FINANCIACION.values;
                 Object.keys(recargoArray).forEach(function (key) {
-                    discountFields += "<option value='" + key + "'>" + recargoArray[key] + "</option>";
+                    benefits += "<option value='" + key + "'>" + recargoArray[key] + "</option>";
                 });
-                discountFields += "</select>";
+                benefits += "</select>";
             }
-            discountFields += "</div>";
+            benefits += "</div>";
         }
 
-        if( typeof data.P_CANAL_COBRO !== 'undefined' ) {
-            var hidden = "";
-            if (data.P_CANAL_COBRO.hidden == "S") {
-                hidden = " type='hidden' ";
-            }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
-            discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
 
-            if (data.P_CANAL_COBRO.fieldType == "select") {
-                var cobroArray = data.P_CANAL_COBRO.values;
-                Object.keys(cobroArray).forEach(function (key) {
-                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
-                });
-                discountFields += "</select>";
-            }
-            discountFields += "</div>";
-        }
 
         //console.log(data);
 
@@ -1248,7 +1270,7 @@ jQuery( document ).ready(function() {
 
                         franchiseField += "";
                         franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
-                        franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
+                        franchiseField += "<" + data.P_FRANQUICIA.WS.tipoCampoHTML + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
 
                         if( data.P_FRANQUICIA.fieldType == "select"){
 
@@ -1328,12 +1350,8 @@ jQuery( document ).ready(function() {
                     var benefitsArray = data.coberturas;
                     //console.log(data.coberturas);
                     var cols;
-
                     var i = 1;
-                    cols = Math.floor(12 / Object.keys(benefitsArray).length);
-                    if (cols < 4) {
-                        cols = 4;
-                    }
+
                     Object.keys(benefitsArray).forEach(function (key) {
                         switch (i) {
                             case 1:
@@ -1361,6 +1379,7 @@ jQuery( document ).ready(function() {
                                 FieldName = "covidUCI";
                                 break;
                         }
+                        cols = Math.floor(12 / benefitsArray[key].columns);
                         hiddenBenefits = benefitsArray[key].hidden;
                         FieldDescription = benefitsArray[key].label;
                         FieldType = benefitsArray[key].fieldType;
@@ -1369,12 +1388,12 @@ jQuery( document ).ready(function() {
                             helpBenefits = '<i class="fas fa-info-circle" title="' + benefitsArray[key].helpField + '"></i>';
                         }
                         if (hiddenBenefits == "S") {
-                            benefits += "<div class='' align-self-end >";
+                            benefits += "<div class=' align-self-end' >";
                             benefits += "<input type='hidden' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
                             benefits += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('#"+benefitsArray[key].valueCopy+"').keyup(function (){var value = jQuery(this).val();jQuery('#"+benefitsArray[key].name+"').val(value);});});</script>";
                             benefits += "</div>";
                         } else {
-                            benefits += "<div class='col-" + cols + "' align-self-end >";
+                            benefits += "<div class='col-" + cols + " align-self-end' >";
                             benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + benefitsArray[key].label + ""+ helpBenefits +"</label>";
                             /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
                             if (FieldType == 'select') {
@@ -1407,6 +1426,45 @@ jQuery( document ).ready(function() {
                         }
                         i++;
                     });
+                    if( typeof data.P_CANAL_COBRO !== 'undefined' ) {
+                        var hidden = "";
+                        if (data.P_CANAL_COBRO.hidden == "S") {
+                            hidden = " type='hidden' ";
+                        }
+                        cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
+                        discountFields += "<div class='col-"+cols+" impersonator-field'>";
+                        discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+                        discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+
+                        if (data.P_CANAL_COBRO.fieldType == "select") {
+                            var cobroArray = data.P_CANAL_COBRO.values;
+                            Object.keys(cobroArray).forEach(function (key) {
+                                discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                            });
+                            discountFields += "</select>";
+                        }
+                        discountFields += "</div>";
+                    }
+
+                    if( typeof data.P_FORMA_PAGO !== 'undefined' ) {
+                        var hidden = "";
+                        if (data.P_FORMA_PAGO.hidden == "S") {
+                            hidden = " type='hidden' ";
+                        }
+                        cols = Math.floor(12 / data.P_FORMA_PAGO.columns);
+                        benefits += "<div class='col-"+cols+" impersonator-field'>";
+                        benefits += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_FORMA_PAGO.name + "</label>";
+                        benefits += "<" + data.P_FORMA_PAGO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_FORMA_PAGO.attributes + ">\n";
+
+                        if (data.P_FORMA_PAGO.fieldType == "select") {
+                            var cobroArray = data.P_FORMA_PAGO.values;
+                            Object.keys(cobroArray).forEach(function (key) {
+                                benefits += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                            });
+                            benefits += "</select>";
+                        }
+                        benefits += "</div>";
+                    }
                 }
 
                 // load discount fields for impersonator users
@@ -2843,6 +2901,7 @@ jQuery( document ).ready(function() {
                     displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
                     jQuery('#quote #generate-budget .loadingIcon').hide();
                     jQuery('#quote #generate-budget').removeAttr("disabled");
+                    jQuery(".loader-wrapper-get-budget").hide();
                 }
             },
             error: function (response) {
@@ -2850,6 +2909,7 @@ jQuery( document ).ready(function() {
                 displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
                 jQuery('#quote #generate-budget .loadingIcon').hide();
                 jQuery('#quote #generate-budget').removeAttr("disabled");
+                jQuery(".loader-wrapper-get-budget").hide();
             }
         });
     }
@@ -2880,7 +2940,7 @@ jQuery( document ).ready(function() {
                     jQuery('a.print-budget').attr("href", response['data']['url']);
                     jQuery('#quote #generate-budget .loadingIcon').hide();
                     jQuery('#quote #generate-budget').removeAttr("disabled");
-
+                    jQuery(".loader-wrapper-get-budget").hide();
                 } else {
                     jQuery('#quote #step-1 #send-budget').attr("disabled", "disabled");
                     jQuery('#quote #step-1 #send-budget').removeClass("active");
@@ -2888,6 +2948,7 @@ jQuery( document ).ready(function() {
                     jQuery('#quote #step-1 #print-budget').removeClass("active");
                     jQuery('#quote #generate-budget .loadingIcon').hide();
                     jQuery('#quote #generate-budget').removeAttr("disabled");
+                    jQuery(".loader-wrapper-get-budget").hide();
                 }
             },
             error: function (response) {
@@ -2895,6 +2956,7 @@ jQuery( document ).ready(function() {
                 displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
                 jQuery('#quote #generate-budget .loadingIcon').hide();
                 jQuery('#quote #generate-budget .loadingIcon').removeAttr("disabled");
+                jQuery(".loader-wrapper-get-budget").hide();
             }
 
         });
@@ -2939,6 +3001,7 @@ jQuery( document ).ready(function() {
     // Generate budget
     jQuery('#quote #step-1 #generate-budget').click(function(e){
         jQuery('#quote #generate-budget .loadingIcon').show();
+        jQuery(".loader-wrapper-get-budget").show();
         jQuery('#quote #generate-budget').attr("disabled");
         getBudget();
     });
