@@ -1557,6 +1557,7 @@ button#print-budget.active, button#send-budget.active {
 /* datepicker */
 div#ui-datepicker-div {
     z-index: 9 !important;
+    margin-top: -246px !important;
 }
 input#quote-starting-date[readonly] {
     background: none;

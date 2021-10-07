@@ -32,10 +32,10 @@
         $pm = new \App\Http\Middleware\PMWShandler();
         $currentLanguage = App::getLocale();
 
-        if( !isset($_GET['dev']) ){
-           app('debugbar')->disable();
-           config(['app.debug' => false]);
-        }
+        //if( !isset($_GET['dev']) ){
+        //   app('debugbar')->disable();
+        //   config(['app.debug' => false]);
+        //}
         // Needs to load User, Pass (and productor) from GET
         if( !isset($_GET['p']) || strlen($_GET['p']) < 3 ){
            die();
@@ -43,7 +43,9 @@
 
         // Loads quote info using token
         $pm->getAccessData( $_GET['p'] );
+        //app('debugbar')->info($pm);
         $pm->validateUser( Session::get('widget.productVariation') );
+        //app('debugbar')->info($pm);
 
         // Passes user and pass to JS to send as parameters for Cross-Domain widget
 
@@ -51,6 +53,7 @@
         echo "var PMp = '" . Session::get('login.pass') . "';\n";
         echo "var PMproductor = " . Session::get('widget.productor') . ";\n";
         echo "var PMproduct = " . Session::get('widget.product') . ";\n";
+        //echo "var PMproduct = 'ÉLITE-PM PROFESIONAL';\n";
         echo "var PMproductVariation = " . Session::get('widget.productVariation') . ";\n";
 
         if( Session::has('extraInfo.datosSalida.P_CABECERA') && Session::get('extraInfo.datosSalida.P_CABECERA') != "" ){

@@ -681,7 +681,7 @@ class PMWShandler
 
         //app('debugbar')->info($parameters);
         $response = $this->PMWS->getRates($parameters);
-        //app('debugbar')->info($response);
+        app('debugbar')->info($response);
 
         $rates = [];
 
@@ -766,7 +766,10 @@ class PMWShandler
                     foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         if( $row2->formaPago == 1){
                             $rates["table"][$fila][$columna]["price"] = $row2->primaTotalAnual;
-                            $messages[$fila][$columna] = $row2->primaTotalAnual;
+                            $messages[$fila][$columna] = str_replace(",", ".",$row2->primaTotalAnual);
+                        } else {
+                            $rates["table"][$fila][$columna]["price"] = $row2->primaTotalAnual;
+                            $messages[$fila][$columna] = str_replace(",", ".",$row2->primaTotalAnual);
                         }
                     }
 
@@ -856,11 +859,11 @@ class PMWShandler
         $parameters["language"] = $this->language;
         $parameters["pmUserCode"] = $this->userPM;
 
-        //app('debugbar')->info('$parameters');
-        //app('debugbar')->info($parameters);
+        app('debugbar')->info('$parameters');
+        app('debugbar')->info($parameters);
         $response = $this->PMWS->getBudget($parameters);
-        //app('debugbar')->info('$response');
-        //app('debugbar')->info($response);
+        app('debugbar')->info('$response');
+        app('debugbar')->info($response);
 
         $budget = [];
         $data = $response->return;
@@ -894,14 +897,16 @@ class PMWShandler
         $parameters["language"] = $this->language;
         $parameters["pmUserCode"] = $this->userPM;
 
-        app('debugbar')->info('getBudgetDocument PMWS HANDLER $parameters');
-        app('debugbar')->info($parameters);
+        //app('debugbar')->info('getBudgetDocument PMWS HANDLER $parameters');
+        //app('debugbar')->info($parameters);
         $response = $this->PMWS->getBudgetDocument($parameters);
         //app('debugbar')->info('getBudgetDocument PMWS HANDLER $response');
         //app('debugbar')->info($response);
 
         $budgetDocument = [];
         $data = $response->return;
+        //app('debugbar')->info('data');
+        //app('debugbar')->info($data);
         if( $data->correcto == "S" ){
             if ($data->datosSalida->array->nombre == "P_CODIGO_PETICION") {
                 $budgetId = $data->datosSalida->array->valor;
@@ -914,6 +919,7 @@ class PMWShandler
             file_put_contents($destinationPath, $base);
             $budgetDocument["data"] = "OK";
             $budgetDocument["url"] = $budgetURL;
+            $budgetDocument["id"] = "p".$budgetId;
 
         } else{
             $budgetDocument= $data->mensajeError;
@@ -1127,8 +1133,8 @@ class PMWShandler
         $rates = [];
 
         $data = $response->return;
-        //app('debugbar')->info('Data:');
-        //app('debugbar')->info($data);
+        app('debugbar')->info('Data:');
+        app('debugbar')->info($data);
         if( $data->correcto == "S" ){
 
             //Description prior to table and foot info
@@ -1202,11 +1208,11 @@ class PMWShandler
                     }
 
                     // Get price
-                    foreach (array_reverse($row->tarificaciones->array) as $row2) {
-                        if( $row2->formaPago == 1){
-                            $rates["table"][$fila][$columna]["price"] = $row2->primaTotalAnual;
-                            $messages[$fila][$columna] = $row2->primaTotalAnual;
-                        }
+                    foreach (array_reverse($row->coberturas->array) as $row2) {
+
+                            $rates["table"][$fila][$columna]["price"] = str_replace(",", ".",$row2->capital);
+                            $messages[$fila][$columna] = str_replace(",", ".", $row2->capital);
+
                     }
 
                     // Get description option)
@@ -1706,7 +1712,7 @@ class PMWShandler
     {
 
         $response = $this->PMWS->getAccessData($this->language, $token);
-        // app('debugbar')->info($response);
+        app('debugbar')->info($response);
         $data = $response->return;
 
         if( $data->correcto == "S" ){

@@ -181,6 +181,7 @@ class PMWSjs extends Controller
         $parameters["covidHospitalizacionCob"] = $this->parameters["covidHospitalizacionCob"] ?? null;
         $parameters["covidHospitalizacionSub"] = $this->parameters["covidHospitalizacionSub"] ?? null;
         $parameters["jobType"] = $this->parameters["jobType"];
+        $parameters["formaPago"] = $this->parameters["formaPago"]?? null;
         $parameters["duration"] = $this->parameters["duration"] ?? null;
 
 

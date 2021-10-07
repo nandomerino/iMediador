@@ -679,7 +679,6 @@ jQuery( document ).ready(function() {
             if( data.P_FRANQUICIA.fieldType == "select"){
 
                 var franchiseArray = data.P_FRANQUICIA.values;
-                var franchiseSelect = "<option value=''>Todas las Franquicias</option>";
 
                 Object.keys(franchiseArray).forEach(function(key) {
                     franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
@@ -811,9 +810,7 @@ jQuery( document ).ready(function() {
 
                 i++;
             });
-            jQuery(function(){
-                jQuery("#quote-starting-date").datepicker({ minDate: 0, maxDate: 30 });
-            });
+
 
             if( typeof data.P_CANAL_COBRO !== 'undefined' ) {
                 var hidden = "";
@@ -1040,6 +1037,9 @@ jQuery( document ).ready(function() {
         jQuery('#quote #step-1 .loader-wrapper').hide();
         jQuery('#quote .product-extra-info').fadeIn();
         jQuery('#quote .get-rates').fadeIn();
+        jQuery(function(){
+            jQuery("#quote-starting-date").datepicker({ minDate: 0, maxDate: 30 });
+        });
     }
     //    jQuery("#quote .changeConfiguration").on('change', ".changeConfiguration", function (e) {
     //    jQuery("#quote .changeConfiguration").on('change', "#quote", function (e) {
@@ -1275,7 +1275,6 @@ jQuery( document ).ready(function() {
                         if( data.P_FRANQUICIA.fieldType == "select"){
 
                             var franchiseArray = data.P_FRANQUICIA.values;
-                            var franchiseSelect = "<option value=''>Todas las Franquicias</option>";
 
                             Object.keys(franchiseArray).forEach(function(key) {
                                 franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
@@ -1890,6 +1889,7 @@ jQuery( document ).ready(function() {
                 var discountCommisionDel = jQuery('#quote .quote-discount-commision-del').val();
                 var discountRecargoFinanciacion = jQuery('#quote .quote-discount-recargo-financiacion').val();
                 var discountCobro = jQuery('#quote .quote-discount-cobro').val();
+                var formaPago = jQuery('#quote .quote-discount-cobro').val();
 
                 var enfCob = null;
                 var enfSub  = null;
@@ -1903,7 +1903,9 @@ jQuery( document ).ready(function() {
                 var covidHospitalizacionSub = null;
                 var covidUCICob = null;
                 var covidUCISub = null;
+
                 var date = jQuery('#quote .quote-starting-date').val();
+
 
 
                 var franchise = null;
@@ -1999,9 +2001,9 @@ jQuery( document ).ready(function() {
                     covidUCICob : covidUCICob,
                     covidUCISub : covidUCISub,
                     franchise : franchise,
-                    date: date
+                    date: date,
+                    formaPago: formaPago
                 }
-
 
                 jQuery.ajax({
                     type: "POST",
@@ -2039,8 +2041,10 @@ jQuery( document ).ready(function() {
                         covidUCICob : covidUCICob,
                         covidUCISub : covidUCISub,
                         franchise: franchise,
-                        enfGraves: enfGraves
+                        enfGraves: enfGraves,
+                        formaPago: formaPago
                     },
+
                     success: function (response) {
 
                         if (response['success'] == true) {
@@ -2063,7 +2067,9 @@ jQuery( document ).ready(function() {
                         jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
                         jQuery(".loader-wrapper-get-rates").hide();
                     }
+
                 });
+
             }
 
         });
@@ -2073,7 +2079,7 @@ jQuery( document ).ready(function() {
     function quote_load_Rates(data){
 
         window.PMrates = data;
-        console.log(data);
+        //console.log(data);
         product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
         productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
 
@@ -2892,10 +2898,10 @@ jQuery( document ).ready(function() {
                 coverages : window.PMselectedFinalProductCoverages
             },
             success: function (response) {
+                console.log(response);
                 if (response['success'] == true) {
                     window.PMbudgetNumber = response.data.budgetNumber;
                     getBudgetDocument();
-
                 } else {
                     console.error( response.e);
                     displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
@@ -2926,7 +2932,7 @@ jQuery( document ).ready(function() {
                 budgetNumber : window.PMbudgetNumber
             },
             success: function (response) {
-                //console.log(response);
+                console.log(response);
                 if (response['success'] == true) {
                     //console.log(response['data']['url']);
                     // Stores it to use later
@@ -2965,12 +2971,14 @@ jQuery( document ).ready(function() {
     jQuery("#quote .billing-cycle").on('click', "input", function (e) {
         jQuery('#quote .table-actions .action-minibutton').removeAttr("disabled").addClass("active");
         window.PMbillingCycle = jQuery(this).val(); // forma de pago
-
+        productName = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
         window.PMselectedProduct = jQuery("#quote input[name='quote-product']:checked").next().html().trim().toUpperCase();
         window.PMselectedProductVariation = jQuery("#quote input[name='quote-product-variation']:checked").next().html().trim().toUpperCase();
+
         var billing = jQuery(this).parent().next().find(".quote-amount").html();
         var billingTotal = jQuery(this).parent().next().find(".total-quote-amount").html();
         var exemption = jQuery('.rates-table .PM-row td.selected:not(".product")').html();
+
 
         if( billingTotal ){
             // removes parenthesis from string
@@ -2986,6 +2994,7 @@ jQuery( document ).ready(function() {
 
         jQuery('#quote #selected-product-info .product-name .dynamic-content').html( PMselectedProduct );
         jQuery('#quote #selected-product-info .product-variation .dynamic-content').html( PMselectedProductVariation );
+        jQuery('#quote #selected-product-info .product-product .dynamic-content').html( productName );
         jQuery('#quote #selected-product-info .product-coverage .dynamic-content').html( PMselectedFinalProduct );
         jQuery('#quote #selected-product-info .product-exemption .dynamic-content').html( exemption );
 
@@ -3058,6 +3067,8 @@ jQuery( document ).ready(function() {
         jQuery('.modal-send-email .loader-wrapper').show();
         jQuery('.modal-send-email .result').html();
         var budgetURL = PMbudgetURL;
+        console.log(budgetURL);
+        console.log(window.PMbudgetNumber);
 
         // NEED TO GET INFO of the file FROM WS
         var fileId = ""; // 323785;
