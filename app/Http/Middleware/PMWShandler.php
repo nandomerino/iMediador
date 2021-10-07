@@ -423,6 +423,7 @@ class PMWShandler
 
     }
 
+
     /**
      * @param $user
      * @param $pass
@@ -444,8 +445,8 @@ class PMWShandler
         // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productId . " | " . $productVariationId . " | " . $entryChannel . " | " . $application);
 
         $response = $this->PMWS->getProductConfiguration($this->user, $this->pass, $this->language, $productor, $productId, $productModalityId, $entryChannel, $application, $this->userPM, $modifiedField);
-        //app('debugbar')->info('pmwshandler getProductConfiguration');
-        //app('debugbar')->info($response);
+        app('debugbar')->info('pmwshandler getProductConfiguration');
+        app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
@@ -500,6 +501,7 @@ class PMWShandler
                     foreach( $row->listaValores->listaValores as $innerRow ) {
                         $productConfig[$row->nombre]["values"][$innerRow->codigo] = $innerRow->descripcion;
                     }
+                    sort($productConfig[$row->nombre]["values"], SORT_NUMERIC);
                 }
 
                 if( $row->nombre == "P_PERIODO_COBERTURA"){
