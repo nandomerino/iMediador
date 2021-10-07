@@ -679,6 +679,7 @@ jQuery( document ).ready(function() {
             if( data.P_FRANQUICIA.fieldType == "select"){
 
                 var franchiseArray = data.P_FRANQUICIA.values;
+                var franchiseSelect;
 
                 Object.keys(franchiseArray).forEach(function(key) {
                     franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
@@ -1275,6 +1276,8 @@ jQuery( document ).ready(function() {
                         if( data.P_FRANQUICIA.fieldType == "select"){
 
                             var franchiseArray = data.P_FRANQUICIA.values;
+                            var franchiseSelect = "";
+                            console.log(franchiseArray);
 
                             Object.keys(franchiseArray).forEach(function(key) {
                                 franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
