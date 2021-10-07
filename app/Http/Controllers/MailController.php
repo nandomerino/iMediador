@@ -296,10 +296,10 @@ class MailController extends Controller
         );
 
         if (!$this->mail->send()) {
-            unlink('presupuesto.pdf');
+            unlink('coste-seguro.pdf');
             return response()->json(['error' => 'KO', 'customClass'=> $this->modalKOClass, 'title'=> $this->modalKOTitle, 'body'=> $this->modalKOBody, 'button'=> $this->modalKOButton1, 'e' => $this->mail->ErrorInfo]);
         } else {
-            unlink('presupuesto.pdf');
+            unlink('coste-seguro.pdf');
             return response()->json(['success' => 'OK', 'customClass'=>  $this->modalOKClass, 'title'=> $this->modalOKTitle, 'body'=> $this->modalOKBody, 'button'=> $this->modalOKButton1]);
         }
 

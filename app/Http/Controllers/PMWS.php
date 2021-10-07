@@ -1087,6 +1087,12 @@ class PMWS extends controller
                 "valorParametro"	=> $data["paymentChannel"]
             );
         }
+        if ( isset($data["paymentChannel"]) ) {
+            $fData[] = array(
+                "nombreParametro"	=> "P_FORMA_PAGO",
+                "valorParametro"	=> $data["formaPago"]
+            );
+        }
 
         $fData = array_merge($fData, $this->getCapitalGarantia(
             $data["enfCob"],
@@ -1129,8 +1135,8 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        //app('debugbar')->info('$params');
-        //app('debugbar')->info($params);
+        app('debugbar')->info('$params');
+        app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
