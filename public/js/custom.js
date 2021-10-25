@@ -682,7 +682,7 @@ jQuery( document ).ready(function() {
                 var franchiseSelect;
 
                 Object.keys(franchiseArray).forEach(function(key) {
-                    franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
+                    franchiseSelect += "<option value='" + franchiseArray[key].codigo + "'>" + franchiseArray[key].opcion + "</option>";
                 });
                 franchiseField += franchiseSelect;
 
@@ -1162,6 +1162,7 @@ jQuery( document ).ready(function() {
     function quote_load_PartialProductConfiguration( data, index ){
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
+        //console.log(data);
 
         // Signing method Logalty/handwriting
         if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
@@ -1227,9 +1228,14 @@ jQuery( document ).ready(function() {
                     var claveCommercialArray = data.P_CLAVE_COMERCIAL.values;
                     var claveCommercialSelect = "";
                     claveCommercialSelect += "<option value=\"\"></option>";
-                    Object.keys(claveCommercialArray).forEach(function(key) {
-                        claveCommercialSelect += "<option value='" + key + "'>" + claveCommercialArray[key] + "</option>";
-                    });
+                    if (data.P_CLAVE_COMERCIAL.values != null) {
+                        Object.keys(claveCommercialArray).forEach(function(key) {
+                            claveCommercialSelect += "<option value='" + key + "'>" + claveCommercialArray[key] + "</option>";
+                        });
+                    } else {
+                        claveCommercialSelect += "<option value=''> Sin opciones de tarifa </option>";
+                    }
+
                     commercialKey += claveCommercialSelect;
 
                     commercialKey += "</select>";
@@ -1268,7 +1274,10 @@ jQuery( document ).ready(function() {
                             modConfig = " configChange";
                         }
                         window.PMEnfGraves = true;
-
+                        var hidden = "";
+                        if(data.P_FRANQUICIA.hidden == "S"){
+                            hidden = " type='hidden' ";
+                        }
                         franchiseField += "";
                         franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
                         franchiseField += "<" + data.P_FRANQUICIA.WS.tipoCampoHTML + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
@@ -1277,10 +1286,9 @@ jQuery( document ).ready(function() {
 
                             var franchiseArray = data.P_FRANQUICIA.values;
                             var franchiseSelect = "";
-                            console.log(franchiseArray);
 
                             Object.keys(franchiseArray).forEach(function(key) {
-                                franchiseSelect += "<option value='" + key + "'>" + franchiseArray[key] + "</option>";
+                                franchiseSelect += "<option value='" + franchiseArray[key].codigo + "'>" + franchiseArray[key].opcion + "</option>";
                             });
                             franchiseField += franchiseSelect;
 
@@ -2082,7 +2090,7 @@ jQuery( document ).ready(function() {
     function quote_load_Rates(data){
 
         window.PMrates = data;
-        //console.log(data);
+        console.log(data);
         product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
         productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
 
@@ -2131,6 +2139,7 @@ jQuery( document ).ready(function() {
             rows += "<tr class='PM-row row-" + numFila + "'><td>" + i + "</td>";
             numFila++;
             // Render columns
+            //console.log(data.messages[i])
             Object.keys(data.messages[i]).forEach(function(j) {
                 //console.log(data.messages[i][j])
                 if (isNaN(data.messages[i][j])){
@@ -2138,17 +2147,13 @@ jQuery( document ).ready(function() {
                 } else {
                     let rawPrice = data.messages[i][j];
                     let splitPrice = rawPrice.split(".");
-
                     var adjustedDecimal;
                     if( typeof splitPrice[1] !== 'undefined' ) {
                         adjustedDecimal = splitPrice[1] + "00";
                     }else{
                         adjustedDecimal = "00";
                     }
-
                     let newDecimal = adjustedDecimal.slice(0,2);
-
-
                     amount = splitPrice[0] + "," + newDecimal + " &euro;";
                     rows += "<td class='product' ";
 
@@ -2165,17 +2170,17 @@ jQuery( document ).ready(function() {
 
                     // Renders quotes (formas de pago) data
                     for( k=0;k<data.table[i][j].quotes.length;k++ ) {
-                        switch(k){
-                            case 0:
+                        switch(data.table[i][j].quotes[k].formaPago){
+                            case 1:
                                 rows += " data-annual='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-annual-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-annual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
-                            case 1:
+                            case 2:
                                 rows += " data-biannual='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-biannual-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-biannual-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
-                            case 2:
+                            case 3:
                                 rows +=  " data-quarterly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-quarterly-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-quarterly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
-                            case 3:
+                            case 5:
                                 rows += " data-monthly='" + data.table[i][j].quotes[k].primaNetaFraccionada + "' data-monthly-total='" + data.table[i][j].quotes[k].primaTotalAnual + "' data-monthly-forma-pago='" + data.table[i][j].quotes[k].formaPago + "' ";
                                 break;
                         }
@@ -2202,20 +2207,20 @@ jQuery( document ).ready(function() {
         var billingCycles = "";
         cols = Math.floor( 12 / data.billingCycles.length );
         for( i=0;i<data.billingCycles.length;i++ ) {
-            switch(i) {
-                case 0:
+            switch(data.billingCycles[i]) {
+                case 1:
                     description = lang["quote.annual.text"];
                     dataField = lang["quote.annual.field"];
                     break;
-                case 1:
+                case 2:
                     description = lang["quote.biannual.text"];
                     dataField = lang["quote.biannual.field"];
                     break;
-                case 2:
+                case 3:
                     description = lang["quote.quarterly.text"];
                     dataField = lang["quote.quarterly.field"];
                     break;
-                case 3:
+                case 5:
                     description = lang["quote.monthly.text"];
                     dataField = lang["quote.monthly.field"];
                     break;
@@ -2755,8 +2760,6 @@ jQuery( document ).ready(function() {
     });
 
 
-
-
     // QUOTE - Print button
     jQuery('#quote .rates-table .action-minibutton.print').click(function(e){
 
@@ -2776,7 +2779,7 @@ jQuery( document ).ready(function() {
         selectedColumnIndex = jQuery(this).index() + 1;
         jQuery('#quote .rates-table table th:nth-child(' + selectedColumnIndex +')' ).addClass("selected");
         window.PMselectedFinalProduct = jQuery('#quote .rates-table table th:nth-child(' + selectedColumnIndex +')' ).html();
-
+        console.log(window.PMselectedFinalProduct);
         // Enables action buttons
         resetRatesTableActionsBilling();
         jQuery('#quote .rates-table .billing-cycle input').removeAttr("disabled");

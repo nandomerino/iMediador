@@ -445,8 +445,8 @@ class PMWShandler
         // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productId . " | " . $productVariationId . " | " . $entryChannel . " | " . $application);
 
         $response = $this->PMWS->getProductConfiguration($this->user, $this->pass, $this->language, $productor, $productId, $productModalityId, $entryChannel, $application, $this->userPM, $modifiedField);
-        app('debugbar')->info('pmwshandler getProductConfiguration');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('pmwshandler getProductConfiguration');
+        //app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
@@ -499,7 +499,8 @@ class PMWShandler
                     $productConfig[$row->nombre]["attributes"] = $row->atributosHTML;
                     $productConfig[$row->nombre]["columns"] = $row->columnas;
                     foreach( $row->listaValores->listaValores as $innerRow ) {
-                        $productConfig[$row->nombre]["values"][$innerRow->codigo] = $innerRow->descripcion;
+                        $productConfig[$row->nombre]["values"][$innerRow->codigo]["opcion"] = $innerRow->descripcion;
+                        $productConfig[$row->nombre]["values"][$innerRow->codigo]["codigo"] = $innerRow->codigo;
                     }
                     sort($productConfig[$row->nombre]["values"], SORT_NUMERIC);
                 }
@@ -592,18 +593,19 @@ class PMWShandler
                     $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
                     $productConfig[$row->nombre]["attributes"] = $row->atributosHTML;
                     $productConfig[$row->nombre]["hidden"] = $row->esOculto;
-
+                    app('debugbar')->info($row);
                     if( $productConfig[$row->nombre]["fieldType"] == "select"){
-
-                        //app('debugbar')->info($row->listaValores->listaValores);
-                        if( is_array ($row->listaValores->listaValores) ){
-                            foreach( $row->listaValores->listaValores as $innerRow ) {
-                                $productConfig[$row->nombre]["values"][$innerRow->codigo] = $innerRow->descripcion;
+                        if (isset($row->listaValores->listaValores)) {
+                            if (is_array($row->listaValores->listaValores)) {
+                                foreach ($row->listaValores->listaValores as $innerRow) {
+                                    $productConfig[$row->nombre]["values"][$innerRow->codigo] = $innerRow->descripcion;
+                                }
+                            } else {
+                                $productConfig[$row->nombre]["values"][$row->listaValores->listaValores->codigo] = $row->listaValores->listaValores->descripcion;
                             }
-                        }else{
-                            $productConfig[$row->nombre]["values"][$row->listaValores->listaValores->codigo] = $row->listaValores->listaValores->descripcion;
+                        } else {
+                            $productConfig[$row->nombre]["values"] = null;
                         }
-
                     }
                 }
 
@@ -759,20 +761,16 @@ class PMWShandler
 
                     // billing cycles
                     $j = 0;
-                    foreach ($row->tarificaciones->array as $row2) {
+                    foreach (array_reverse($row->tarificaciones->array) as $row2) {
                         $rates["billingCycles"][$j] = $row2->formaPago;
                         $j++;
                     }
 
                     // Get price
-                    foreach (array_reverse($row->tarificaciones->array) as $row2) {
-                        if( $row2->formaPago == 1){
-                            $rates["table"][$fila][$columna]["price"] = $row2->primaTotalAnual;
-                            $messages[$fila][$columna] = str_replace(",", ".",$row2->primaTotalAnual);
-                        } else {
-                            $rates["table"][$fila][$columna]["price"] = $row2->primaTotalAnual;
-                            $messages[$fila][$columna] = str_replace(",", ".",$row2->primaTotalAnual);
-                        }
+                    foreach ($row->tarificaciones->array as $row2) {
+                        $rates["table"][$fila][$columna]["price"] = $row2->primaTotalAnual;
+                        $rates["table"][$fila][$columna]["method"] = $row2->formaPago;
+                        $messages[$fila][$columna] = str_replace(",", ".",$row2->primaTotalAnual);
                     }
 
                     // Get coverages (coberturas)
@@ -1714,7 +1712,7 @@ class PMWShandler
     {
 
         $response = $this->PMWS->getAccessData($this->language, $token);
-        app('debugbar')->info($response);
+        //app('debugbar')->info($response);
         $data = $response->return;
 
         if( $data->correcto == "S" ){

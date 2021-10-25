@@ -145,7 +145,7 @@ class PMWSjs extends Controller
             $this->parameters["u"],
             $this->parameters["p"]
         );
-        //app('debugbar')->info($data);
+        app('debugbar')->info($data);
         if (is_array($data)) {
             return response()->json(['success' => true, 'data' => $data]);
         } else {

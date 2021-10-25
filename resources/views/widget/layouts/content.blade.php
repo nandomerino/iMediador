@@ -52,7 +52,7 @@
         echo "var PMu = '" . Session::get('login.user') . "';\n";
         echo "var PMp = '" . Session::get('login.pass') . "';\n";
         echo "var PMproductor = " . Session::get('widget.productor') . ";\n";
-        echo "var PMproduct = " . Session::get('widget.product') . ";\n";
+        //echo "var PMproduct = " . Session::get('widget.product') . ";\n";
         //echo "var PMproduct = 'ÉLITE-PM PROFESIONAL';\n";
         echo "var PMproductVariation = " . Session::get('widget.productVariation') . ";\n";
 
@@ -77,6 +77,7 @@
     var companyAddressTypeOthers = "O";
     var PMentryChannel  = "WSD";
     var PMapplication  = "EMISION_WEB";
+
 
 </script>
 <div id="quote" class="widget">
