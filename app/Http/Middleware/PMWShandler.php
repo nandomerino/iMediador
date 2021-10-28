@@ -706,6 +706,9 @@ class PMWShandler
                         $desc = $info->valorParametro;
                         $rates["description"] = $desc;
                     }
+                    if ($info->nombreParametro == "P_TIPO_CONTRATACION"){
+                        $rates["hiringType"] = $info->valorParametro;
+                    }
                 }
             }
 
@@ -897,16 +900,16 @@ class PMWShandler
         $parameters["language"] = $this->language;
         $parameters["pmUserCode"] = $this->userPM;
 
-        //app('debugbar')->info('getBudgetDocument PMWS HANDLER $parameters');
-        //app('debugbar')->info($parameters);
+        app('debugbar')->info('getBudgetDocument PMWS HANDLER $parameters');
+        app('debugbar')->info($parameters);
         $response = $this->PMWS->getBudgetDocument($parameters);
-        //app('debugbar')->info('getBudgetDocument PMWS HANDLER $response');
-        //app('debugbar')->info($response);
+        app('debugbar')->info('getBudgetDocument PMWS HANDLER $response');
+        app('debugbar')->info($response);
 
         $budgetDocument = [];
         $data = $response->return;
-        //app('debugbar')->info('data');
-        //app('debugbar')->info($data);
+        app('debugbar')->info('data');
+        app('debugbar')->info($data);
         if( $data->correcto == "S" ){
             if ($data->datosSalida->array->nombre == "P_CODIGO_PETICION") {
                 $budgetId = $data->datosSalida->array->valor;
@@ -1327,36 +1330,41 @@ class PMWShandler
             $this->pass = $p;
         }
         $response = $this->PMWS->getHealthForm($this->user, $this->pass, $this->language, $productor, $product, $commercialKey);
-        //app('debugbar')->info($response);
+        app('debugbar')->info($response);
         $data = $response->return;
         if( $data->correcto == "S" ){
             $healthForm = array();
             $healthForm["id"] = $data->datosSalida->listaParametros->valorParametro;
             $healthForm["groups"] = array();
-            foreach ($data->agrupaciones->listaAgrupaciones as $group) {
-                if (!array_key_exists($group->codigoAgrupacion, $healthForm["groups"])) {
-                    $healthForm["groups"][$group->codigoAgrupacion] = array();
-                }
-                $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = $this->get_question_default_value($group->valoresDefecto);
-                // $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = ANSWER_RADIO_NO;
-                $healthForm["groups"][$group->codigoAgrupacion]["desc"] = $group->descripcionAgrupacion;
-                $healthForm["groups"][$group->codigoAgrupacion]["questions"] = array();
-
-                if ( is_array($group->preguntas->listaPreguntas)){
-                    foreach ($group->preguntas->listaPreguntas as $question) {
-                        $healthForm["groups"][$group->codigoAgrupacion]["questions"][$question->codigoPregunta] = $this->buildQuestion($question);
+            if (isset($data->agrupaciones->listaAgrupaciones)){
+                foreach ($data->agrupaciones->listaAgrupaciones as $group) {
+                    if (!array_key_exists($group->codigoAgrupacion, $healthForm["groups"])) {
+                        $healthForm["groups"][$group->codigoAgrupacion] = array();
                     }
-                } else {
-                    $healthForm["groups"][$group->codigoAgrupacion]["questions"][$group->preguntas->listaPreguntas->codigoPregunta] = $this->buildQuestion($group->preguntas->listaPreguntas);
+                    $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = $this->get_question_default_value($group->valoresDefecto);
+                    // $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = ANSWER_RADIO_NO;
+                    $healthForm["groups"][$group->codigoAgrupacion]["desc"] = $group->descripcionAgrupacion;
+                    $healthForm["groups"][$group->codigoAgrupacion]["questions"] = array();
+
+                    if ( is_array($group->preguntas->listaPreguntas)){
+                        foreach ($group->preguntas->listaPreguntas as $question) {
+                            $healthForm["groups"][$group->codigoAgrupacion]["questions"][$question->codigoPregunta] = $this->buildQuestion($question);
+                        }
+                    } else {
+                        $healthForm["groups"][$group->codigoAgrupacion]["questions"][$group->preguntas->listaPreguntas->codigoPregunta] = $this->buildQuestion($group->preguntas->listaPreguntas);
+                    }
                 }
+                $healthFormData["html"] = $this->healthFormToHTML($healthForm);
+            } else {
+                $healthFormData["html"] = 'KO';
             }
             // generates HTML code
             $healthFormData["id"] = $healthForm["id"];
-            $healthFormData["html"] = $this->healthFormToHTML($healthForm);
+
         } else {
             $healthFormData = $data->codigoError;
         }
-        //app('debugbar')->info($healthFormData);
+        app('debugbar')->info($healthFormData);
 
         return $healthFormData;
     }
@@ -1443,6 +1451,7 @@ class PMWShandler
                         <label class="btn btn-radio btn-radio-right text-center mt-lg-0 <?php if ($bNoActive) { echo "active"; } ?>">
                             <input type="radio" value="NO" class="form-check-input position-static" name="<?php echo $groupId . ANSWER_SUFFIX_GROUP; ?>" <?php if ($bNoActive) { echo " checked "; } ?> ><?php echo __('text.no') ?>
                         </label>
+
                     </div>
 
                     <?php
@@ -1933,6 +1942,7 @@ class PMWShandler
      * @param "holderName" - holder name
      * @param "holderSurname" - holder surname
      * @param "holderBirthdate" - holder birthdate
+     * @param "hiring" - Type of hiring
      * @param "holderPhone" - holder phone
      * @param "holderEmail" - holder email
      * @param "holderDocType" - holder document type
@@ -1998,22 +2008,23 @@ class PMWShandler
         if( app('session')->has('healthForm') ){
             $parameters["healthQ"] = session('healthForm');
         }
+        //app('debugbar')->info('PMWS HANDLER $parameters');
         //app('debugbar')->info($parameters);
         $response = $this->PMWS->submitPolicy($parameters);
-        //app('debugbar')->info($response);
+        app('debugbar')->info('PMWS HANDLER $response');
+        app('debugbar')->info($response);
 
         $data = $response->return;
 
-        if( $data->correcto == "S" ){
-            if (property_exists($data, "datosSalida")) {
-                if( is_array( $data->datosSalida->array ) ){
-                    foreach ($data->datosSalida->array as $row) {
-                        $submitPolicy[$row->nombre] = $row->valor;
-                    }
+
+        if (property_exists($data, "datosSalida")) {
+            if( is_array( $data->datosSalida->array ) ){
+                foreach ($data->datosSalida->array as $row) {
+                    $submitPolicy[$row->nombre] = $row->valor;
                 }
             }
-
-        }else{
+        }
+        else{
             $submitPolicy = $data->mensajeError;
         }
 
@@ -2040,7 +2051,8 @@ class PMWShandler
         }
 
         $response = $this->PMWS->getDocument($this->user, $this->pass, $this->language, $productor, $docId, $source, $type, $format, $pmUserCode);
-        // app('debugbar')->info($response);
+        app('debugbar')->info('getDocument');
+        app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
@@ -2061,7 +2073,8 @@ class PMWShandler
 
         $data = $response->return;
         if( $data->correcto == "S" ){
-            //app('debugbar')->info($data);
+            app('debugbar')->info('getFileList');
+            app('debugbar')->info($data);
             if (property_exists($data->listaFicheros, "listaFicherosCartera")) {
                 if( is_array( $data->listaFicheros->listaFicherosCartera ) ){
                     $i=0;
@@ -2085,7 +2098,7 @@ class PMWShandler
     function getFile($fileId, $pmUserCode = null){
 
         $response = $this->PMWS->getFile($this->user, $this->pass, $this->language, $fileId, $pmUserCode);
-        // app('debugbar')->info($response);
+        app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){

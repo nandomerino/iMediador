@@ -601,6 +601,10 @@ table td{
     color: #707070;
 }
 
+.app-core label {
+    padding-right: 20px;
+}
+
 .app-core label svg{
     position: absolute;
     right: 5px;
@@ -1554,6 +1558,13 @@ button#print-budget.active, button#send-budget.active {
 .collapse {
     display: block;
 }
+#group-12.row.questions-group.show.collapse.in {
+    display: block;
+}
+#group-12.row.questions-group.show.collapse {
+    display: none;
+}
+
 /* datepicker */
 div#ui-datepicker-div {
     z-index: 9 !important;

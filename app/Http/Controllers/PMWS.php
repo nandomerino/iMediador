@@ -783,7 +783,7 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        // app('debugbar')->info($params);
+        app('debugbar')->info($params);
         $result = $client->getDocumento($params);
 
         if (is_soap_fault($result)) {
@@ -1626,6 +1626,7 @@ class PMWS extends controller
      * @param "gender" - user gender
      * @param "height" - user height
      * @param "weight" - user weigth
+     * @param "hiring" - Type of hiring
      * @param "name" - insured person name
      * @param "surname" - insured person surname
      * @param "docId" - insured person documentId
@@ -1678,9 +1679,9 @@ class PMWS extends controller
      */
     public function submitPolicy($data) {
 
-        //app('debugbar')->info('submitPolicy: $data["productId"]: ');
-        //app('debugbar')->info($data["productId"]);
-        //app('debugbar')->info($data);
+        app('debugbar')->info('submitPolicy: $data["productId"]: ');
+        app('debugbar')->info($data["productId"]);
+        app('debugbar')->info($data);
         $endpoint = $this->baseUrl . "/v3/wspoliza" . $this->environment . "/Poliza?WSDL";
         $client = new SoapClient($endpoint);
 
@@ -1730,6 +1731,10 @@ class PMWS extends controller
                 "nombreParametro"	=> "P_CLAVE_COMERCIAL",
                 "valorParametro"	=> "DUE");
         }
+
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_TIPO_CONTRATACION",
+            "valorParametro"	=> $data["hiring"]);
         $inputData[] =  array(
             "nombreParametro"	=> "P_NOMBRE_ASEGURADO",
             "valorParametro"	=> $data["name"]);
@@ -1957,7 +1962,7 @@ class PMWS extends controller
             );
         }
 
-        // app('debugbar')->info($params);
+        app('debugbar')->info($params);
         //file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/log.txt', serialize($params) );
         $result = $client->altaPoliza($params);
 

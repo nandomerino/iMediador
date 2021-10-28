@@ -56,6 +56,12 @@ jQuery( document ).ready(function() {
             }
 
         }*/
+    // CONVERT FORM TO UPPERCASE
+
+    jQuery("#step-2 .form-control").on("autocompletechange focusout", function () {
+        input=jQuery(this);
+        input.val(input.val().toUpperCase());
+    })
 
     // Updates post links
     if (jQuery('.app-core a[href]').length) {
@@ -509,14 +515,10 @@ jQuery( document ).ready(function() {
     function quote_load_ProductConfiguration( data ){
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
+        //console.log('load_Product');
         //console.log(data);
 
-        // Signing method Logalty/handwriting
-        if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
-            window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
-        }else{
-            window.PMsigningMode = null;
-        }
+
 
         //var timestamp = window.PMproductConfig.coberturas;//'{{ Session::get("quote")}}';
 
@@ -1162,14 +1164,15 @@ jQuery( document ).ready(function() {
     function quote_load_PartialProductConfiguration( data, index ){
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
+        //console.log('load_PartialProduct');
         //console.log(data);
 
         // Signing method Logalty/handwriting
-        if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
-            window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
-        }else{
-            window.PMsigningMode = null;
-        }
+        //if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
+        //    window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
+        //}else{
+        //    window.PMsigningMode = null;
+        //}
         var benefits = "";
         var franchiseField = "";
         var duration = "<div class='col-12'>";
@@ -2090,7 +2093,13 @@ jQuery( document ).ready(function() {
     function quote_load_Rates(data){
 
         window.PMrates = data;
-        console.log(data);
+        console.log(window.PMrates);
+        // Signing method Logalty/handwriting
+        if( typeof window.PMrates.hiringType !== 'undefined' ) {
+            window.PMsigningMode = window.PMrates.hiringType;
+        }else{
+            window.PMsigningMode = null;
+        }
         product = jQuery('#quote .quote-product:checked').next().html().trim().toUpperCase();
         productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
 
@@ -3131,7 +3140,7 @@ jQuery( document ).ready(function() {
             accSub : window.PMaccSub,
             hospCob : window.PMhospCob,
             hospSub : window.PMhospSub,
-
+            hiring : window.PMrates.hiringType, // tipo de contratación
             exemption : window.PMselectedFinalProductExemption, // franquicia
             billingCycle : window.PMbillingCycle, // forma pago
             productVariation : window.PMselectedFinalProduct,
@@ -3722,8 +3731,13 @@ jQuery( document ).ready(function() {
 
                 },
                 success: function (response) {
+                    console.log(response);
                     if (response['success'] == true) {
-                        healthFormRequired = true;
+                        if (response.data.html == 'KO') {
+                            healthFormRequired = false;
+                        } else {
+                            healthFormRequired = true;
+                        }
                         quote_load_healthForm(response.data);
                     } else {
                         console.error( response.e);
@@ -3746,7 +3760,6 @@ jQuery( document ).ready(function() {
 
     // QUOTES - Loads html code of health form
     function quote_load_healthForm(data){
-        //console.log(data);
         window.PMquoteHealthFormId = data.id;
         jQuery('#quote #health-form .dynamic-content').html(data.html);
         /*if( jQuery( ".datetimepickerHealth input" ).length ){
@@ -3756,6 +3769,7 @@ jQuery( document ).ready(function() {
         // jQuery('#quote #step-3 .step-buttons .quote-step.next').removeAttr("disabled");
         jQuery('#health-form label.active').removeClass("active");
         jQuery('#quote #step-3 .loader-wrapper').hide();
+
     }
 
     // QUOTE - Health form displays hidden sub questions
@@ -3908,6 +3922,7 @@ jQuery( document ).ready(function() {
                 step3EnableNextButton();
             });
 
+
     // QUOTE - Validates all visible fields (extra fields when selecting yes)
     function step3EnableNextButton(){
         allValid = true;
@@ -3923,6 +3938,16 @@ jQuery( document ).ready(function() {
                     //console.log( "OK | " + this.className.split(' ')[2] );
                 }
             });
+        jQuery("input:radio[name=12_group]").change(function () {
+            var valor = jQuery(this).val();
+            if (valor == "SI") {
+                jQuery('#group-12').addClass( "show" );
+                //alert( jQuery(this).val());
+            } else  {
+                jQuery('#group-12').removeClass( "show" );
+                //alert( jQuery(this).val());
+            }
+        });
 
         if( allValid ){
             jQuery('#step-3 .quote-step.next').removeAttr("disabled");
@@ -4146,6 +4171,7 @@ jQuery( document ).ready(function() {
             var height = window.PMquoteStep1.height;
             var weight = window.PMquoteStep1.weight;
             var paymentMethod  = window.PMquoteStep1.billingCycle;
+            var hiring = window.PMquoteStep1.hiring;
 
             var name  = window.PMquoteStep2.firstName;
             var surname  = window.PMquoteStep2.lastName;
@@ -4238,6 +4264,7 @@ jQuery( document ).ready(function() {
                     height : height,
                     weight : weight,
                     paymentMethod : paymentMethod,
+                    hiring : hiring,
                     name : name,
                     surname : surname,
                     docId : docId,
@@ -4281,6 +4308,7 @@ jQuery( document ).ready(function() {
                     coverageData : coverageData
                 },
                 success: function (response) {
+                    //console.log(response);
                     if (typeof response.e === 'undefined') {
                         quote_load_submitPolicy(response.data);
                     } else {
@@ -4309,7 +4337,7 @@ jQuery( document ).ready(function() {
     function quote_load_submitPolicy( data ) {
         // Stores this info in a global array to access it later on
         window.PMsubmitPolicy = data;
-
+        //console.log(data);
         // Display message on screen
         policyStatus = false;
         var message;
@@ -4318,16 +4346,15 @@ jQuery( document ).ready(function() {
         }else if( typeof data.P_ESTADO_EMISION !== 'undefined'){
             message = lang['quote.sign.policy.status'] + "<span class='data font-weight-bold'>" + data.P_ESTADO_EMISION + "</span><br>";
             message += lang['quote.sign.policy.request'] + "<span class='data' font-weight-bold>" + data.P_NUMERO_SOLICITUD + "</span><br>";
-            if( data.P_CODIGO_ESTADO == "F" ) {
-                message += lang['quote.sign.policy.id'] + "<span class='data font-weight-bold'>" + data.P_NUMERO_POLIZA + "</span><br>";
-            }
+            message += lang['quote.sign.policy.id'] + "<span class='data font-weight-bold'>" + data.P_NUMERO_POLIZA + "</span><br>";
+
         }
         jQuery("#step-5 .thank-you .message").html(message);
 
         // TESTING
         // window.PMsigningMode = "P,S,A";
         // TESTING
-
+        console.log(window.PMsigningMode);
         if( window.PMsigningMode){
             // split array
             var signingMethods = window.PMsigningMode.split(",");
@@ -4454,6 +4481,8 @@ jQuery( document ).ready(function() {
         jQuery('#quote-download-form .source').prop("value", source);
         jQuery('#quote-download-form .type').prop("value", type);
         jQuery('#quote-download-form .format').prop("value",format);
+
+
 
         jQuery('#send-policy-request .productor').prop("value",window.PMquoteStep1.productor);
         jQuery('#send-policy-request .refId').prop("value", docId);
@@ -4959,9 +4988,7 @@ jQuery( document ).ready(function() {
 
         function enableUploadPolicyRequestButton(){
             allValid = true;
-            jQuery( '#send-policy-request input:visible, ' +
-                '#send-policy-request select:visible' )
-                .each(function() {
+            jQuery( '#send-policy-request #doc' ).change(function() {
                     if( !jQuery(this).hasClass("valid") ){
                         allValid = false;
                     }

@@ -1175,15 +1175,17 @@
                             <div class="row pt-1">
                                 <div class="col hand-write text-center txt-navy-blue mb-3">
                                     <p class="">{!! __('quote.sign.handWrite.instructions.step1') !!}</p>
-                                    <form id="quote-download-form" action="/download" method="get">
-                                        <input type="hidden" name="docId" class="docId" value="">
-                                        <input type="hidden" name="productor" class="productor" value="">
-                                        <input type="hidden" name="source" class="source" value="">
-                                        <input type="hidden" name="type" class="type" value="">
-                                        <input type="hidden" name="format" class="format" value="">
-                                        <input type="hidden" name="downloadType" class="downloadType" value="document">
-                                        <input type="submit" id="quote-download-policy-request" class="quote-download-policy-request"  value="{!! __('text.download') !!}">
-                                    </form>
+                                    <div class="col-12">
+                                        <form id="quote-download-form" action="/download" method="get">
+                                            <input type="hidden" name="docId" class="docId" value="">
+                                            <input type="hidden" name="productor" class="productor" value="">
+                                            <input type="hidden" name="source" class="source" value="">
+                                            <input type="hidden" name="type" class="type" value="">
+                                            <input type="hidden" name="format" class="format" value="">
+                                            <input type="hidden" name="downloadType" class="downloadType" value="document">
+                                            <input type="submit" id="quote-download-policy-request" class="quote-download-policy-request"  value="{!! __('text.download') !!}">
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row pt-1">
@@ -1205,7 +1207,7 @@
                                                 <input type="hidden" name="folderId" class="folderId" value="65">
                                                 <input type="hidden" name="docType" class="docType" value="application/pdf">
                                                 <input type="hidden" name="sendType" class="sendType" value="policyRequest">
-                                                <button id="send-policy-request-button" class="send-policy-request-button bg-lime-yellow text-white py-2 px-3 rounded border-0 position-relative" disabled>
+                                                <button id="send-policy-request-button" class="send-policy-request-button bg-lime-yellow text-white py-2 px-3 rounded border-0 position-relative">
                                                     <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
                                                     {{ __('text.send') }}
                                                 </button>
