@@ -1928,6 +1928,9 @@ class PMWShandler
      * @param "workLocationType" - insured person work location type
      * @param "paymentMethod" - chosen payment method
      * @param "hasMorePolicies" - whether insurance person has more policies. Options: "S"/"N"
+     * @param "anotherInsuranceName" -
+     * @param "anotherInsurancePrice" -
+     * @param "anotherInsuranceEnds" .
      * @param "extraCompanyName" - name of company where person has other policies
      * @param "extraInsurancePrice" - price of other policies
      * @param "extraInsuranceDate" - expiration date of other policies

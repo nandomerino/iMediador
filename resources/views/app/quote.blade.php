@@ -350,6 +350,13 @@
                     </div>
 
                     <div class="data col-12 col-md-6 col-lg-6 col-xl-6 rates-table pt-5 pt-md-0 print-center" style="display: none;">
+                        <div style="display: none" class="showprint">
+                            <script>
+                                var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+                                var f=new Date();
+                                document.write("Panel de precios impreso el: " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear());
+                            </script>
+                        </div>
                         <h4 style="display: none;" class="showprint">{{ __('quote.printTitle.uno') }}</h4>
                         <div class="row">
                             <div class="col datos-salida">
@@ -1174,7 +1181,13 @@
                         <div class="col">
                             <div class="row pt-1">
                                 <div class="col hand-write text-center txt-navy-blue mb-3">
-                                    <p class="">{!! __('quote.sign.handWrite.instructions.step1') !!}</p>
+                                    <h4 class="text-center title my-3">{!! __('quote.sign.handWrite.title.step1') !!}</h4>
+                                    <p class="instructions">{!! __('quote.sign.handWrite.instructions.step1') !!}</p>
+                                </div>
+                            </div>
+                            <div class="row pt-1">
+                                <div class="col hand-write text-center txt-navy-blue mb-3">
+
                                     <div class="col-12">
                                         <form id="quote-download-form" action="/download" method="get">
                                             <input type="hidden" name="docId" class="docId" value="">
@@ -1186,36 +1199,111 @@
                                             <input type="submit" id="quote-download-policy-request" class="quote-download-policy-request"  value="{!! __('text.download') !!}">
                                         </form>
                                     </div>
+                                    <p></p>
+                                    <div class="">
+                                        <form id="send-policy-request" autocomplete="off">
+                                            <div class="row my-4">
+                                                <div class="col">
+                                                    <input type="file" name="doc" class="doc" id="doc" required accept=".pdf,.jpg,.jpeg,.png">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col text-center">
+                                                    <input type="hidden" name="refId" class="refId" value="">
+                                                    <input type="hidden" name="productor" class="productor" value="">
+
+                                                    <input type="hidden" name="docId" class="docId" value="467">
+                                                    <input type="hidden" name="folderId" class="folderId" value="65">
+                                                    <input type="hidden" name="docType" class="docType" value="application/pdf">
+                                                    <input type="hidden" name="sendType" class="sendType" value="policyRequest">
+                                                    <button id="send-policy-request-button" class="send-policy-request-button bg-lime-yellow text-white py-2 px-3 rounded border-0 position-relative">
+                                                        <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
+                                                        {{ __('text.send') }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row pt-1">
-                                <div class="col hand-write text-center txt-navy-blue my-3">
-                                    <p class="">{!! __('quote.sign.handWrite.instructions.step2.now') !!}</p>
-                                    <p class="instructions">{!! __('quote.sign.handWrite.instructions.step2.verbose') !!}</p>
-                                    <form id="send-policy-request" autocomplete="off">
-                                        <div class="row my-4">
-                                            <div class="col">
-                                                <input type="file" name="doc" class="doc" id="doc" required accept=".pdf,.jpg,.jpeg,.png">
+                            <div id="dowload-condition" class="row pt-1" style="display: none;">
+                                <div class="row pt-1">
+                                    <div class="col hand-write text-center txt-navy-blue mb-3">
+                                        <h4 class="text-center title my-3">{!! __('quote.sign.handWrite.title.poliza.step1') !!}</h4>
+                                        <p class="instructions">{!! __('quote.sign.handWrite.instructions.poliza.step1') !!}</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 hand-write text-center txt-navy-blue mb-3">
+                                    <p class="">{!! __('quote.sign.handWrite.instructionscp.step1') !!}</p>
+                                    <div class="col-12">
+                                        <form id="quote-download-policy-cp-form" action="/download" method="get">
+                                            <input type="hidden" name="docId" class="docId" value="">
+                                            <input type="hidden" name="productor" class="productor" value="">
+                                            <input type="hidden" name="source" class="source" value="">
+                                            <input type="hidden" name="type" class="type" value="">
+                                            <input type="hidden" name="format" class="format" value="">
+                                            <input type="hidden" name="downloadType" class="downloadType" value="document">
+                                            <input type="submit" id="quote-download-policy-cp-request" class="quote-download-policy-cp-request"  value="{!! __('text.download') !!}">
+                                        </form>
+                                        <form id="send-policy-request-cp" autocomplete="off">
+                                            <div class="row my-4">
+                                                <div class="col">
+                                                    <input type="file" name="doc" class="doc" id="doc-cp" required accept=".pdf,.jpg,.jpeg,.png">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col text-center">
-                                                <input type="hidden" name="refId" class="refId" value="">
-                                                <input type="hidden" name="productor" class="productor" value="">
+                                            <div class="row">
+                                                <div class="col text-center">
+                                                    <input type="hidden" name="refId" class="refId" value="">
+                                                    <input type="hidden" name="productor" class="productor" value="">
 
-                                                <input type="hidden" name="docId" class="docId" value="467">
-                                                <input type="hidden" name="folderId" class="folderId" value="65">
-                                                <input type="hidden" name="docType" class="docType" value="application/pdf">
-                                                <input type="hidden" name="sendType" class="sendType" value="policyRequest">
-                                                <button id="send-policy-request-button" class="send-policy-request-button bg-lime-yellow text-white py-2 px-3 rounded border-0 position-relative">
-                                                    <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
-                                                    {{ __('text.send') }}
-                                                </button>
+                                                    <input type="hidden" name="docId" class="docId" value="444">
+                                                    <input type="hidden" name="folderId" class="folderId" value="11">
+                                                    <input type="hidden" name="docType" class="docType" value="application/pdf">
+                                                    <input type="hidden" name="sendType" class="sendType" value="policyRequest">
+                                                    <button id="send-policy-request-button" class="send-policy-request-button bg-lime-yellow text-white py-2 px-3 rounded border-0 position-relative">
+                                                        <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
+                                                        {{ __('text.send') }}
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                    <p class="mt-4">{!! __('quote.sign.handWrite.instructions.step2.later') !!}</p>
-                                    <p class="mt-4 legal">{!! __('quote.sign.handWrite.legal') !!}</p>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-6 hand-write text-center txt-navy-blue mb-3">
+                                    <p class="">{!! __('quote.sign.handWrite.instructionscg.step1') !!}</p>
+                                    <div class="col-12">
+                                        <form id="quote-download-policy-cg-form" action="/download" method="get">
+                                            <input type="hidden" name="docId" class="docId" value="">
+                                            <input type="hidden" name="productor" class="productor" value="">
+                                            <input type="hidden" name="source" class="source" value="">
+                                            <input type="hidden" name="type" class="type" value="">
+                                            <input type="hidden" name="format" class="format" value="">
+                                            <input type="hidden" name="downloadType" class="downloadType" value="document">
+                                            <input type="submit" id="quote-download-policy-cg-request" class="quote-download-policy-cg-request"  value="{!! __('text.download') !!}">
+                                        </form>
+                                        <form id="send-policy-request-cg" autocomplete="off">
+                                            <div class="row my-4">
+                                                <div class="col">
+                                                    <input type="file" name="doc" class="doc" id="doc-cg" required accept=".pdf,.jpg,.jpeg,.png">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col text-center">
+                                                    <input type="hidden" name="refId" class="refId" value="">
+                                                    <input type="hidden" name="productor" class="productor" value="">
+
+                                                    <input type="hidden" name="docId" class="docId" value="442">
+                                                    <input type="hidden" name="folderId" class="folderId" value="10">
+                                                    <input type="hidden" name="docType" class="docType" value="application/pdf">
+                                                    <input type="hidden" name="sendType" class="sendType" value="policyRequest">
+                                                    <button id="send-policy-request-button" class="send-policy-request-button bg-lime-yellow text-white py-2 px-3 rounded border-0 position-relative">
+                                                        <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
+                                                        {{ __('text.send') }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>

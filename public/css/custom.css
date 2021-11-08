@@ -917,7 +917,7 @@ table.ui-datepicker-calendar tbody td span{
 }
 
 #step-5 .container{
-    max-width: 500px;
+    max-width: 750px;
     margin: auto !important;
 }
 #step-5 .thank-you .message{
@@ -947,7 +947,7 @@ table.ui-datepicker-calendar tbody td span{
     line-height: 1.2;
 }
 
-#quote-download-policy-request{
+#quote-download-policy-request, #dowload-condition input[type=submit]{
     background-color: #D1D546;
     color: white;
     padding: 10px 15px;
@@ -1077,7 +1077,7 @@ table.ui-datepicker-calendar tbody td span{
     line-height: 2;
 }
 
-#quote-download-form input[type=submit]{
+#quote-download-form input[type=submit], #dowload-condition input[type=submit]{
     border: none;
     padding: 10px 15px;
     max-height: unset;

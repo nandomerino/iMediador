@@ -3677,9 +3677,9 @@ jQuery( document ).ready(function() {
             companyProvince : jQuery('#quote .quote-company-province').val(),
 
             anotherInsurance : jQuery('#quote .quote-another-insurance.active > input').val(),
-            anotherInsuranceName : jQuery('#quote .quote-another-insurance-name > input').val(),
-            anotherInsuranceAmount : jQuery('#quote .quote-another-insurance-price > input').val(),
-            anotherInsuranceEnds : jQuery('#quote .quote-another-insurance-ends > input').val(),
+            anotherInsuranceName : jQuery('#quote .quote-another-insurance-name').val(),
+            anotherInsuranceAmount : jQuery('#quote .quote-another-insurance-price').val(),
+            anotherInsuranceEnds : jQuery('#quote .quote-another-insurance-ends').val(),
 
             legalEntityType : jQuery('#quote .quote-legal-entity-type.active').data("person-type"),
             legalEntityName : jQuery('#quote .quote-legal-entity-name').val(),
@@ -4337,7 +4337,7 @@ jQuery( document ).ready(function() {
     function quote_load_submitPolicy( data ) {
         // Stores this info in a global array to access it later on
         window.PMsubmitPolicy = data;
-        //console.log(data);
+        console.log(data);
         // Display message on screen
         policyStatus = false;
         var message;
@@ -4346,15 +4346,16 @@ jQuery( document ).ready(function() {
         }else if( typeof data.P_ESTADO_EMISION !== 'undefined'){
             message = lang['quote.sign.policy.status'] + "<span class='data font-weight-bold'>" + data.P_ESTADO_EMISION + "</span><br>";
             message += lang['quote.sign.policy.request'] + "<span class='data' font-weight-bold>" + data.P_NUMERO_SOLICITUD + "</span><br>";
-            message += lang['quote.sign.policy.id'] + "<span class='data font-weight-bold'>" + data.P_NUMERO_POLIZA + "</span><br>";
-
+            if( data.P_CODIGO_ESTADO != 'V') {
+                message += lang['quote.sign.policy.id'] + "<span class='data font-weight-bold'>" + data.P_NUMERO_POLIZA + "</span><br>";
+            }
         }
         jQuery("#step-5 .thank-you .message").html(message);
 
         // TESTING
         // window.PMsigningMode = "P,S,A";
         // TESTING
-        console.log(window.PMsigningMode);
+        //console.log(window.PMsigningMode);
         if( window.PMsigningMode){
             // split array
             var signingMethods = window.PMsigningMode.split(",");
@@ -4373,6 +4374,11 @@ jQuery( document ).ready(function() {
                         jQuery("#step-5 .hand-write-method").fadeIn();
                         jQuery("#step-5 .hand-write-method-button").show();
                         quote_load_policyRequestDownload(data.P_NUMERO_SOLICITUD);
+                        if( data.P_CODIGO_ESTADO != 'V') {
+                            quote_load_policyCPRequestDownload(data.P_NUMERO_POLIZA);
+                            quote_load_policyCGRequestDownload(data.P_NUMERO_POLIZA);
+                            jQuery('#dowload-condition').fadeIn();
+                        }
                         break;
 
                     case "A":
@@ -4520,6 +4526,48 @@ jQuery( document ).ready(function() {
 
         });
         */
+
+    }
+    // QUOTE - gets the policy request to download and sign
+    function quote_load_policyCPRequestDownload(docId){
+
+        // var url = "/get-data";
+        // var ws = "getDocument";
+        var productor = window.PMquoteStep1.productor;
+        var source = 1;
+        var type = "CP";
+        var format  = "A4";
+
+        jQuery('#quote-download-policy-cp-form .docId').prop("value", docId);
+        jQuery('#quote-download-policy-cp-form .productor').prop("value", productor);
+        jQuery('#quote-download-policy-cp-form .source').prop("value", source);
+        jQuery('#quote-download-policy-cp-form .type').prop("value", type);
+        jQuery('#quote-download-policy-cp-form .format').prop("value",format);
+
+        jQuery('#send-policy-request-cp .productor').prop("value",window.PMquoteStep1.productor);
+        jQuery('#send-policy-request-cp .refId').prop("value", docId);
+
+
+    }
+    // QUOTE - gets the policy request to download and sign
+    function quote_load_policyCGRequestDownload(docId){
+
+        // var url = "/get-data";
+        // var ws = "getDocument";
+        var productor = window.PMquoteStep1.productor;
+        var source = 1;
+        var type = "CG";
+        var format  = "A4";
+
+        jQuery('#quote-download-policy-cg-form .docId').prop("value", docId);
+        jQuery('#quote-download-policy-cg-form .productor').prop("value", productor);
+        jQuery('#quote-download-policy-cg-form .source').prop("value", source);
+        jQuery('#quote-download-policy-cg-form .type').prop("value", type);
+        jQuery('#quote-download-policy-cg-form .format').prop("value",format);
+
+        jQuery('#send-policy-request-cg .productor').prop("value",window.PMquoteStep1.productor);
+        jQuery('#send-policy-request-cg .refId').prop("value", docId);
+
 
     }
 
@@ -5090,6 +5138,270 @@ jQuery( document ).ready(function() {
                             displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
                             jQuery('#send-policy-request button').removeAttr("disabled");
                             jQuery('#send-policy-request button .loadingIcon').css('display', 'none');
+                        }
+                    });
+
+                };
+                // Convert data to base64
+                fileReader.readAsDataURL(fileToLoad);
+            }
+        });
+
+    }
+
+    // Send CP
+    if (jQuery('#send-policy-request-cp').length) {
+        jQuery('#send-policy-request-cp input:visible, ' +
+            '#send-policy-request-cp select:visible')
+            .on("input change click keyup", function () {
+
+                // validates fields
+
+                if (jQuery(this).hasClass("productor")) {
+                    if (jQuery(this).val() != "") {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
+                }
+
+                if (jQuery(this).hasClass("doc")) {
+                    if (jQuery(this).val() != "") {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
+                }
+
+                if (jQuery(this).hasClass("refId")) {
+                    if (jQuery(this).val() > 0) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
+                }
+
+                enableUploadPolicyRequestButtonCP();
+
+            });
+
+        function enableUploadPolicyRequestButtonCP(){
+            allValid = true;
+            jQuery( '#send-policy-request-cp #doc' ).change(function() {
+                if( !jQuery(this).hasClass("valid") ){
+                    allValid = false;
+                }
+            });
+
+            if( allValid ){
+                jQuery('#send-policy-request-cp button').removeAttr("disabled");
+                jQuery('#send-policy-request-cp button').addClass("active");
+            }else{
+                jQuery('#send-policy-request-cp button').attr("disabled", "disabled");
+                jQuery('#send-policy-request-cp button').removeClass("active");
+            }
+
+            return allValid;
+        }
+
+
+        jQuery("#send-policy-request-cp button").click( function (e) {
+
+            // Hides next blocks and displays loader
+            resetProductVariations();
+
+            // jQuery('#send-policy-request button .loader-wrapper').fadeIn();
+            jQuery('#send-policy-request-cp button .loadingIcon').css('display', 'inline');
+            jQuery('#send-policy-request-cp button').attr("disabled", "disabled");
+
+            var url = "/get-data";
+            var ws = "uploadDocument";
+            //var productor = jQuery("#send-policy-request .productor").val();
+            var refId =  jQuery("#send-policy-request-cp .refId").val();
+            var docId =  jQuery("#send-policy-request-cp .docId").val();
+            var folderId =  jQuery("#send-policy-request-cp .folderId").val();
+            var docType =  jQuery("#send-policy-request-cp .docType").val();
+
+            var selectedFile = document.getElementById("doc-cp").files;
+            //Check File is not Empty
+            if (selectedFile.length > 0) {
+                // Select the very first file from list
+                var fileToLoad = selectedFile[0];
+                // FileReader function for read the file.
+                var fileReader = new FileReader();
+                // Onload of file read the file content
+                var base64;
+                fileReader.onload = function(fileLoadedEvent) {
+                    base64 = fileLoadedEvent.target.result;
+                    // Print data in console
+                    base64 = base64.replace("data:application/pdf;base64,", "");
+                    //console.log(base64);
+
+                    jQuery.ajax({
+                        type: "POST",
+                        url: url,
+                        data: {
+                            ws: ws,
+                            //productor: productor,
+                            refId : refId,
+                            docId : docId,
+                            folderId : folderId,
+                            docType : docType,
+                            doc : base64
+                        },
+                        success: function (response) {
+                            jQuery('#send-policy-request-cp button').removeAttr("disabled");
+                            jQuery('#send-policy-request-cp button .loadingIcon').css('display', 'none');
+                            if (response['success'] == true) {
+                                displayModal("health", lang["uploadPolicyRequest.ok.modal.title"], lang["uploadPolicyRequest.ok.modal.message"], lang["quote.modal.close"]);
+                            } else {
+                                console.error( response.e);
+                                displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
+                            }
+                        },
+                        error: function (response) {
+                            console.error( response.e);
+                            displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
+                            jQuery('#send-policy-request-cp button').removeAttr("disabled");
+                            jQuery('#send-policy-request-cp button .loadingIcon').css('display', 'none');
+                        }
+                    });
+
+                };
+                // Convert data to base64
+                fileReader.readAsDataURL(fileToLoad);
+            }
+        });
+
+    }
+
+    // Send CG
+    if (jQuery('#send-policy-request-cg').length) {
+        jQuery('#send-policy-request-cg input:visible, ' +
+            '#send-policy-request-cg select:visible')
+            .on("input change click keyup", function () {
+
+                // validates fields
+
+                if (jQuery(this).hasClass("productor")) {
+                    if (jQuery(this).val() != "") {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
+                }
+
+                if (jQuery(this).hasClass("doc")) {
+                    if (jQuery(this).val() != "") {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
+                }
+
+                if (jQuery(this).hasClass("refId")) {
+                    if (jQuery(this).val() > 0) {
+                        jQuery(this).removeClass("invalid");
+                        jQuery(this).addClass("valid");
+                    } else {
+                        jQuery(this).addClass("invalid");
+                        jQuery(this).removeClass("valid");
+                    }
+                }
+
+                enableUploadPolicyRequestButtonCG();
+
+            });
+
+        function enableUploadPolicyRequestButtonCG(){
+            allValid = true;
+            jQuery( '#send-policy-request-cg #doc' ).change(function() {
+                if( !jQuery(this).hasClass("valid") ){
+                    allValid = false;
+                }
+            });
+
+            if( allValid ){
+                jQuery('#send-policy-request-cg button').removeAttr("disabled");
+                jQuery('#send-policy-request-cg button').addClass("active");
+            }else{
+                jQuery('#send-policy-request-cg button').attr("disabled", "disabled");
+                jQuery('#send-policy-request-cg button').removeClass("active");
+            }
+
+            return allValid;
+        }
+
+
+        jQuery("#send-policy-request-cg button").click( function (e) {
+
+            // Hides next blocks and displays loader
+            resetProductVariations();
+
+            // jQuery('#send-policy-request button .loader-wrapper').fadeIn();
+            jQuery('#send-policy-request-cg button .loadingIcon').css('display', 'inline');
+            jQuery('#send-policy-request-cg button').attr("disabled", "disabled");
+
+            var url = "/get-data";
+            var ws = "uploadDocument";
+            //var productor = jQuery("#send-policy-request .productor").val();
+            var refId =  jQuery("#send-policy-request-cg .refId").val();
+            var docId =  jQuery("#send-policy-request-cg .docId").val();
+            var folderId =  jQuery("#send-policy-request-cg .folderId").val();
+            var docType =  jQuery("#send-policy-request-cg .docType").val();
+
+            var selectedFile = document.getElementById("doc-cg").files;
+            //Check File is not Empty
+            if (selectedFile.length > 0) {
+                // Select the very first file from list
+                var fileToLoad = selectedFile[0];
+                // FileReader function for read the file.
+                var fileReader = new FileReader();
+                // Onload of file read the file content
+                var base64;
+                fileReader.onload = function(fileLoadedEvent) {
+                    base64 = fileLoadedEvent.target.result;
+                    // Print data in console
+                    base64 = base64.replace("data:application/pdf;base64,", "");
+                    //console.log(base64);
+
+                    jQuery.ajax({
+                        type: "POST",
+                        url: url,
+                        data: {
+                            ws: ws,
+                            //productor: productor,
+                            refId : refId,
+                            docId : docId,
+                            folderId : folderId,
+                            docType : docType,
+                            doc : base64
+                        },
+                        success: function (response) {
+                            jQuery('#send-policy-request-cg button').removeAttr("disabled");
+                            jQuery('#send-policy-request-cg button .loadingIcon').css('display', 'none');
+                            if (response['success'] == true) {
+                                displayModal("health", lang["uploadPolicyRequest.ok.modal.title"], lang["uploadPolicyRequest.ok.modal.message"], lang["quote.modal.close"]);
+                            } else {
+                                console.error( response.e);
+                                displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
+                            }
+                        },
+                        error: function (response) {
+                            console.error( response.e);
+                            displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
+                            jQuery('#send-policy-request-cg button').removeAttr("disabled");
+                            jQuery('#send-policy-request-cg button .loadingIcon').css('display', 'none');
                         }
                     });
 
