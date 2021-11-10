@@ -878,7 +878,7 @@ table.ui-datepicker-calendar tbody td span{
     margin-bottom: 10px;
 }
 
-#step-4 #payment-input{
+#step-4 #payment-input, #step-4 #hiring-method{
     max-width: 500px;
     margin: auto;
 }

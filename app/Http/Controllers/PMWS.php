@@ -1293,11 +1293,14 @@ class PMWS extends controller
      * @param "gender" - user gender
      * @param "height" - user height
      * @param "weight" - user weigth
+     * @param "paymentMethod" -
      * @param "coverages" -
      * @return bool - false or rates list
      * @throws \SoapFault
      */
     function getBudget($data) {
+        app('debugbar')->info('getBudget data');
+        app('debugbar')->info($data);
 
         $endpoint = $this->baseUrl . "/v4/wspresupuesto" . $this->environment . "/Presupuesto?WSDL";
         $client = new SoapClient($endpoint);
@@ -1369,9 +1372,9 @@ class PMWS extends controller
             "nombreParametro"	=> "P_ALTA_AUTOMATICA",
             "valorParametro"	=> "N");
 
-        $inputData[] = array(
+        $inputData[] =  array(
             "nombreParametro"	=> "P_FORMA_PAGO",
-            "valorParametro"	=> "1");
+            "valorParametro"	=> $data["paymentMethod"]);
         $fData = array();
 
         $fData[] = array(

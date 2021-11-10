@@ -1675,7 +1675,7 @@ jQuery( document ).ready(function() {
 
     // QUOTE - Date field behavior (only numbers and /)
     jQuery("#quote").on('keypress',
-        ".quote-birthdate, .quote-another-insurance-ends, .datetimepickerHealth input, .quote-starting-date,  .quote-another-insurance-ends, .date-input",
+        ".quote-birthdate, .quote-person-entity-birthdate-show, .quote-another-insurance-ends, .datetimepickerHealth input, .quote-starting-date,  .quote-another-insurance-ends, .date-input",
         function (evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -1788,7 +1788,8 @@ jQuery( document ).ready(function() {
         }
 
         if (jQuery(element).hasClass("quote-birthdate") ||
-            jQuery(element).hasClass("quote-starting-date")) {
+            jQuery(element).hasClass("quote-starting-date") ||
+            jQuery(element).hasClass("quote-person-entity-birthdate-show")) {
             var valid;
 
             if( jQuery(element).val().length == 10) {
@@ -2882,106 +2883,7 @@ jQuery( document ).ready(function() {
         jQuery('#quote .rates-table-selection-description').fadeIn();
 
     });
-    function getBudget() {
-        var url = "/get-data";
-        var ws = "getBudget";
 
-        jQuery.ajax({
-            type: "POST",
-            url: url,
-            data: {
-                ws: ws,
-                productor: window.PMgetRatesData.productor,
-                option: window.PMgetRatesData.option,
-                productId: window.PMgetRatesData.productId,
-                profession: window.PMgetRatesData.profession,
-                birthdate: window.PMgetRatesData.birthdate,
-                gender: window.PMgetRatesData.gender,
-                height: window.PMgetRatesData.height,
-                weight: window.PMgetRatesData.weight,
-                commercialKey : window.PMgetRatesData.commercialKey,
-                jobType : window.PMgetRatesData.jobType,
-                duration: window.PMgetRatesData.duration,
-                discount : window.PMgetRatesData.discount,
-                date : window.PMgetRatesData.date,
-                discountYears : window.PMgetRatesData.discountYears,
-                discountSobreprima : window.PMgetRatesData.discountSobreprima,
-                discountCommisionMed : window.PMgetRatesData.discountCommisionMed,
-                discountCommisionDel : window.PMgetRatesData.discountCommisionDel,
-                discountRecargoFinanciacion : window.PMgetRatesData.discountRecargoFinanciacion,
-                discountCobro : window.PMgetRatesData.discountCobro,
-                coverages : window.PMselectedFinalProductCoverages
-            },
-            success: function (response) {
-                console.log(response);
-                if (response['success'] == true) {
-                    window.PMbudgetNumber = response.data.budgetNumber;
-                    getBudgetDocument();
-                } else {
-                    console.error( response.e);
-                    displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
-                    jQuery('#quote #generate-budget .loadingIcon').hide();
-                    jQuery('#quote #generate-budget').removeAttr("disabled");
-                    jQuery(".loader-wrapper-get-budget").hide();
-                }
-            },
-            error: function (response) {
-                console.error( response.e);
-                displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
-                jQuery('#quote #generate-budget .loadingIcon').hide();
-                jQuery('#quote #generate-budget').removeAttr("disabled");
-                jQuery(".loader-wrapper-get-budget").hide();
-            }
-        });
-    }
-    function getBudgetDocument() {
-        var url = "/get-data";
-        var ws = "getBudgetDocument";
-
-        jQuery.ajax({
-            type: "POST",
-            url: url,
-            data: {
-                ws: ws,
-                productor: window.PMgetRatesData.productor,
-                budgetNumber : window.PMbudgetNumber
-            },
-            success: function (response) {
-                console.log(response);
-                if (response['success'] == true) {
-                    //console.log(response['data']['url']);
-                    // Stores it to use later
-                    window.PMbudgetURL = {
-                        budgetURL: response['data']['url']
-                    }
-                    jQuery('#quote #step-1 #send-budget').removeAttr("disabled");
-                    jQuery('#quote #step-1 #send-budget').addClass("active");
-                    jQuery('#quote #step-1 #print-budget').removeAttr("disabled");
-                    jQuery('#quote #step-1 #print-budget').addClass("active");
-                    jQuery('a.print-budget').attr("href", response['data']['url']);
-                    jQuery('#quote #generate-budget .loadingIcon').hide();
-                    jQuery('#quote #generate-budget').removeAttr("disabled");
-                    jQuery(".loader-wrapper-get-budget").hide();
-                } else {
-                    jQuery('#quote #step-1 #send-budget').attr("disabled", "disabled");
-                    jQuery('#quote #step-1 #send-budget').removeClass("active");
-                    jQuery('#quote #step-1 #print-budget').attr("disabled", "disabled");
-                    jQuery('#quote #step-1 #print-budget').removeClass("active");
-                    jQuery('#quote #generate-budget .loadingIcon').hide();
-                    jQuery('#quote #generate-budget').removeAttr("disabled");
-                    jQuery(".loader-wrapper-get-budget").hide();
-                }
-            },
-            error: function (response) {
-                console.error( response.e);
-                displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
-                jQuery('#quote #generate-budget .loadingIcon').hide();
-                jQuery('#quote #generate-budget .loadingIcon').removeAttr("disabled");
-                jQuery(".loader-wrapper-get-budget").hide();
-            }
-
-        });
-    }
     // QUOTE - Stores selected billing cycle and displays Next step button
     jQuery("#quote .billing-cycle").on('click', "input", function (e) {
         jQuery('#quote .table-actions .action-minibutton').removeAttr("disabled").addClass("active");
@@ -3022,6 +2924,105 @@ jQuery( document ).ready(function() {
         }, 1000);
 
     });
+    function getBudget() {
+        var url = "/get-data";
+        var ws = "getBudget";
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                ws: ws,
+                productor: window.PMgetRatesData.productor,
+                option: window.PMgetRatesData.option,
+                productId: window.PMgetRatesData.productId,
+                profession: window.PMgetRatesData.profession,
+                birthdate: window.PMgetRatesData.birthdate,
+                gender: window.PMgetRatesData.gender,
+                height: window.PMgetRatesData.height,
+                weight: window.PMgetRatesData.weight,
+                commercialKey : window.PMgetRatesData.commercialKey,
+                jobType : window.PMgetRatesData.jobType,
+                duration: window.PMgetRatesData.duration,
+                discount : window.PMgetRatesData.discount,
+                date : window.PMgetRatesData.date,
+                discountYears : window.PMgetRatesData.discountYears,
+                discountSobreprima : window.PMgetRatesData.discountSobreprima,
+                discountCommisionMed : window.PMgetRatesData.discountCommisionMed,
+                discountCommisionDel : window.PMgetRatesData.discountCommisionDel,
+                discountRecargoFinanciacion : window.PMgetRatesData.discountRecargoFinanciacion,
+                discountCobro : window.PMgetRatesData.discountCobro,
+                coverages : window.PMselectedFinalProductCoverages,
+                paymentMethod : window.PMbillingCycle
+            },
+            success: function (response) {
+                console.log(response);
+                if (response['success'] == true) {
+                    window.PMbudgetNumber = response.data.budgetNumber;
+                    getBudgetDocument();
+                } else {
+                    console.error( response.e);
+                    displayModal("health", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
+                    jQuery('#quote #generate-budget .loadingIcon').hide();
+                    jQuery('#quote #generate-budget').removeAttr("disabled");
+                    jQuery(".loader-wrapper-get-budget").hide();
+                }
+            },
+            error: function (response) {
+                console.error( response.e);
+                displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
+                jQuery('#quote #generate-budget .loadingIcon').hide();
+                jQuery('#quote #generate-budget').removeAttr("disabled");
+                jQuery(".loader-wrapper-get-budget").hide();
+            }
+        });
+    }
+    function getBudgetDocument() {
+        var url = "/get-data";
+        var ws = "getBudgetDocument";
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                ws: ws,
+                productor: window.PMgetRatesData.productor,
+                budgetNumber : window.PMbudgetNumber
+            },
+            success: function (response) {
+                console.log(response);
+                if (response['success'] == true) {
+                    //console.log(response['data']['url']);
+                    // Stores it to use later
+                    window.PMbudgetURL = response['data']['url'];
+                    jQuery('#quote #step-1 #send-budget').removeAttr("disabled");
+                    jQuery('#quote #step-1 #send-budget').addClass("active");
+                    jQuery('#quote #step-1 #print-budget').removeAttr("disabled");
+                    jQuery('#quote #step-1 #print-budget').addClass("active");
+                    jQuery('a.print-budget').attr("href", response['data']['url']);
+                    jQuery('#quote #generate-budget .loadingIcon').hide();
+                    jQuery('#quote #generate-budget').removeAttr("disabled");
+                    jQuery(".loader-wrapper-get-budget").hide();
+                } else {
+                    jQuery('#quote #step-1 #send-budget').attr("disabled", "disabled");
+                    jQuery('#quote #step-1 #send-budget').removeClass("active");
+                    jQuery('#quote #step-1 #print-budget').attr("disabled", "disabled");
+                    jQuery('#quote #step-1 #print-budget').removeClass("active");
+                    jQuery('#quote #generate-budget .loadingIcon').hide();
+                    jQuery('#quote #generate-budget').removeAttr("disabled");
+                    jQuery(".loader-wrapper-get-budget").hide();
+                }
+            },
+            error: function (response) {
+                console.error( response.e);
+                displayModal("health", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
+                jQuery('#quote #generate-budget .loadingIcon').hide();
+                jQuery('#quote #generate-budget .loadingIcon').removeAttr("disabled");
+                jQuery(".loader-wrapper-get-budget").hide();
+            }
+
+        });
+    }
     // Generate budget
     jQuery('#quote #step-1 #generate-budget').click(function(e){
         jQuery('#quote #generate-budget .loadingIcon').show();
@@ -3081,9 +3082,7 @@ jQuery( document ).ready(function() {
 
         jQuery('.modal-send-email .loader-wrapper').show();
         jQuery('.modal-send-email .result').html();
-        var budgetURL = PMbudgetURL;
-        console.log(budgetURL);
-        console.log(window.PMbudgetNumber);
+        console.log(PMbudgetURL);
 
         // NEED TO GET INFO of the file FROM WS
         var fileId = ""; // 323785;
@@ -3101,12 +3100,13 @@ jQuery( document ).ready(function() {
         // Send email with attachment from /downloads
         jQuery.ajax({
             type: "POST",
-            url: "/send-mail-budget",
+            url: "/send-mail-html",
             data: {
                 email : email,
                 product : product,
                 body : body,
                 html : html,
+                budgetURL : PMbudgetURL,
             },
             success: function(response) {
                 jQuery('.modal-send-email .loader-wrapper').hide();
@@ -3177,7 +3177,11 @@ jQuery( document ).ready(function() {
             jQuery(this).val( jQuery(this).val().substring(0, 9) )
         }
     });
-
+    jQuery("#quote .quote-person-entity-phone").on("keyup", function(e){
+        if (jQuery(this).val().length > 9) {
+            jQuery(this).val( jQuery(this).val().substring(0, 9) )
+        }
+    });
     // QUOTES - postal code max numbers
     jQuery("#quote .quote-postal-code, " +
         "#quote .quote-company-postal-code," +
@@ -3361,7 +3365,8 @@ jQuery( document ).ready(function() {
                 }
             }
 
-            if (jQuery(this).hasClass("quote-personal-id") ){
+            if (jQuery(this).hasClass("quote-personal-id") ||
+                jQuery(this).hasClass("quote-person-entity-personal-id") ){
                 if (isValidDoc( jQuery(this).val() ) ) {
                     jQuery(this).removeClass("invalid");
                     jQuery(this).addClass("valid");
@@ -3477,6 +3482,7 @@ jQuery( document ).ready(function() {
             }
 
             if (jQuery(this).hasClass("quote-email") ||
+                jQuery(this).hasClass("quote-person-entity-email") ||
                 jQuery(this).hasClass("quote-legal-entity-email")) {
                 var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
                 if ( regex.test( jQuery(this).val() ) ) {
@@ -3606,17 +3612,19 @@ jQuery( document ).ready(function() {
         jQuery("#quote .quote-another-insurance-extra-info").hide();
         step2EnableNextButton();
     });
-
-    // QUOTES - toggles legal entity extra info
-    jQuery("#quote .quote-legal-entity-type.legal-entity").click( function(e){
-        jQuery("#quote .legalEntityInfo").fadeIn();
-        step2EnableNextButton();
-    });
+    // QUOTES - toggles person entity extra info
     jQuery("#quote .quote-legal-entity-type.natural-person").click( function(e){
+        jQuery("#quote .personEntityInfo").fadeIn();
         jQuery("#quote .legalEntityInfo").hide();
         step2EnableNextButton();
     });
 
+    // QUOTES - toggles legal entity extra info
+    jQuery("#quote .quote-legal-entity-type.legal-entity").click( function(e){
+        jQuery("#quote .legalEntityInfo").fadeIn();
+        jQuery("#quote .personEntityInfo").hide();
+        step2EnableNextButton();
+    });
     // QUOTES - show hidden fields when OTHER is selected
     jQuery("#step-2 .quote-company-address-pick").change(function() {
         if ( jQuery(this).val() == companyAddressTypeOthers ) {
@@ -3747,6 +3755,36 @@ jQuery( document ).ready(function() {
                         jQuery('#step-3').fadeIn();
                     }else{
                         jQuery('#step-4').fadeIn();
+                    }
+                    var hiring = window.PMquoteStep1.hiring.split(",");
+                    //console.log(hiring);
+                    if (hiring.length > 1){
+                        jQuery("#step-4 #hiring-method").fadeIn();
+                        jQuery("#step-4 #hiring-method").show();
+                        var hiringField = "";
+                        hiringField += '<select name="signing-method" id="signing-method">';
+                        var hiringArray = hiring.values;
+                        var hiringOption = '';
+                        hiringOption += '<option value="" disabled selected></option>' ;
+                        for( i=0; i < hiring.length; i++ ) {
+                            switch (hiring[i]) {
+                                case "P":
+                                    hiringOption += '<option value="P">'+lang["quote.sign.P"]+'</option>' ;
+                                    break;
+                                case "A":
+                                    hiringOption +='<option value="A">'+lang["quote.sign.A"]+'</option>' ;
+                                    break;
+                                case "S":
+                                    hiringOption +='<option value="S">'+lang["quote.sign.S"]+'</option>' ;
+                                    break;
+                            }
+                        }
+                        hiringField += hiringOption;
+                        hiringField += "</select>";
+                        jQuery("#select-signing").html(hiringField);
+                        hiring = null;
+                    } else {
+                        jQuery("#step-4 #hiring-method").hide();
                     }
                 },
                 error: function (response) {
@@ -4012,6 +4050,7 @@ jQuery( document ).ready(function() {
                         jQuery('#quote #step-3 #health-form .loading-lock').hide();
                         jQuery('#step-4').fadeIn();
 
+
                         if( response.exclusions ) {
                             var message;
                             response.exclusions.forEach(function(item) {
@@ -4172,6 +4211,9 @@ jQuery( document ).ready(function() {
             var weight = window.PMquoteStep1.weight;
             var paymentMethod  = window.PMquoteStep1.billingCycle;
             var hiring = window.PMquoteStep1.hiring;
+            if (hiring.length > 1) {
+                hiring= jQuery('#signing-method').val();
+            }
 
             var name  = window.PMquoteStep2.firstName;
             var surname  = window.PMquoteStep2.lastName;
@@ -4355,12 +4397,13 @@ jQuery( document ).ready(function() {
         // TESTING
         // window.PMsigningMode = "P,S,A";
         // TESTING
-        //console.log(window.PMsigningMode);
+
         if( window.PMsigningMode){
+            console.log(window.PMsigningMode);
             // split array
             var signingMethods = window.PMsigningMode.split(",");
             var i;
-
+            console.log(signingMethods);
             // Loads screens for each available option
             for( i=0; i < signingMethods.length; i++ ){
                 /**
@@ -4422,15 +4465,12 @@ jQuery( document ).ready(function() {
                                     format : format
                                 },
                                 success: function (response) {
-                                    //console.log( response );
                                     if (response['success'] == true) {
                                         window.PMwidgetStep5 = {
                                             contenidoFichero : response.data.contenidoFichero
                                         }
-
                                         // Initiates logalty iframe
                                         loadLogalty( data.P_NUMERO_SOLICITUD, data.P_NUMERO_POLIZA, response.data.contenidoFichero);
-
                                     } else {
                                         displayModal("health", lang["quote.modal.error"], "OK", lang["quote.modal.close"]);
                                     }
@@ -4448,15 +4488,6 @@ jQuery( document ).ready(function() {
                         }
                         break;
                 }
-            }
-
-            // Displays screen with options to pick from if there is more than one method
-            if( signingMethods.length > 1){
-
-                jQuery("#step-5 .choose-signing-method").fadeIn();
-
-                // Hide options
-                jQuery(".signing-method-screen").hide();
             }
         }
 
@@ -4546,8 +4577,6 @@ jQuery( document ).ready(function() {
 
         jQuery('#send-policy-request-cp .productor').prop("value",window.PMquoteStep1.productor);
         jQuery('#send-policy-request-cp .refId').prop("value", docId);
-
-
     }
     // QUOTE - gets the policy request to download and sign
     function quote_load_policyCGRequestDownload(docId){
@@ -5127,6 +5156,7 @@ jQuery( document ).ready(function() {
                             jQuery('#send-policy-request button').removeAttr("disabled");
                             jQuery('#send-policy-request button .loadingIcon').css('display', 'none');
                             if (response['success'] == true) {
+                                jQuery('#doc').val('');
                                 displayModal("health", lang["uploadPolicyRequest.ok.modal.title"], lang["uploadPolicyRequest.ok.modal.message"], lang["quote.modal.close"]);
                             } else {
                                 console.error( response.e);
@@ -5259,6 +5289,7 @@ jQuery( document ).ready(function() {
                             jQuery('#send-policy-request-cp button').removeAttr("disabled");
                             jQuery('#send-policy-request-cp button .loadingIcon').css('display', 'none');
                             if (response['success'] == true) {
+                                jQuery('#doc-cp').val('');
                                 displayModal("health", lang["uploadPolicyRequest.ok.modal.title"], lang["uploadPolicyRequest.ok.modal.message"], lang["quote.modal.close"]);
                             } else {
                                 console.error( response.e);
@@ -5391,6 +5422,7 @@ jQuery( document ).ready(function() {
                             jQuery('#send-policy-request-cg button').removeAttr("disabled");
                             jQuery('#send-policy-request-cg button .loadingIcon').css('display', 'none');
                             if (response['success'] == true) {
+                                jQuery('#doc-cg').val('');
                                 displayModal("health", lang["uploadPolicyRequest.ok.modal.title"], lang["uploadPolicyRequest.ok.modal.message"], lang["quote.modal.close"]);
                             } else {
                                 console.error( response.e);
@@ -5736,8 +5768,42 @@ jQuery( document ).ready(function() {
                 console.error(response);
             }
         });
-    }
 
+    }
+    // QUOTE - Health form displays hidden sub questions
+    jQuery('#downloads select[name=file]').on('change', function () {
+        var selectedFile = jQuery("#downloads #file").val();
+        switch(selectedFile){
+            case "SO":
+                jQuery("#downloads .docID").val('467');
+                jQuery("#downloads .folderID").val('65');
+                break;
+            case "CP":
+                jQuery("#downloads .docID").val('444');
+                jQuery("#downloads .folderID").val('11');
+                break;
+            case "CG":
+                jQuery("#downloads .docID").val('10');
+                jQuery("#downloads .folderID").val('442');
+                break;
+        }
+    });
+    jQuery('#send-policy-request-cp select[name=file]').on('change', function () {
+        var selectedFile = jQuery("#send-policy-request-cp #file").val();
+        switch(selectedFile){
+            case "CP":
+                jQuery("#send-policy-request-cp .docID").val('444');
+                jQuery("#send-policy-request-cp .folderID").val('11');
+                break;
+            case "CG":
+                jQuery("#send-policy-request-cp .docID").val('10');
+                jQuery("#send-policy-request-cp .folderID").val('442');
+                break;
+        }
+    });
+    jQuery('#quote-download-policy-cp-request').on('click', function () {
+        setTimeout(function(){ jQuery('#quote-download-policy-cg-request').trigger('click'); }, 30000);
+    });
 
 
 

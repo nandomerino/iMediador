@@ -911,12 +911,84 @@
                                     <div class="col-12">
                                         <ul class="nav nav-pills" id="contractTab" role="tablist">
                                             <li class="nav-item">
-                                                <a class="nav-link nav-link-custom-left active valid quote-legal-entity-type natural-person"  data-toggle="tab" data-person-type="F" href="#pf" role="tab" aria-controls="pf" aria-selected="true">{{ __('quote.naturalPerson') }}</a>
+                                                <a class="nav-link nav-link-custom-left valid quote-legal-entity-type natural-person"  data-toggle="tab" data-person-type="F" href="#pf" role="tab" aria-controls="pf" aria-selected="true">{{ __('quote.naturalPerson') }}</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link nav-link-custom-right valid quote-legal-entity-type legal-entity"  data-toggle="tab" href="#pj" role="tab" data-person-type="J" aria-controls="pj" aria-selected="false">{{ __('quote.legalEntity') }}</a>
                                             </li>
                                         </ul>
+                                        <div class="tab-content personEntityInfo" style="display: none;">
+                                            <div class="row pt-xl-3">
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="quote-person-entity-name" class="quote-person-entity-name-label mb-1">{{ __('text.firstName') }}</label>
+                                                    <input type="text" class="form-control w-100 quote-person-entity-name" name="quote-person-entity-name" required maxlength="100">
+                                                </div>
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="quote-person-entity-last-name" class="quote-person-entity-last-name-label mb-1">{{ __('text.lastName') }}</label>
+                                                    <input type="text" class="form-control w-100 quote-person-entity-last-name" name="quote-person-entity-last-name" required maxlength="30">
+                                                </div>
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="quote-person-entity-personal-id" class="quote-person-entity-personal-id-label mb-1">{{ __('quote.personalId') }}</label>
+                                                    <input type="text" class="form-control w-100 quote-person-entity-personal-id" name="quote-person-entity-personal-id" required maxlength="9">
+                                                    <div class="error" style="display:none;">{{ __('quote.personalId.error') }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="row pt-xl-3">
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="birthdate" class="quote-person-entity-birthdate-label mb-1">{{ __('text.birthdate') }}</label>
+                                                    <input type="text" class="form-control w-100 quote-person-entity-birthdate-show valid" name="quote-person-entity-birthdate-show" required maxlength="10">
+                                                </div>
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="quote-person-entity-email" class="quote-person-entity-email-label mb-1">{{ __('quote.email') }}</label>
+                                                    <input type="email" class="form-control w-100 quote-person-entity-email" name="quote-email" required maxlength="50">
+                                                    <div class="error" style="display:none;">{{ __('quote.email.error') }}</div>
+                                                </div>
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="quote-person-entity-phone" class="quote-person-entity-phone-label mb-1">{{ __('quote.phone') }}</label>
+                                                    <input type="number" class="form-control w-100 quote-person-entity-phone" name="quote-person-entity-phone" required max="799999999" min="600000000">
+                                                    <div class="error" style="display:none;">{{ __('quote.phone.error') }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="row pt-xl-3">
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="quote-legal-entity-address-type" class="quote-legal-entity-address-type-label mb-1">{{ __('quote.addressType') }}</label>
+                                                    <select class="form-control w-100 quote-legal-entity-address-type" name="quote-legal-entity-address-type" required>
+                                                        <option value="" disabled selected>-</option>
+                                                        <?php
+                                                        foreach ($addressTypes as $key => $value) {
+                                                            echo '<option value="' . $key . '">' . $value . '</option>';
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12 col-lg-8">
+                                                    <label for="quote-legal-entity-address" class="quote-legal-entity-address-label mb-1">{{ __('quote.address') }}</label>
+                                                    <input type="text" class="form-control w-100 quote-legal-entity-address" name="quote-legal-entity-address" required maxlength="100">
+                                                </div>
+                                            </div>
+                                            <div class="row pt-xl-3">
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="quote-legal-entity-postal-code" class="quote-legal-entity-postal-code-label mb-1">{{ __('quote.postalCode') }}</label>
+                                                    <input type="text" class="form-control w-100 quote-legal-entity-postal-code" name="quote-legal-entity-postal-code" maxlength="5" required>
+                                                </div>
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="quote-legal-entity-city" class="quote-legal-entity-city-label mb-1">{{ __('quote.city') }}</label>
+                                                    <select class="form-control w-100 quote-legal-entity-city" name="quote-legal-entity-city" required disabled="disabled">
+                                                        @php
+                                                            // Dynamically filled with JS
+                                                        @endphp
+                                                    </select>
+                                                </div>
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="quote-legal-entity-province" class="quote-legal-entity-province-label mb-1">{{ __('quote.province') }}</label>
+                                                    <select class="form-control w-100 quote-legal-entity-province" name="quote-legal-entity-province" required disabled="disabled">
+                                                        @php
+                                                            // Dynamically filled with JS
+                                                        @endphp
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="tab-content legalEntityInfo" style="display: none;">
                                             <div class="row pt-xl-3">
                                                 <div class="col-12 col-lg-4">
@@ -1113,7 +1185,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div id="hiring-method" class="col px-3 py-md-5 text-center" style="display: none;">
+                            <div class="col">
+                                <h4 class="text-center title mb-0">{{ __('quote.sign.select') }}</h4>
+                                <div class="separator bg-navy-blue mb-3 mt-3"></div>
+                                <div id="select-signing">
 
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                     <div class="step-buttons my-3 row">
                         <div class="col d-none d-md-block">
                         </div>
@@ -1154,28 +1237,6 @@
                     </div>
 
                     <h4 class="text-center title mb-3">{{ __('quote.sign.title') }}</h4>
-
-                    <div class="row mb-5 choose-signing-method" style="display: none;">
-                        <div class="col">
-                            <div class="row pt-1">
-                                <div class="col text-center txt-navy-blue mb-4 my-xl-5 hand-write-method-button" style="display: none;">
-                                    <div class="card border-white hand-write">
-                                        <p class="font-weight-bold">{{ __('quote.sign.handWrite') }}</p>
-                                    </div>
-                                </div>
-                                <div class="col text-center txt-navy-blue mb-4 my-xl-5 logalty-method-button" style="display: none;">
-                                    <div class="card border-white logalty">
-                                        <p class="font-weight-bold">{{ __('quote.sign.logalty') }}</p>
-                                    </div>
-                                </div>
-                                <div class="col text-center txt-navy-blue mb-4 my-xl-5 logalty-synchronous-method-button" style="display: none;">
-                                    <div class="card border-white logalty-synchronous">
-                                        <p class="font-weight-bold">{{ __('quote.sign.logalty.synchronous') }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="row mb-5 hand-write-method signing-method-screen" style="display: none;">
                         <div class="col">
@@ -1233,7 +1294,7 @@
                                         <p class="instructions">{!! __('quote.sign.handWrite.instructions.poliza.step1') !!}</p>
                                     </div>
                                 </div>
-                                <div class="col-6 hand-write text-center txt-navy-blue mb-3">
+                                <div class="col-12 hand-write text-center txt-navy-blue mb-3">
                                     <p class="">{!! __('quote.sign.handWrite.instructionscp.step1') !!}</p>
                                     <div class="col-12">
                                         <form id="quote-download-policy-cp-form" action="/download" method="get">
@@ -1246,6 +1307,20 @@
                                             <input type="submit" id="quote-download-policy-cp-request" class="quote-download-policy-cp-request"  value="{!! __('text.download') !!}">
                                         </form>
                                         <form id="send-policy-request-cp" autocomplete="off">
+                                            <div class="select-file row my-4">
+                                                <div class="col-12 col-md-6 pt-2 text-right mb-2 mb-md-0">
+                                                    <label for="file">{!! __('uploadPolicyRequest.pick.file') !!}</label>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4">
+                                                    <select class="form-control file" id="file" name="file" autocomplete="off" required="">
+                                                        <option value="" disabled="" selected=""></option>
+                                                        <option value="CP">{!! __('quote.sign.CP') !!}</option>
+                                                        <option value="CG">{!! __('quote.sign.CG') !!}</option>
+                                                    </select>
+                                                    <input type="hidden" name="docId" class="docId" value="">
+                                                    <input type="hidden" name="folderId" class="folderId" value="">
+                                                </div>
+                                            </div>
                                             <div class="row my-4">
                                                 <div class="col">
                                                     <input type="file" name="doc" class="doc" id="doc-cp" required accept=".pdf,.jpg,.jpeg,.png">
@@ -1269,8 +1344,7 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="col-6 hand-write text-center txt-navy-blue mb-3">
-                                    <p class="">{!! __('quote.sign.handWrite.instructionscg.step1') !!}</p>
+                                <div style="display:none;">
                                     <div class="col-12">
                                         <form id="quote-download-policy-cg-form" action="/download" method="get">
                                             <input type="hidden" name="docId" class="docId" value="">

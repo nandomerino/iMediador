@@ -265,7 +265,7 @@
     "quote.sign.handWrite.instructions.poliza.step1" : "Agradecemos la confianza depositada en Previsión Mallorquina.<br>Recuerde que debe devolver a la compañía debidamente firmada por el Tomador y/o Asegurado todas las hojas del documento (condiciones particulares y condiciones generales) en el espacio reservado a tal fin.<br>Recuerde que debe entregar al cliente una copia de los documentos.",
     "quote.sign.handWrite.instructionscg.step1" : "Condiciones generales",
     "quote.sign.handWrite.instructionsso.step1" : "Solicitud.",
-    "quote.sign.handWrite.instructionscp.step1" : "Condiciones particulares",
+    "quote.sign.handWrite.instructionscp.step1" : "Condiciones particulares y generales",
     "quote.sign.handWrite.instructions.step2.now" : "<b>Paso 2.</b> Escanea y sube la documentación firmado para finalizar.",
     "quote.sign.handWrite.instructions.step2.verbose" : "Desde esta utilidad puedes enviarnos la documentación que necesites.<br>Selecciona el documento desde tu escritorio o dispositivo y súbelo.<br>Recuerda que puedes enviar hasta un máximo de 10MB en cualquiera de los siguientes formatos: .pdf, .jpg, .jpeg, .png",
     "quote.sign.handWrite.instructions.step2.later" : "Para subir el documento más adelante encontrarás una opción en el menú de iMediador.",
@@ -277,6 +277,13 @@
     "quote.policyRequest" : "PM_Solicitud_",
     "quote.loadGetBudget" : "Estamos generando el presupuesto.",
     "quote.loadGetRates" : "En unos instantes te mostraremos tu oferta de seguro.",
+    "quote.sign.A" : "Firma Electrónica Asíncrona",
+    "quote.sign.P" : "Firma Manuscrita",
+    "quote.sign.S" : "Firma Electrónica Síncrona",
+    "quote.sign.CP" : "Condiciones Particulares",
+    "quote.sign.CG" : "Condiciones Generales",
+    "quote.sign.SO" : "Solicitud",
+    "quote.sign.select" : "Elija la forma de contratación:",
 
 
     "advisor.title" : "Recomendador",
@@ -349,7 +356,8 @@
     "downloadDocuments.table.header.col4" : "Descargar",
 
     "uploadPolicyRequest.pick.productor" : "Selecciona productor",
-    "uploadPolicyRequest.policyRequestCode" : "Código de solicitud ",
+    "uploadPolicyRequest.pick.file" : "Selecciona documentación",
+    "uploadPolicyRequest.policyRequestCode" : "Código de documento ",
 
     "uploadPolicyRequest.ok.modal.title" : "Documentación enviada",
     "uploadPolicyRequest.ok.modal.message" : "La documentación se ha enviado correctamente.",

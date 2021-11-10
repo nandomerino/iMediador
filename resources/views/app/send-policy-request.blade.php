@@ -44,6 +44,21 @@
                     </select>
                 </div>
             </div>
+            <div class="select-file row my-4">
+                <div class="col-12 col-md-6 pt-2 text-right mb-2 mb-md-0">
+                    <label for="file">{{ __('uploadPolicyRequest.pick.file') }}</label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <select class="form-control file" id="file" name="file" autocomplete="off" required>
+                        <option value="" disabled selected></option>
+                        <option value="SO">{{ __('quote.sign.SO') }}</option>
+                        <option value="CP">{{ __('quote.sign.CP') }}</option>
+                        <option value="CG">{{ __('quote.sign.CG') }}</option>
+                    </select>
+                    <input type="hidden" name="docId" class="docId" value="">
+                    <input type="hidden" name="folderId" class="folderId" value="">
+                </div>
+            </div>
             <div class="row my-4">
                 <div class="col-12 col-md-6 pt-2 text-right mb-2 mb-md-0">
                     <label for="doc">{{ __('text.chooseFile') }}</label>
@@ -62,8 +77,6 @@
             </div>
             <div class="row">
                 <div class="col text-center">
-                    <input type="hidden" name="docId" class="docId" value="467">
-                    <input type="hidden" name="folderId" class="folderId" value="65">
                     <input type="hidden" name="docType" class="docType" value="application/pdf">
                     <input type="hidden" name="sendType" class="sendType" value="policyRequest">
                     <button id="send-policy-request-button" class="send-policy-request-button bg-lime-yellow text-white py-2 px-3 rounded border-0 position-relative" disabled>

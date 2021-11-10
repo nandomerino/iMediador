@@ -327,6 +327,7 @@ class PMWSjs extends Controller
         $parameters["duration"] = $this->parameters["duration"] ?? null;
         $parameters["date"] = $this->parameters["date"];
         $parameters["coverages"] = $this->parameters["coverages"];
+        $parameters["paymentMethod"] = $this->parameters["paymentMethod"];
 
 
 
