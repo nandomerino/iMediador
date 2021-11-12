@@ -1987,8 +1987,10 @@ class PMWShandler
         // if customer is natural person copies uses his data for holder as well
         if( $parameters["holderName"] == "" ){
             $parameters["holderName"] = $parameters["name"];
+            $parameters["holderSurname"] = $parameters["holderSurname"];
             $parameters["holderDocId"] = $parameters["docId"];
             $parameters["holderEmail"] = $parameters["email"];
+            $parameters["holderPhone"] = $parameters["phone"];
             $parameters["holderStreetType"] = $parameters["streetType"];
             $parameters["holderAddress"] = $parameters["address"];
             $parameters["holderCity"] = $parameters["city"];

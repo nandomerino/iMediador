@@ -1778,6 +1778,8 @@ class PMWS extends controller
             "nombreParametro"	=> "P_TIPO_DIRECCION_EMPRESA",
             "valorParametro"	=> $data["companyAddressType"]);
 
+
+
         if( $data["companyAddressType"] == "O") {
             $inputData[] =  array(
                 "nombreParametro"	=> "P_CODIGO_TIPO_VIA_EMPRESA",

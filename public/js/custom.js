@@ -525,6 +525,7 @@ jQuery( document ).ready(function() {
 
         // Loads jobs
         var jobsArray = data.P_PROFESION_CLIENTE.values;
+
         var modificaConfiguracion = data.P_PROFESION_CLIENTE.WS.modificaConfiguracion.toUpperCase()=="S";
         //alert(data.P_PROFESION_CLIENTE.WS.modificaConfiguracion);
         if (modificaConfiguracion){
@@ -1202,6 +1203,8 @@ jQuery( document ).ready(function() {
                 });
                 window.PMjobPicker = jobPicker.sort();
                 window.PMjobSelect = jobSelect;
+
+
 
                 // load info button if there is text for it
                 if( typeof data.P_PROFESION_CLIENTE.WS.textoAyuda !== 'undefined' && data.P_PROFESION_CLIENTE.WS.textoAyuda != null){
@@ -3177,7 +3180,17 @@ jQuery( document ).ready(function() {
             jQuery(this).val( jQuery(this).val().substring(0, 9) )
         }
     });
+    jQuery("#quote .quote-company-phone").on("keyup", function(e){
+        if (jQuery(this).val().length > 9) {
+            jQuery(this).val( jQuery(this).val().substring(0, 9) )
+        }
+    });
     jQuery("#quote .quote-person-entity-phone").on("keyup", function(e){
+        if (jQuery(this).val().length > 9) {
+            jQuery(this).val( jQuery(this).val().substring(0, 9) )
+        }
+    });
+    jQuery("#quote .quote-legal-entity-phone").on("keyup", function(e){
         if (jQuery(this).val().length > 9) {
             jQuery(this).val( jQuery(this).val().substring(0, 9) )
         }
@@ -3390,9 +3403,47 @@ jQuery( document ).ready(function() {
                     jQuery(this).removeClass("valid");
                 }
             }
-
-            if (jQuery(this).hasClass("quote-phone") ) {
-                if (jQuery(this).val().length == 9) {
+            function checkMobile(texto) {
+                var regex = /^[67]/;
+                return regex.test(texto);
+            }
+            function checkCompanyPhone(texto) {
+                var regex = /^[6789]/;
+                return regex.test(texto);
+            }
+            function onlyLetters(texto) {
+                var regex = /^[a-zA-Z ]+$/;
+                return regex.test(texto);
+            }
+            if (jQuery(this).hasClass("quote-company-phone")) {
+                if (jQuery(this).val().length == 9 && ( checkCompanyPhone(this.value)==true)) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                    jQuery(this).next().hide();
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                    jQuery(this).next().show();
+                }
+            }
+            if (jQuery(this).hasClass("quote-phone") ||
+                jQuery(this).hasClass("quote-person-entity-phone") ||
+                jQuery(this).hasClass("quote-legal-entity-phone") ) {
+                if (jQuery(this).val().length == 9 && (checkMobile(this.value)==true)) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                    jQuery(this).next().hide();
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                    jQuery(this).next().show();
+                }
+            }
+            if (jQuery(this).hasClass("quote-first-name") ||
+                jQuery(this).hasClass("quote-last-name") ||
+                jQuery(this).hasClass("quote-person-entity-name") ||
+                jQuery(this).hasClass("quote-person-entity-last-name") ) {
+                if (onlyLetters(this.value)==true) {
                     jQuery(this).removeClass("invalid");
                     jQuery(this).addClass("valid");
                     jQuery(this).next().hide();
@@ -3483,7 +3534,8 @@ jQuery( document ).ready(function() {
 
             if (jQuery(this).hasClass("quote-email") ||
                 jQuery(this).hasClass("quote-person-entity-email") ||
-                jQuery(this).hasClass("quote-legal-entity-email")) {
+                jQuery(this).hasClass("quote-legal-entity-email") ||
+                jQuery(this).hasClass("quote-company-email")) {
                 var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
                 if ( regex.test( jQuery(this).val() ) ) {
                     jQuery(this).removeClass("invalid");
@@ -3662,6 +3714,33 @@ jQuery( document ).ready(function() {
 
     // QUOTES - Saves step 2 data into JS variable
     function storeStep2Data(){
+        if ( jQuery('#quote .quote-legal-entity-name').val() != '' ) {
+            var quoteEntityName = jQuery('#quote .quote-legal-entity-name').val();
+        } else if ( jQuery('#quote .quote-person-entity-name').val() != '' ) {
+            var quoteEntityName = jQuery('#quote .quote-person-entity-name').val();
+        }
+        if ( jQuery('#quote .quote-person-entity-last-name').val() != '' ) {
+            var quoteEntityLastName= jQuery('#quote .quote-person-entity-last-name').val();
+        } else {
+            var quoteEntityLastName = '';
+        }
+        if ( jQuery('#quote .quote-legal-entity-id').val() != '' ) {
+            var quoteEntityId = jQuery('#quote .quote-legal-entity-id').val();
+        } else if ( jQuery('#quote .quote-person-entity-personal-id').val() != '' ) {
+            var quoteEntityId = jQuery('#quote .quote-person-entity-personal-id').val();
+        }
+        if ( jQuery('#quote .quote-legal-entity-email').val() != '' ) {
+            var quoteEntityEmail = jQuery('#quote .quote-legal-entity-email').val();
+        } else if ( jQuery('#quote .quote-person-entity-email').val() != '' ) {
+            var quoteEntityEmail = jQuery('#quote .quote-person-entity-email').val();
+        }
+        if ( jQuery('#quote .quote-legal-entity-phone').val() != '' ) {
+            var quoteEntityPhone = jQuery('#quote .quote-legal-entity-phone').val();
+        } else if ( jQuery('#quote .quote-person-entity-phone').val() != '' ) {
+            var quoteEntityPhone = jQuery('#quote .quote-person-entity-phone').val();
+        }
+
+
         window.PMquoteStep2 = {
             firstName : jQuery('#quote .quote-first-name').val(),
             lastName : jQuery('#quote .quote-last-name').val(),
@@ -3690,9 +3769,12 @@ jQuery( document ).ready(function() {
             anotherInsuranceEnds : jQuery('#quote .quote-another-insurance-ends').val(),
 
             legalEntityType : jQuery('#quote .quote-legal-entity-type.active').data("person-type"),
-            legalEntityName : jQuery('#quote .quote-legal-entity-name').val(),
-            legalEntityId : jQuery('#quote .quote-legal-entity-id').val(),
-            legalEntityEmail : jQuery('#quote .quote-legal-entity-email').val(),
+            legalEntityName : quoteEntityName,
+            legalLastName : quoteEntityLastName,
+            legalEntityId : quoteEntityId,
+            legalEntityEmail : quoteEntityEmail,
+            legalEntityPhone : quoteEntityPhone,
+            legalEntityBirthay : jQuery('#quote .quote-person-entity-birthdate-show').val(),
             legalEntityAddressType : jQuery('#quote .quote-legal-entity-address-type').val(),
             legalEntityAddress : jQuery('#quote .quote-legal-entity-address').val(),
             legalEntityPostalCode : jQuery('#quote .quote-legal-entity-postal-code').val(),
@@ -4248,18 +4330,18 @@ jQuery( document ).ready(function() {
             var holderType  = window.PMquoteStep2.legalEntityType;
 
             var holderName  = window.PMquoteStep2.legalEntityName;
+            var holderSurname = window.PMquoteStep2.legalLastName;
             var holderDocId  = window.PMquoteStep2.legalEntityId
             // var holderDocType  =   Generated on PMWShandler;
             var holderEmail  = window.PMquoteStep2.legalEntityEmail;
+            var holderPhone  = window.PMquoteStep2.legalEntityPhone;
             var holderStreetType  = window.PMquoteStep2.legalEntityAddressType;
             var holderAddress  = window.PMquoteStep2.legalEntityAddress;
             var holderCity  = window.PMquoteStep2.legalEntityCity;
             var holderProvince  = window.PMquoteStep2.legalEntityProvince;
 
             // no inputs but we use the personal data to fill it
-            var holderSurname  = window.PMquoteStep2.lastName;
-            var holderBirthdate  = window.PMquoteStep1.birthdate;
-            var holderPhone  = window.PMquoteStep2.phone;
+            var holderBirthdate  = window.PMquoteStep2.legalEntityBirthay ;
             var holderLanguage  = window.PMquoteStep2.documentationLanguage;
 
             var beneficiary = window.PMquoteStep2.additionalBeneficiary;
@@ -4334,13 +4416,13 @@ jQuery( document ).ready(function() {
                     holderName : holderName,
                     holderDocId : holderDocId,
                     holderEmail : holderEmail,
+                    holderPhone : holderPhone,
                     holderStreetType : holderStreetType,
                     holderAddress : holderAddress,
                     holderCity : holderCity,
                     holderProvince : holderProvince,
                     holderSurname : holderSurname,
                     holderBirthdate : holderBirthdate,
-                    holderPhone : holderPhone,
                     holderLanguage : holderLanguage,
                     beneficiary : beneficiary,
                     increasedValue : increasedValue,

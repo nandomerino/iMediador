@@ -711,10 +711,12 @@
                                     <div class="col-12 col-lg-4">
                                         <label for="quote-first-name" class="quote-first-name-label mb-1">{{ __('text.firstName') }}</label>
                                         <input type="text" class="form-control w-100 quote-first-name" name="quote-first-name" required maxlength="20">
+                                        <div class="error" style="display:none;">{{ __('quote.name.error') }}</div>
                                     </div>
                                     <div class="col-12 col-lg-4">
                                         <label for="quote-last-name" class="quote-last-name-label mb-1">{{ __('text.lastName') }}</label>
                                         <input type="text" class="form-control w-100 quote-last-name" name="quote-last-name" required maxlength="30">
+                                        <div class="error" style="display:none;">{{ __('quote.lastname.error') }}</div>
                                     </div>
                                     <div class="col-12 col-lg-4">
                                         <label for="quote-personal-id" class="quote-personal-id-label mb-1">{{ __('quote.personalId') }}</label>
@@ -859,6 +861,18 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="row companyAddressWrapper pt-xl-3 d-none">
+                                    <div class="col-12 col-lg-6">
+                                        <label for="quote-company-email" class="quote-company-email-label mb-1">{{ __('quote.company.email') }}</label>
+                                        <input type="email" class="form-control w-100 quote-company-email" name="quote-company-email" required maxlength="50">
+                                        <div class="error" style="display:none;">{{ __('quote.email.error') }}</div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <label for="quote-company-phone" class="quote-company-phone-label mb-1">{{ __('quote.company.phone') }}</label>
+                                        <input type="number" class="form-control w-100 quote-company-phone" name="quote-company-phone" required max="799999999" min="600000000">
+                                        <div class="error" style="display:none;">{{ __('quote.phone.error') }}</div>
+                                    </div>
+                                </div>
                                 <div class="row pt-xl-5">
                                     <div class="col-12 col-lg-6">
                                         <label>{{ __('quote.anotherInsurance') }}</label>
@@ -922,10 +936,12 @@
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-person-entity-name" class="quote-person-entity-name-label mb-1">{{ __('text.firstName') }}</label>
                                                     <input type="text" class="form-control w-100 quote-person-entity-name" name="quote-person-entity-name" required maxlength="100">
+                                                    <div class="error" style="display:none;">{{ __('quote.name.error') }}</div>
                                                 </div>
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-person-entity-last-name" class="quote-person-entity-last-name-label mb-1">{{ __('text.lastName') }}</label>
                                                     <input type="text" class="form-control w-100 quote-person-entity-last-name" name="quote-person-entity-last-name" required maxlength="30">
+                                                    <div class="error" style="display:none;">{{ __('quote.lastname.error') }}</div>
                                                 </div>
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-person-entity-personal-id" class="quote-person-entity-personal-id-label mb-1">{{ __('quote.personalId') }}</label>
@@ -950,6 +966,7 @@
                                                 </div>
                                             </div>
                                             <div class="row pt-xl-3">
+
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-legal-entity-address-type" class="quote-legal-entity-address-type-label mb-1">{{ __('quote.addressType') }}</label>
                                                     <select class="form-control w-100 quote-legal-entity-address-type" name="quote-legal-entity-address-type" required>
@@ -999,9 +1016,17 @@
                                                     <label for="quote-legal-entity-id" class="quote-legal-entity-id-label mb-1">{{ __('quote.legalEntity.id') }}</label>
                                                     <input type="text" class="form-control w-100 quote-legal-entity-id" name="quote-legal-entity-id" required maxlength="9">
                                                 </div>
+
+                                            </div>
+                                            <div class="row pt-xl-3">
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-legal-entity-email" class="quote-legal-entity-email-label mb-1">{{ __('quote.email') }}</label>
                                                     <input type="email" class="form-control w-100 quote-legal-entity-email" name="quote-legal-entity-email" required maxlength="50">
+                                                </div>
+                                                <div class="col-12 col-lg-4">
+                                                    <label for="quote-legal-entity-phone" class="quote-legal-entity-phone-label mb-1">{{ __('quote.phone') }}</label>
+                                                    <input type="number" class="form-control w-100 quote-legal-entity-phone" name="quote-legal-entity-phone" required max="799999999" min="600000000">
+                                                    <div class="error" style="display:none;">{{ __('quote.phone.error') }}</div>
                                                 </div>
                                             </div>
                                             <div class="row pt-xl-3">
