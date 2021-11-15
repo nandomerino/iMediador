@@ -869,7 +869,7 @@
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <label for="quote-company-phone" class="quote-company-phone-label mb-1">{{ __('quote.company.phone') }}</label>
-                                        <input type="number" class="form-control w-100 quote-company-phone" name="quote-company-phone" required max="799999999" min="600000000">
+                                        <input type="number" class="form-control w-100 quote-company-phone" name="quote-company-phone" required>
                                         <div class="error" style="display:none;">{{ __('quote.phone.error') }}</div>
                                     </div>
                                 </div>
@@ -968,8 +968,8 @@
                                             <div class="row pt-xl-3">
 
                                                 <div class="col-12 col-lg-4">
-                                                    <label for="quote-legal-entity-address-type" class="quote-legal-entity-address-type-label mb-1">{{ __('quote.addressType') }}</label>
-                                                    <select class="form-control w-100 quote-legal-entity-address-type" name="quote-legal-entity-address-type" required>
+                                                    <label for="quote-person-entity-address-type" class="quote-person-entity-address-type-label mb-1">{{ __('quote.addressType') }}</label>
+                                                    <select class="form-control w-100 quote-person-entity-address-type" name="quote-person-entity-address-type" required>
                                                         <option value="" disabled selected>-</option>
                                                         <?php
                                                         foreach ($addressTypes as $key => $value) {
@@ -979,8 +979,8 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-12 col-lg-8">
-                                                    <label for="quote-legal-entity-address" class="quote-legal-entity-address-label mb-1">{{ __('quote.address') }}</label>
-                                                    <input type="text" class="form-control w-100 quote-legal-entity-address" name="quote-legal-entity-address" required maxlength="100">
+                                                    <label for="quote-person-entity-address" class="quote-person-entity-address-label mb-1">{{ __('quote.address') }}</label>
+                                                    <input type="text" class="form-control w-100 quote-person-entity-address" name="quote-person-entity-address" required maxlength="100">
                                                 </div>
                                             </div>
                                             <div class="row pt-xl-3">

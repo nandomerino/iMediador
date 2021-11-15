@@ -1925,6 +1925,8 @@ class PMWShandler
      * @param "companyStreetType" - company street type
      * @param "companyAddress" - company address
      * @param "companyCity" - company city
+     * @param "companyPhone" - company phone
+     * @param "companyMail" - company mail
      * @param "workLocationType" - insured person work location type
      * @param "paymentMethod" - chosen payment method
      * @param "hasMorePolicies" - whether insurance person has more policies. Options: "S"/"N"
@@ -1987,7 +1989,8 @@ class PMWShandler
         // if customer is natural person copies uses his data for holder as well
         if( $parameters["holderName"] == "" ){
             $parameters["holderName"] = $parameters["name"];
-            $parameters["holderSurname"] = $parameters["holderSurname"];
+            $parameters["holderSurname"] = $parameters["surname"];
+            $parameters["holderBirthdate"] = $parameters["birthdate"];
             $parameters["holderDocId"] = $parameters["docId"];
             $parameters["holderEmail"] = $parameters["email"];
             $parameters["holderPhone"] = $parameters["phone"];
@@ -2013,8 +2016,8 @@ class PMWShandler
         if( app('session')->has('healthForm') ){
             $parameters["healthQ"] = session('healthForm');
         }
-        //app('debugbar')->info('PMWS HANDLER $parameters');
-        //app('debugbar')->info($parameters);
+        app('debugbar')->info('PMWS HANDLER $parameters');
+        app('debugbar')->info($parameters);
         $response = $this->PMWS->submitPolicy($parameters);
         app('debugbar')->info('PMWS HANDLER $response');
         app('debugbar')->info($response);

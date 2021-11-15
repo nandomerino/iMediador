@@ -3718,6 +3718,8 @@ jQuery( document ).ready(function() {
             var quoteEntityName = jQuery('#quote .quote-legal-entity-name').val();
         } else if ( jQuery('#quote .quote-person-entity-name').val() != '' ) {
             var quoteEntityName = jQuery('#quote .quote-person-entity-name').val();
+        } else {
+            var quoteEntityName = '';
         }
         if ( jQuery('#quote .quote-person-entity-last-name').val() != '' ) {
             var quoteEntityLastName= jQuery('#quote .quote-person-entity-last-name').val();
@@ -3739,7 +3741,21 @@ jQuery( document ).ready(function() {
         } else if ( jQuery('#quote .quote-person-entity-phone').val() != '' ) {
             var quoteEntityPhone = jQuery('#quote .quote-person-entity-phone').val();
         }
-
+        if(jQuery('#quote .quote-legal-entity-type.active').data("person-type") == undefined) {
+            var quoteLegalEntity = 'F';
+        } else {
+            var quoteLegalEntity = jQuery('#quote .quote-legal-entity-type.active').data("person-type");
+        }
+        if(jQuery('#quote .quote-legal-entity-address').val() != '') {
+            var quoteEntityAddress = jQuery('#quote .quote-legal-entity-address').val();
+        } else if ( jQuery('#quote .quote-person-entity-address').val() != '' ) {
+            var quoteEntityAddress = jQuery('#quote .quote-person-entity-address').val();
+        }
+        if(jQuery('#quote .quote-legal-entity-address-type').val() != '') {
+            var quoteEntityAddressType = jQuery('#quote .quote-legal-entity-address-type').val();
+        } else if ( jQuery('#quote .quote-person-entity-address-type').val() != '' ) {
+            var quoteEntityAddressType = jQuery('#quote .quote-person-entity-address-type').val();
+        }
 
         window.PMquoteStep2 = {
             firstName : jQuery('#quote .quote-first-name').val(),
@@ -3761,6 +3777,8 @@ jQuery( document ).ready(function() {
             companyAddress : jQuery('#quote .quote-company-address').val(),
             companyPostalCode : jQuery('#quote .quote-company-postal-code').val(),
             companyCity : jQuery('#quote .quote-company-city').val(),
+            companyPhone : jQuery('#quote .quote-company-phone').val(),
+            companyMail : jQuery('#quote .quote-company-email').val(),
             companyProvince : jQuery('#quote .quote-company-province').val(),
 
             anotherInsurance : jQuery('#quote .quote-another-insurance.active > input').val(),
@@ -3768,15 +3786,15 @@ jQuery( document ).ready(function() {
             anotherInsuranceAmount : jQuery('#quote .quote-another-insurance-price').val(),
             anotherInsuranceEnds : jQuery('#quote .quote-another-insurance-ends').val(),
 
-            legalEntityType : jQuery('#quote .quote-legal-entity-type.active').data("person-type"),
+            legalEntityType : quoteLegalEntity,
             legalEntityName : quoteEntityName,
             legalLastName : quoteEntityLastName,
             legalEntityId : quoteEntityId,
             legalEntityEmail : quoteEntityEmail,
             legalEntityPhone : quoteEntityPhone,
             legalEntityBirthay : jQuery('#quote .quote-person-entity-birthdate-show').val(),
-            legalEntityAddressType : jQuery('#quote .quote-legal-entity-address-type').val(),
-            legalEntityAddress : jQuery('#quote .quote-legal-entity-address').val(),
+            legalEntityAddressType : quoteEntityAddressType,
+            legalEntityAddress : quoteEntityAddress,
             legalEntityPostalCode : jQuery('#quote .quote-legal-entity-postal-code').val(),
             legalEntityCity : jQuery('#quote .quote-legal-entity-city').val(),
             legalEntityProvince : jQuery('#quote .quote-legal-entity-province').val(),
@@ -4319,6 +4337,8 @@ jQuery( document ).ready(function() {
             var companyAddress  = window.PMquoteStep2.companyAddress;
             var companyPostalCode  = window.PMquoteStep2.companyPostalCode;
             var companyCity  = window.PMquoteStep2.companyCity;
+            var companyPhone  = window.PMquoteStep2.companyPhone;
+            var companyMail = window.PMquoteStep2.companyMail;
             var companyProvince  = window.PMquoteStep2.companyProvince; // is not sent;
 
 
@@ -4407,6 +4427,8 @@ jQuery( document ).ready(function() {
                     companyAddress : companyAddress,
                     companyPostalCode : companyPostalCode,
                     companyCity : companyCity,
+                    companyPhone : companyPhone,
+                    companyMail : companyMail,
                     companyProvince : companyProvince,
                     hasMorePolicies : hasMorePolicies,
                     anotherInsuranceName  : anotherInsuranceName,

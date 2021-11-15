@@ -1646,6 +1646,8 @@ class PMWS extends controller
      * @param "companyStreetType" - company street type
      * @param "companyAddress" - company address
      * @param "companyCity" - company city
+     * @param "companyPhone" - company phone
+     * @param "companyMail" - company mail
      * @param "workLocationType" - insured person work location type
      * @param "paymentMethod" - chosen payment method
      * @param "hasMorePolicies" - whether insurance person has more policies. Options: "S"/"N"
@@ -1774,6 +1776,12 @@ class PMWS extends controller
         $inputData[] =  array(
             "nombreParametro"	=> "P_NOMBRE_EMPRESA",
             "valorParametro"	=> $data["companyName"]);
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_TELEFONO_EMPRESA",
+            "valorParametro"	=> $data["companyPhone"]);
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_EMAIL_EMPRESA",
+            "valorParametro"	=> $data["companyMail"]);
         $inputData[] =  array(
             "nombreParametro"	=> "P_TIPO_DIRECCION_EMPRESA",
             "valorParametro"	=> $data["companyAddressType"]);
