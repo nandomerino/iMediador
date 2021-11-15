@@ -145,7 +145,7 @@ class PMWSjs extends Controller
             $this->parameters["u"],
             $this->parameters["p"]
         );
-        //app('debugbar')->info($data);
+        app('debugbar')->info($data);
         if (is_array($data)) {
             return response()->json(['success' => true, 'data' => $data]);
         } else {
@@ -181,6 +181,7 @@ class PMWSjs extends Controller
         $parameters["covidHospitalizacionCob"] = $this->parameters["covidHospitalizacionCob"] ?? null;
         $parameters["covidHospitalizacionSub"] = $this->parameters["covidHospitalizacionSub"] ?? null;
         $parameters["jobType"] = $this->parameters["jobType"];
+        $parameters["hiring"] = $this->parameters["hiring"]?? null;
         $parameters["formaPago"] = $this->parameters["formaPago"]?? null;
         $parameters["duration"] = $this->parameters["duration"] ?? null;
 
@@ -326,6 +327,7 @@ class PMWSjs extends Controller
         $parameters["duration"] = $this->parameters["duration"] ?? null;
         $parameters["date"] = $this->parameters["date"];
         $parameters["coverages"] = $this->parameters["coverages"];
+        $parameters["paymentMethod"] = $this->parameters["paymentMethod"];
 
 
 
@@ -526,6 +528,7 @@ class PMWSjs extends Controller
 
     public function submitPolicy()
     {
+        //app('debugbar')->info('PWJS $this->parameters');
         //app('debugbar')->info($this->parameters);
         // Call PM WS
 
@@ -545,6 +548,7 @@ class PMWSjs extends Controller
 
         // Call PM WS
         $data = $this->PMWShandler->submitPolicy($this->parameters);
+        //app('debugbar')->info('PWJS $data');
         //app('debugbar')->info($data);
         if (is_array($data)) {
             return response()->json(['success' => true, 'data' => $data]);

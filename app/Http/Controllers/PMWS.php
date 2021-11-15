@@ -783,7 +783,7 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        // app('debugbar')->info($params);
+        app('debugbar')->info($params);
         $result = $client->getDocumento($params);
 
         if (is_soap_fault($result)) {
@@ -1293,11 +1293,14 @@ class PMWS extends controller
      * @param "gender" - user gender
      * @param "height" - user height
      * @param "weight" - user weigth
+     * @param "paymentMethod" -
      * @param "coverages" -
      * @return bool - false or rates list
      * @throws \SoapFault
      */
     function getBudget($data) {
+        app('debugbar')->info('getBudget data');
+        app('debugbar')->info($data);
 
         $endpoint = $this->baseUrl . "/v4/wspresupuesto" . $this->environment . "/Presupuesto?WSDL";
         $client = new SoapClient($endpoint);
@@ -1369,9 +1372,9 @@ class PMWS extends controller
             "nombreParametro"	=> "P_ALTA_AUTOMATICA",
             "valorParametro"	=> "N");
 
-        $inputData[] = array(
+        $inputData[] =  array(
             "nombreParametro"	=> "P_FORMA_PAGO",
-            "valorParametro"	=> "1");
+            "valorParametro"	=> $data["paymentMethod"]);
         $fData = array();
 
         $fData[] = array(
@@ -1626,6 +1629,7 @@ class PMWS extends controller
      * @param "gender" - user gender
      * @param "height" - user height
      * @param "weight" - user weigth
+     * @param "hiring" - Type of hiring
      * @param "name" - insured person name
      * @param "surname" - insured person surname
      * @param "docId" - insured person documentId
@@ -1642,6 +1646,8 @@ class PMWS extends controller
      * @param "companyStreetType" - company street type
      * @param "companyAddress" - company address
      * @param "companyCity" - company city
+     * @param "companyPhone" - company phone
+     * @param "companyMail" - company mail
      * @param "workLocationType" - insured person work location type
      * @param "paymentMethod" - chosen payment method
      * @param "hasMorePolicies" - whether insurance person has more policies. Options: "S"/"N"
@@ -1678,9 +1684,9 @@ class PMWS extends controller
      */
     public function submitPolicy($data) {
 
-        //app('debugbar')->info('submitPolicy: $data["productId"]: ');
-        //app('debugbar')->info($data["productId"]);
-        //app('debugbar')->info($data);
+        app('debugbar')->info('submitPolicy: $data["productId"]: ');
+        app('debugbar')->info($data["productId"]);
+        app('debugbar')->info($data);
         $endpoint = $this->baseUrl . "/v3/wspoliza" . $this->environment . "/Poliza?WSDL";
         $client = new SoapClient($endpoint);
 
@@ -1730,6 +1736,10 @@ class PMWS extends controller
                 "nombreParametro"	=> "P_CLAVE_COMERCIAL",
                 "valorParametro"	=> "DUE");
         }
+
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_TIPO_CONTRATACION",
+            "valorParametro"	=> $data["hiring"]);
         $inputData[] =  array(
             "nombreParametro"	=> "P_NOMBRE_ASEGURADO",
             "valorParametro"	=> $data["name"]);
@@ -1767,8 +1777,16 @@ class PMWS extends controller
             "nombreParametro"	=> "P_NOMBRE_EMPRESA",
             "valorParametro"	=> $data["companyName"]);
         $inputData[] =  array(
+            "nombreParametro"	=> "P_TELEFONO_EMPRESA",
+            "valorParametro"	=> $data["companyPhone"]);
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_EMAIL_EMPRESA",
+            "valorParametro"	=> $data["companyMail"]);
+        $inputData[] =  array(
             "nombreParametro"	=> "P_TIPO_DIRECCION_EMPRESA",
             "valorParametro"	=> $data["companyAddressType"]);
+
+
 
         if( $data["companyAddressType"] == "O") {
             $inputData[] =  array(
@@ -1957,7 +1975,7 @@ class PMWS extends controller
             );
         }
 
-        // app('debugbar')->info($params);
+        app('debugbar')->info($params);
         //file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/log.txt', serialize($params) );
         $result = $client->altaPoliza($params);
 

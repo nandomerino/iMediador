@@ -713,7 +713,7 @@ jQuery( document ).ready(function() {
         jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
     });
 
-            // WIDGET - toggles check attribute on clicked toggle button
+    // WIDGET - toggles check attribute on clicked toggle button
     jQuery("#quote .btn-group-toggle .btn").click(function (e) {
         jQuery(this).parent().find(".btn input").removeAttr("checked");
         jQuery(this).find("input").attr("checked", "checked");
@@ -1147,7 +1147,7 @@ jQuery( document ).ready(function() {
         if (allValid) {
             jQuery('#step-2 .quote-step.next').removeAttr("disabled");
         } else {
-           //  jQuery('#step-2 .quote-step.next').attr("disabled", "disabled");
+            //  jQuery('#step-2 .quote-step.next').attr("disabled", "disabled");
             jQuery([document.documentElement, document.body]).animate({
                 scrollTop: jQuery(".invalid").offset().top -50
             }, 1000);
@@ -1208,43 +1208,43 @@ jQuery( document ).ready(function() {
             jQuery('#step-2').hide();
 
 
-                jQuery('#quote #step-3 .loader-wrapper').show();
+            jQuery('#quote #step-3 .loader-wrapper').show();
 
-                // Retrieves health form data from WS
-                var url = "/get-data";
-                var ws = "getHealthForm";
-                var commercialkey = window.PMwidgetStep1.commercialKey;
+            // Retrieves health form data from WS
+            var url = "/get-data";
+            var ws = "getHealthForm";
+            var commercialkey = window.PMwidgetStep1.commercialKey;
 
-                jQuery.ajax({
-                    type: "POST",
-                    url: url,
-                    data: {
-                        ws : ws,
-                        productor : PMproductor,
-                        product : PMproduct,
-                        commercialKey : commercialkey,
-                        u: PMu,
-                        p: PMp
+            jQuery.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    ws : ws,
+                    productor : PMproductor,
+                    product : PMproduct,
+                    commercialKey : commercialkey,
+                    u: PMu,
+                    p: PMp
 
-                    },
-                    success: function (response) {
-                        if (response['success'] == true) {
-                            healthFormRequired = true;
-                            quote_load_healthForm(response.data);
-                        } else {
-                            console.error( response.e);
-                        }
-
-                        if (healthFormRequired){
-                            jQuery('#step-3').fadeIn();
-                        }else{
-                            jQuery('#step-4').fadeIn();
-                        }
-                    },
-                    error: function (response) {
-                        console.error( lang["WS.error"] );
+                },
+                success: function (response) {
+                    if (response['success'] == true) {
+                        healthFormRequired = true;
+                        quote_load_healthForm(response.data);
+                    } else {
+                        console.error( response.e);
                     }
-                });
+
+                    if (healthFormRequired){
+                        jQuery('#step-3').fadeIn();
+                    }else{
+                        jQuery('#step-4').fadeIn();
+                    }
+                },
+                error: function (response) {
+                    console.error( lang["WS.error"] );
+                }
+            });
 
 
         }

@@ -601,6 +601,10 @@ table td{
     color: #707070;
 }
 
+.app-core label {
+    padding-right: 20px;
+}
+
 .app-core label svg{
     position: absolute;
     right: 5px;
@@ -874,7 +878,7 @@ table.ui-datepicker-calendar tbody td span{
     margin-bottom: 10px;
 }
 
-#step-4 #payment-input{
+#step-4 #payment-input, #step-4 #hiring-method{
     max-width: 500px;
     margin: auto;
 }
@@ -913,7 +917,7 @@ table.ui-datepicker-calendar tbody td span{
 }
 
 #step-5 .container{
-    max-width: 500px;
+    max-width: 750px;
     margin: auto !important;
 }
 #step-5 .thank-you .message{
@@ -943,7 +947,7 @@ table.ui-datepicker-calendar tbody td span{
     line-height: 1.2;
 }
 
-#quote-download-policy-request{
+#quote-download-policy-request, #dowload-condition input[type=submit]{
     background-color: #D1D546;
     color: white;
     padding: 10px 15px;
@@ -1073,7 +1077,7 @@ table.ui-datepicker-calendar tbody td span{
     line-height: 2;
 }
 
-#quote-download-form input[type=submit]{
+#quote-download-form input[type=submit], #dowload-condition input[type=submit]{
     border: none;
     padding: 10px 15px;
     max-height: unset;
@@ -1554,6 +1558,13 @@ button#print-budget.active, button#send-budget.active {
 .collapse {
     display: block;
 }
+#group-12.row.questions-group.show.collapse.in {
+    display: block;
+}
+#group-12.row.questions-group.show.collapse {
+    display: none;
+}
+
 /* datepicker */
 div#ui-datepicker-div {
     z-index: 9 !important;
