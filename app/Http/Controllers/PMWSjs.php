@@ -138,9 +138,9 @@ class PMWSjs extends Controller
             $this->parameters["productor"],
             $this->parameters["product"],
            // $this->parameters["productVariation"],
-            $this->parameters["productModality"],
-            $this->parameters["entryChannel"],
-            $this->parameters["application"],
+            $this->parameters["productModality"] ?? null,
+            $this->parameters["entryChannel"] ?? null,
+            $this->parameters["application"] ?? null,
             $modField,//$this->parameters["modifiedField"],
             $this->parameters["u"],
             $this->parameters["p"]

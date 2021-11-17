@@ -36,6 +36,7 @@ jQuery( document ).ready(function() {
                 p: PMp
             },
             success: function (response) {
+                console.log(response);
                 if (response['success'] == true) {
                     quote_load_ProductVariations(response.data);
                 } else {

@@ -234,9 +234,9 @@ class PMWShandler
             $this->pass = $p;
         }
 
-        // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productGroup . " | " . $entryChannel . " | " . $application . " | " . $pmUserCode);
+        //app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productGroup . " | " . $entryChannel . " | " . $application . " | " . $pmUserCode);
         $response = $this->PMWS->getProductVariations($this->user, $this->pass, $this->language, $productor, $productGroup, $entryChannel, $application, $this->userPM);
-        //app('debugbar')->info($response);
+        app('debugbar')->info($response);
 
 
         $data = $response->return;
@@ -882,8 +882,8 @@ class PMWShandler
         session([
             'budget' => $budget
         ]);
-        //app('debugbar')->info("budget:");
-        //app('debugbar')->info($budget);
+        app('debugbar')->info("budget:");
+        app('debugbar')->info($budget);
         return $budget;
     }
 
@@ -897,28 +897,30 @@ class PMWShandler
             $parameters["pass"] = $this->pass;
         }
 
+
         $parameters["language"] = $this->language;
         $parameters["pmUserCode"] = $this->userPM;
 
-        app('debugbar')->info('getBudgetDocument PMWS HANDLER $parameters');
-        app('debugbar')->info($parameters);
+        //app('debugbar')->info('getBudgetDocument PMWS HANDLER $parameters');
+        //app('debugbar')->info($parameters);
         $response = $this->PMWS->getBudgetDocument($parameters);
-        app('debugbar')->info('getBudgetDocument PMWS HANDLER $response');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('getBudgetDocument PMWS HANDLER $response');
+        //app('debugbar')->info($response);
 
         $budgetDocument = [];
         $data = $response->return;
-        app('debugbar')->info('data');
-        app('debugbar')->info($data);
+        //app('debugbar')->info('data');
+        //app('debugbar')->info($data);
         if( $data->correcto == "S" ){
             if ($data->datosSalida->array->nombre == "P_CODIGO_PETICION") {
                 $budgetId = $data->datosSalida->array->valor;
             }
             //Content file
+
             $dataDocument = $data->contenidoFichero;
             $base = base64_decode($dataDocument);
-            $budgetURL = "/WP/wp-content/uploads/presupuestos/p".$budgetId.".pdf";
-            $destinationPath = public_path() . "/WP/wp-content/uploads/presupuestos/p".$budgetId.".pdf";
+            $budgetURL = "uploads/presupuestos/p".$budgetId.".pdf";
+            $destinationPath = public_path() . "/uploads/presupuestos/p".$budgetId.".pdf";
             file_put_contents($destinationPath, $base);
             $budgetDocument["data"] = "OK";
             $budgetDocument["url"] = $budgetURL;
@@ -1721,7 +1723,8 @@ class PMWShandler
     {
 
         $response = $this->PMWS->getAccessData($this->language, $token);
-        //app('debugbar')->info($response);
+        app('debugbar')->info('getAccessData $response');
+        app('debugbar')->info($response);
         $data = $response->return;
 
         if( $data->correcto == "S" ){
@@ -1737,12 +1740,11 @@ class PMWShandler
                         case "P_CODIGO_PRODUCTOR":
                             $productor = $row->valorParametro;
                             break;
-                        case "P_AGRUPACION":
-                            $product = $row->valorParametro;
-                            break;
                         case "P_PRODUCTO":
+                            $product = $row->valorParametro;
                             $productVariation = $row->valorParametro;
                             break;
+
                     }
                 }
 
@@ -2016,11 +2018,11 @@ class PMWShandler
         if( app('session')->has('healthForm') ){
             $parameters["healthQ"] = session('healthForm');
         }
-        app('debugbar')->info('PMWS HANDLER $parameters');
-        app('debugbar')->info($parameters);
+        //app('debugbar')->info('PMWS HANDLER $parameters');
+        //app('debugbar')->info($parameters);
         $response = $this->PMWS->submitPolicy($parameters);
-        app('debugbar')->info('PMWS HANDLER $response');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('PMWS HANDLER $response');
+        //app('debugbar')->info($response);
 
         $data = $response->return;
 
@@ -2179,6 +2181,8 @@ class PMWShandler
         //app('debugbar')->info($response);
 
         $data = $response->return;
+        //app('debugbar')->info('Data');
+        //app('debugbar')->info($data);
         if( $data->correcto == "S" ){
 
             $campaigns = [];
@@ -2210,10 +2214,15 @@ class PMWShandler
                     }
                 }else{
                     $row = $data->datosObjetivos->objetivo;
+                    $total = count($row->tramosIncentivos->tramoIncentivo);
+                    $posicion = --$total;
                     $campaigns[$i]["codigo"] = $row->codigo;
                     $campaigns[$i]["descripcion"] = $row->descripcion;
                     $campaigns[$i]["titulo"] = $row->titulo;
                     $campaigns[$i]["valorActual"] = $row->valorActual;
+                    $campaigns[$i]["valorTotal"] = $row->tramosIncentivos->tramoIncentivo[$posicion]->hasta;
+                    $campaigns[$i]["porcentajeConseguido"] = round(($row->valorActual*100)/$row->tramosIncentivos->tramoIncentivo[$posicion]->hasta, 2);
+
 
                     if( is_array($row->tramosIncentivos->tramoIncentivo) ) {
                         $j = 0;
@@ -2221,6 +2230,18 @@ class PMWShandler
                             $campaigns[$i]["tramosIncentivos"][$j]["desde"]  = $row2->desde;
                             $campaigns[$i]["tramosIncentivos"][$j]["hasta"]  = $row2->hasta;
                             $campaigns[$i]["tramosIncentivos"][$j]["incentivo"]  = $row2->incentivo;
+                            $campaigns[$i]["tramosIncentivos"][$j]["porcentajeParcialConseguido"]  = round(($row->valorActual*100)/$row2->hasta, 2);
+                            $campaigns[$i]["tramosIncentivos"][$j]["porcentajeTotal"]  = round((($row2->hasta - $row2->desde)*100)/$row->tramosIncentivos->tramoIncentivo[$posicion]->hasta, 2);
+                            if (round(($row->valorActual*100)/$row2->hasta, 2) >= 100){
+                                $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'SI';
+                            } else {
+                                $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'NO';
+                            }
+                            if ($row->valorActual > $row2->desde && $row->valorActual < $row2->hasta ){
+                                $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'SI';
+                            } else {
+                                $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'NO';
+                            }
                             $j++;
                         }
                     }else{

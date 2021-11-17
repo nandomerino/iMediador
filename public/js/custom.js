@@ -3098,12 +3098,12 @@ jQuery( document ).ready(function() {
         html += jQuery('#quote #step-1 .print1').html();
         var email = jQuery(".modal-send-email input[type=email]").val();
         var product = jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html();
-        var body = "Le remitimos información del coste de su Seguro de " + jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html() +", solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
+        var body = "Le remitimos el presupuesto del coste de su Seguro de " + jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html() +", solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
 
         // Send email with attachment from /downloads
         jQuery.ajax({
             type: "POST",
-            url: "/send-mail-html",
+            url: "/send-budget-html",
             data: {
                 email : email,
                 product : product,

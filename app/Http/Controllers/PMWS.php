@@ -96,13 +96,13 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        //var_dump("parametros:");
-        //var_dump($params);
+        //app('debugbar')->info('parametros');
+        //app('debugbar')->info($params);
 
         $result = $client->obtenerDatosMediador($params);
 
-        //var_dump("result:");
-        //var_dump($result);
+        //app('debugbar')->info('result');
+        //app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -189,7 +189,8 @@ class PMWS extends controller
         );
 
         $result = $client->obtenerDatosAcceso($params);
-
+        app('debugbar')->info('$result');
+        app('debugbar')->info($result);
         if (is_soap_fault($result)) {
             $result = false;
         }
@@ -907,6 +908,7 @@ class PMWS extends controller
         );
 
         $result = $client->getListaObjetivos($params);
+        //app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;

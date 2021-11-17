@@ -43,8 +43,10 @@
 
         // Loads quote info using token
         $pm->getAccessData( $_GET['p'] );
+        //app('debugbar')->info('getAccessData');
         //app('debugbar')->info($pm);
         $pm->validateUser( Session::get('widget.productVariation') );
+        //app('debugbar')->info('validateUser');
         //app('debugbar')->info($pm);
 
         // Passes user and pass to JS to send as parameters for Cross-Domain widget
@@ -52,7 +54,7 @@
         echo "var PMu = '" . Session::get('login.user') . "';\n";
         echo "var PMp = '" . Session::get('login.pass') . "';\n";
         echo "var PMproductor = " . Session::get('widget.productor') . ";\n";
-        //echo "var PMproduct = " . Session::get('widget.product') . ";\n";
+        echo "var PMproduct = " . Session::get('widget.product') . ";\n";
         //echo "var PMproduct = 'ÉLITE-PM PROFESIONAL';\n";
         echo "var PMproductVariation = " . Session::get('widget.productVariation') . ";\n";
 
