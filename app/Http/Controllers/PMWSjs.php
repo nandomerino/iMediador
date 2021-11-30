@@ -50,6 +50,9 @@ class PMWSjs extends Controller
             case "submitPolicy":
                 $response = $this->submitPolicy();
                 break;
+            case "getReceipt":
+                $response = $this->getReceipt();
+                break;
             case "getDocument":
                 $response = $this->getDocument();
                 break;
@@ -101,6 +104,8 @@ class PMWSjs extends Controller
             $this->parameters["u"],
             $this->parameters["p"]
         );
+        app('debugbar')->info('getProductVariations $data');
+        app('debugbar')->info($data);
 
         if (is_array($data)) {
             return response()->json(['success' => true, 'data' => $data]);
@@ -139,12 +144,13 @@ class PMWSjs extends Controller
             $this->parameters["product"],
            // $this->parameters["productVariation"],
             $this->parameters["productModality"] ?? null,
-            $this->parameters["entryChannel"] ?? null,
-            $this->parameters["application"] ?? null,
+            $this->parameters["entryChannel"],
+            $this->parameters["application"],
             $modField,//$this->parameters["modifiedField"],
             $this->parameters["u"],
             $this->parameters["p"]
         );
+        app('debugbar')->info('getProductConfiguration PWSJ $data');
         app('debugbar')->info($data);
         if (is_array($data)) {
             return response()->json(['success' => true, 'data' => $data]);
@@ -438,9 +444,9 @@ class PMWSjs extends Controller
         }
         $parameters["u"] = $this->parameters["u"];
         $parameters["p"] = $this->parameters["p"];
-        app('debugbar')->info($parameters);
+        //app('debugbar')->info($parameters);
         $data = $this->PMWShandler->getBudgetDocument($parameters);
-        app('debugbar')->info($data);
+        //app('debugbar')->info($data);
         if (is_array($data)) {
             return response()->json(['success' => true, 'data' => $data,  'budgetNumber' => $parameters["budgetNumber"]]);
         } else {
@@ -582,6 +588,33 @@ class PMWSjs extends Controller
             $this->parameters["p"]
         );
         //app('debugbar')->info($data);
+        if (is_array($data)) {
+            return response()->json(['success' => true, 'data' => $data]);
+        } else {
+            return response()->json(['success' => false, 'e' => $data]);
+        }
+    }
+
+    public function getReceipt()
+    {
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["entryChannel"]) ){
+            $this->parameters["entryChannel"] = null;
+        }
+        if( !isset( $this->parameters["application"]) ) {
+            $this->parameters["application"] = null;
+        }
+        if( !isset( $this->parameters["u"]) ) {
+            $this->parameters["u"] = null;
+        }
+        if( !isset( $this->parameters["p"]) ) {
+            $this->parameters["p"] = null;
+        }
+
+        // Call PM WS
+        $data = $this->PMWShandler->getReceipt($this->parameters);
+        app('debugbar')->info('PWJS $data');
+        app('debugbar')->info($data);
         if (is_array($data)) {
             return response()->json(['success' => true, 'data' => $data]);
         } else {

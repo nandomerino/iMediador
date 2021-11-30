@@ -56,7 +56,7 @@
         echo "var PMproductor = " . Session::get('widget.productor') . ";\n";
         echo "var PMproduct = " . Session::get('widget.product') . ";\n";
         //echo "var PMproduct = 'ÉLITE-PM PROFESIONAL';\n";
-        echo "var PMproductVariation = " . Session::get('widget.productVariation') . ";\n";
+        echo "var PMproductVariation = " . Session::get('widget.product') . ";\n";
 
         if( Session::has('extraInfo.datosSalida.P_CABECERA') && Session::get('extraInfo.datosSalida.P_CABECERA') != "" ){
             echo "var PMheader = '" . Session::get('extraInfo.datosSalida.P_CABECERA') . "';\n";
@@ -77,8 +77,8 @@
     var PMweight = 80;
     var PMheight = 180;
     var companyAddressTypeOthers = "O";
-    var PMentryChannel  = "WSD";
-    var PMapplication  = "EMISION_WEB";
+    var PMentryChannel  = "WG";
+    var PMapplication  = "WIDGETS";
 
 
 </script>
@@ -88,76 +88,13 @@
             <div class="form col">
                 <div class="loading-lock" style="display: none;"></div>
                 <div class="container p-0">
-                    <div class="product-extra-info row content w-100" style="margin: 0 !important; display: none;">
-                        <h4 class="m-auto text-center">{{ __('widget.buyNow') }} <span class="product-name"></span></h4>
-                        <div class="separator thin"></div>
-                        <div class="dynamic-content col p-0 pt-3">
-
-                            <div class="row pt-2">
-                                <div class="col max-width-400">
-                                    <label class="quote-job-label mb-1" for="quote-job-picker"></label>
-                                    <select class="form-control quote-job valid" name="quote-job" style="display: none;" autocomplete="off" required>
-                                        @php
-                                            // Dynamically filled with JS
-                                        @endphp
-                                    </select>
-                                    <input class="form-control quote-job-picker" required>
-                                    @php
-                                        // plugin loaded from JS quote_load_ProductConfiguration()
-                                    @endphp
-                                </div>
-                            </div>
-                            <div class="row pt-2">
-                                <div class="col max-width-400">
-                                    <label class="quote-birthdate-label mb-1" for="quote-birthdate"></label>
-                                    <input id="datepicker" type="text" class="form-control w-100 quote-birthdate" name="quote-birthdate" autocomplete="off" required maxlength="10">
-                                    <script>
-                                        jQuery( function() {
-                                            jQuery( "#datepicker" ).datepicker({ maxDate: '-18Y -1D', minDate: '-70Y', changeMonth: true, changeYear: true, yearRange: "-70:+0" });
-                                            jQuery( "#datepicker" ).datepicker("option", jQuery.datepicker.regional[ "{{ $currentLanguage  }}" ]);
-                                        } );
-                                    </script>
-                                </div>
-                            </div>
-                            <div class="row pt-2 quote-job-type-wrapper">
-                                <div class="col max-width-400">
-                                    <label class="quote-job-type-label mb-1" for="quote-job-type"></label>
-                                    <select class="form-control quote-job-type" name="quote-job-type"  required>
-                                        @php
-                                            // Dynamically filled with JS
-                                        @endphp
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row pt-2">
-                                <div class="col max-width-400">
-                                    <label class="quote-gender-label mb-1" for="quote-gender"></label>
-                                    <select class="form-control quote-gender" name="quote-gender"  required>
-                                        @php
-                                            // Dynamically filled with JS
-                                        @endphp
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="quote-hidden-fields-wrapper row pt-2">
-                                <div class="col max-width-400">
-                                    @php
-                                        // Dynamically filled with JS
-                                    @endphp
-                                </div>
-                            </div>
-
-
-
-                            <div class="get-rates content w-100 mt-1">
-                                <div class="col">
-                                    <button class="quote-button text-white bold py-2 px-4 border-0 rounded w-100 mt-4 position-relative bg-lime-yellow">
-                                        {{ __('widget.getRates') }}
-                                        <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
-                                    </button>
-                                </div>
-                            </div>
+                    <div class="product-extra-info content w-100" style="display: none;">
+                        <h4>Contenido dinámico</h4>
+                        <div class="separator thin bg-dark-grey"></div>
+                        <div id="inputWidget" class="dynamic-content row pt-3 d-flex">
+                            @php
+                                // Dynamically filled with JS
+                            @endphp
 
                         </div>
                     </div>

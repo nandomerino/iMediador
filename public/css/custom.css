@@ -947,7 +947,7 @@ table.ui-datepicker-calendar tbody td span{
     line-height: 1.2;
 }
 
-#quote-download-policy-request, #dowload-condition input[type=submit]{
+#quote-download-policy-request, #dowload-condition input[type=submit], #quote-download-receipt-form input[type=submit]{
     background-color: #D1D546;
     color: white;
     padding: 10px 15px;
@@ -1077,7 +1077,7 @@ table.ui-datepicker-calendar tbody td span{
     line-height: 2;
 }
 
-#quote-download-form input[type=submit], #dowload-condition input[type=submit]{
+#quote-download-form input[type=submit], #dowload-condition input[type=submit], #quote-download-receipt-form input[type=submit]{
     border: none;
     padding: 10px 15px;
     max-height: unset;
@@ -1132,6 +1132,13 @@ table.ui-datepicker-calendar tbody td span{
     height: 50px;
     border-radius: 0;
     box-shadow: none;
+    background-color: #002A66;
+}
+.progress-bar.bg-success {
+    background-color: #D1D546 !important;
+}
+.progress-bar.bg-info {
+    background-color: #e5e888 !important;
 }
 .progress-text {
     text-align: center;

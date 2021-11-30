@@ -228,13 +228,13 @@
                                                 </div>
                                             </div>
                                             <div class="row pt-3 d-flex">
-                                                <div class="quote-duration-wrapper  col-6">
+                                                <div class="quote-duration-wrapper row pt-3 d-flex mx-0">
                                                     @php
                                                         // Dynamically filled with JS
                                                     @endphp
 
                                                 </div>
-                                                <div class="quote-discount-wrapper  col-6">
+                                                <div class="quote-discount-wrapper row pt-3 d-flex mx-0">
                                                     @php
                                                         // Dynamically filled with JS
                                                     @endphp
@@ -245,19 +245,19 @@
 
                                         </div>
                                                     </div>
-                                    <div class= "row">
-                                       <div class="static-content col">
+                                        <div class= "row">
+                                           <div class="static-content col">
 
-                                            <div class="row pt-3">
-                                                <div class="col">
-                                                    <label class="quote-starting-date-label mb-1" for="quote-starting-date">{{ __('quote.startDate') }}</label>
-                                                    <input type="text" class="form-control w-100 quote-starting-date" name="quote-starting-date" id="quote-starting-date" maxlength="10" autocomplete="off" required readonly>
+                                                <div class="row pt-3">
+                                                    <div class="col">
+                                                        <label class="quote-starting-date-label mb-1" for="quote-starting-date">{{ __('quote.startDate') }}</label>
+                                                        <input type="text" class="form-control w-100 quote-starting-date" name="quote-starting-date" id="quote-starting-date" maxlength="10" autocomplete="off" required readonly>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
+                                        </div>
                                     </div>
-                                                    </div>
 
                                     <div class="get-rates content w-100 mt-4" style="display: none;">
                                         <div class="separator thin bg-dark-grey"></div>
@@ -953,6 +953,7 @@
                                                 <div class="col-12 col-lg-4">
                                                     <label for="birthdate" class="quote-person-entity-birthdate-label mb-1">{{ __('text.birthdate') }}</label>
                                                     <input type="text" class="form-control w-100 quote-person-entity-birthdate-show valid" name="quote-person-entity-birthdate-show" required maxlength="10">
+                                                    <div class="error" style="display:none;">{{ __('quote.younger.error') }}</div>
                                                 </div>
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-person-entity-email" class="quote-person-entity-email-label mb-1">{{ __('quote.email') }}</label>
@@ -980,25 +981,25 @@
                                                 </div>
                                                 <div class="col-12 col-lg-8">
                                                     <label for="quote-person-entity-address" class="quote-person-entity-address-label mb-1">{{ __('quote.address') }}</label>
-                                                    <input type="text" class="form-control w-100 quote-person-entity-address" name="quote-person-entity-address" required maxlength="100">
+                                                    <input type="text" class="form-control w-100 quote-person-entity-address" name="quote-person-entity-address" required maxlength="50">
                                                 </div>
                                             </div>
                                             <div class="row pt-xl-3">
                                                 <div class="col-12 col-lg-4">
-                                                    <label for="quote-legal-entity-postal-code" class="quote-legal-entity-postal-code-label mb-1">{{ __('quote.postalCode') }}</label>
-                                                    <input type="text" class="form-control w-100 quote-legal-entity-postal-code" name="quote-legal-entity-postal-code" maxlength="5" required>
+                                                    <label for="quote-person-entity-postal-code" class="quote-person-entity-postal-code-label mb-1">{{ __('quote.postalCode') }}</label>
+                                                    <input type="text" class="form-control w-100 quote-person-entity-postal-code" name="quote-person-entity-postal-code" maxlength="5" required>
                                                 </div>
                                                 <div class="col-12 col-lg-4">
-                                                    <label for="quote-legal-entity-city" class="quote-legal-entity-city-label mb-1">{{ __('quote.city') }}</label>
-                                                    <select class="form-control w-100 quote-legal-entity-city" name="quote-legal-entity-city" required disabled="disabled">
+                                                    <label for="quote-person-entity-city" class="quote-person-entity-city-label mb-1">{{ __('quote.city') }}</label>
+                                                    <select class="form-control w-100 quote-person-entity-city" name="quote-person-entity-city" required disabled="disabled">
                                                         @php
                                                             // Dynamically filled with JS
                                                         @endphp
                                                     </select>
                                                 </div>
                                                 <div class="col-12 col-lg-4">
-                                                    <label for="quote-legal-entity-province" class="quote-legal-entity-province-label mb-1">{{ __('quote.province') }}</label>
-                                                    <select class="form-control w-100 quote-legal-entity-province" name="quote-legal-entity-province" required disabled="disabled">
+                                                    <label for="quote-person-entity-province" class="quote-person-entity-province-label mb-1">{{ __('quote.province') }}</label>
+                                                    <select class="form-control w-100 quote-person-entity-province" name="quote-person-entity-province" required disabled="disabled">
                                                         @php
                                                             // Dynamically filled with JS
                                                         @endphp
@@ -1010,11 +1011,12 @@
                                             <div class="row pt-xl-3">
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-legal-entity-name" class="quote-legal-entity-name-label mb-1">{{ __('quote.legalEntity.name') }}</label>
-                                                    <input type="text" class="form-control w-100 quote-legal-entity-name" name="quote-legal-entity-name" required maxlength="100">
+                                                    <input type="text" class="form-control w-100 quote-legal-entity-name" name="quote-legal-entity-name" required maxlength="50">
                                                 </div>
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-legal-entity-id" class="quote-legal-entity-id-label mb-1">{{ __('quote.legalEntity.id') }}</label>
                                                     <input type="text" class="form-control w-100 quote-legal-entity-id" name="quote-legal-entity-id" required maxlength="9">
+                                                    <div class="error" style="display:none;">{{ __('quote.personalId.error') }}</div>
                                                 </div>
 
                                             </div>
@@ -1022,6 +1024,7 @@
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-legal-entity-email" class="quote-legal-entity-email-label mb-1">{{ __('quote.email') }}</label>
                                                     <input type="email" class="form-control w-100 quote-legal-entity-email" name="quote-legal-entity-email" required maxlength="50">
+                                                    <div class="error" style="display:none;">{{ __('quote.email.error') }}</div>
                                                 </div>
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-legal-entity-phone" class="quote-legal-entity-phone-label mb-1">{{ __('quote.phone') }}</label>
@@ -1043,7 +1046,7 @@
                                                 </div>
                                                 <div class="col-12 col-lg-8">
                                                     <label for="quote-legal-entity-address" class="quote-legal-entity-address-label mb-1">{{ __('quote.address') }}</label>
-                                                    <input type="text" class="form-control w-100 quote-legal-entity-address" name="quote-legal-entity-address" required maxlength="100">
+                                                    <input type="text" class="form-control w-100 quote-legal-entity-address" name="quote-legal-entity-address" required maxlength="50">
                                                 </div>
                                             </div>
                                             <div class="row pt-xl-3">
@@ -1401,6 +1404,25 @@
                                                     </button>
                                                 </div>
                                             </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="dowload-receipt" class="row pt-1" style="display: none;">
+                                <div class="col hand-write text-center txt-navy-blue mb-3">
+                                    <h4 class="text-center title my-3">{!! __('quote.sign.handWrite.title.receipt') !!}</h4>
+                                    <p class="instructions">{!! __('quote.sign.handWrite.instructions.receipt') !!}</p>
+                                </div>
+                                <div class="col-12 hand-write text-center txt-navy-blue mb-3">
+                                    <div class="col-12">
+                                        <form id="quote-download-receipt-form" action="/download" method="get">
+                                            <input type="hidden" name="docId" class="docId" value="">
+                                            <input type="hidden" name="productor" class="productor" value="">
+                                            <input type="hidden" name="source" class="source" value="">
+                                            <input type="hidden" name="type" class="type" value="">
+                                            <input type="hidden" name="format" class="format" value="">
+                                            <input type="hidden" name="downloadType" class="downloadType" value="document">
+                                            <input type="submit" id="quote-download-policy-cp-request" class="quote-download-policy-cp-request"  value="{!! __('text.download') !!}">
                                         </form>
                                     </div>
                                 </div>

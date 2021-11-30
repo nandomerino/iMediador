@@ -236,6 +236,7 @@ class PMWShandler
 
         //app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productGroup . " | " . $entryChannel . " | " . $application . " | " . $pmUserCode);
         $response = $this->PMWS->getProductVariations($this->user, $this->pass, $this->language, $productor, $productGroup, $entryChannel, $application, $this->userPM);
+        app('debugbar')->info('getProductVariations $response');
         app('debugbar')->info($response);
 
 
@@ -593,7 +594,7 @@ class PMWShandler
                     $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
                     $productConfig[$row->nombre]["attributes"] = $row->atributosHTML;
                     $productConfig[$row->nombre]["hidden"] = $row->esOculto;
-                    app('debugbar')->info($row);
+                    //app('debugbar')->info($row);
                     if( $productConfig[$row->nombre]["fieldType"] == "select"){
                         if (isset($row->listaValores->listaValores)) {
                             if (is_array($row->listaValores->listaValores)) {
@@ -685,6 +686,7 @@ class PMWShandler
 
         //app('debugbar')->info($parameters);
         $response = $this->PMWS->getRates($parameters);
+        app('debugbar')->info('getRates $response');
         app('debugbar')->info($response);
 
         $rates = [];
@@ -909,8 +911,8 @@ class PMWShandler
 
         $budgetDocument = [];
         $data = $response->return;
-        //app('debugbar')->info('data');
-        //app('debugbar')->info($data);
+        app('debugbar')->info('data');
+        app('debugbar')->info($data);
         if( $data->correcto == "S" ){
             if ($data->datosSalida->array->nombre == "P_CODIGO_PETICION") {
                 $budgetId = $data->datosSalida->array->valor;
@@ -919,8 +921,8 @@ class PMWShandler
 
             $dataDocument = $data->contenidoFichero;
             $base = base64_decode($dataDocument);
-            $budgetURL = "uploads/presupuestos/p".$budgetId.".pdf";
-            $destinationPath = public_path() . "/uploads/presupuestos/p".$budgetId.".pdf";
+            $budgetURL = "uploads/presupuestos/ppto-".$budgetId.".pdf";
+            $destinationPath = public_path() . "/uploads/presupuestos/ppto-".$budgetId.".pdf";
             file_put_contents($destinationPath, $base);
             $budgetDocument["data"] = "OK";
             $budgetDocument["url"] = $budgetURL;
@@ -929,9 +931,7 @@ class PMWShandler
         } else{
             $budgetDocument= $data->mensajeError;
         }
-        session([
-            'budgetDocument' => $budgetURL,
-        ]);
+
         //app('debugbar')->info("budget:");
         //app('debugbar')->info($budget);
         return $budgetDocument;
@@ -1154,6 +1154,9 @@ class PMWShandler
                         $desc = $info->valorParametro;
                         $rates["description"] = $desc;
                     }
+                    if ($info->nombreParametro == "P_TIPO_CONTRATACION"){
+                        $rates["hiringType"] = $info->valorParametro;
+                    }
                 }
             }
 
@@ -1332,7 +1335,8 @@ class PMWShandler
             $this->pass = $p;
         }
         $response = $this->PMWS->getHealthForm($this->user, $this->pass, $this->language, $productor, $product, $commercialKey);
-        app('debugbar')->info($response);
+        //app('debugbar')->info('healthform $response');
+        //app('debugbar')->info($response);
         $data = $response->return;
         if( $data->correcto == "S" ){
             $healthForm = array();
@@ -1366,7 +1370,7 @@ class PMWShandler
         } else {
             $healthFormData = $data->codigoError;
         }
-        app('debugbar')->info($healthFormData);
+        //app('debugbar')->info($healthFormData);
 
         return $healthFormData;
     }
@@ -1723,8 +1727,8 @@ class PMWShandler
     {
 
         $response = $this->PMWS->getAccessData($this->language, $token);
-        app('debugbar')->info('getAccessData $response');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('getAccessData $response');
+        //app('debugbar')->info($response);
         $data = $response->return;
 
         if( $data->correcto == "S" ){
@@ -1742,9 +1746,10 @@ class PMWShandler
                             break;
                         case "P_PRODUCTO":
                             $product = $row->valorParametro;
+                            break;
+                        case "P_AGRUPACION":
                             $productVariation = $row->valorParametro;
                             break;
-
                     }
                 }
 
@@ -1782,7 +1787,8 @@ class PMWShandler
     {
 
         $response = $this->PMWS->validateUser($this->user, $this->pass, $this->language, $productVariationId);
-        //app('debugbar')->info($response);
+        app('debugbar')->info('validateUser $response');
+        app('debugbar')->info($response);
         $data = $response->return;
 
         if( $data->correcto == "S" ){
@@ -2042,6 +2048,40 @@ class PMWShandler
 
     }
 
+    public function getReceipt($parameters) {
+
+        if($parameters["u"] != null && $parameters["p"] != null){
+            $parameters["user"] = $parameters["u"] ;
+            $parameters["pass"] = $parameters["p"] ;
+        }else{
+            $parameters["user"] = $this->user;
+            $parameters["pass"] = $this->pass;
+        }
+        $parameters["language"] = $this->language;
+        $parameters["pmUserCode"] = $this->userPM;
+
+
+
+        app('debugbar')->info('PMWS HANDLER $parameters');
+        app('debugbar')->info($parameters);
+        $response = $this->PMWS->getReceipt($parameters);
+        app('debugbar')->info('PMWS HANDLER $response');
+        app('debugbar')->info($response);
+
+        $data = $response->return;
+
+        if( $data->correcto == "S" ){
+
+            $receipt = [];
+            $receipt["number"] = $data->recibos->codigo_recibo;
+
+        }else{
+            $receipt = $data->mensajeError;
+        }
+        return $receipt;
+
+    }
+
     /**
      * @param $productor
      * @param $docId
@@ -2108,6 +2148,7 @@ class PMWShandler
     function getFile($fileId, $pmUserCode = null){
 
         $response = $this->PMWS->getFile($this->user, $this->pass, $this->language, $fileId, $pmUserCode);
+        app('debugbar')->info('getFile $response');
         app('debugbar')->info($response);
 
         $data = $response->return;

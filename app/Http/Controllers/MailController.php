@@ -151,23 +151,19 @@ class MailController extends Controller
 
         $this->mail->Body =
             'Nombre: ' . $this->JSdata['name'] . "<br>" .
-            'Apellidos: ' . $this->JSdata['surname'] . "<br>" .
+            'Mediador: ' . $this->JSdata['mediador'] . "<br>" .
+            'Código/usuario: ' . $this->JSdata['mediadorId'] . "<br>" .
             'Telf: ' . $this->JSdata['phone'] . "<br>" .
             'E-Mail: ' . $this->JSdata['email'] . "<br>" .
-            'Empresa: ' . $this->JSdata['company'] . "<br>" .
-            'Puesto: ' . $this->JSdata['position'] . "<br>" .
-            'CIF: ' . $this->JSdata['cif'] . "<br>" .
             'Privacidad: ' . $this->JSdata['rgpd'] . "<br>" .
             'Mensaje: ' . "<br>" . $this->JSdata['message'] . "<br>";
 
         $this->mail->AltBody =
             'Nombre: ' . $this->JSdata['name'] .
-            'Apellidos: ' . $this->JSdata['surname'] .
+            'Mediador: ' . $this->JSdata['mediador'] .
+            'Código/usuario: ' . $this->JSdata['mediadorId'] .
             'Telf: ' . $this->JSdata['phone'] .
             'E-Mail: ' . $this->JSdata['email'] .
-            'Empresa: ' . $this->JSdata['company'] .
-            'Puesto: ' . $this->JSdata['position'] .
-            'CIF: ' . $this->JSdata['cif'] .
             'Privacidad: ' . $this->JSdata['rgpd'] .
             'Mensaje: ' . $this->JSdata['message'];
 

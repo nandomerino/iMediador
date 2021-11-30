@@ -2,7 +2,12 @@ var companyAddressTypeOthers = "O";
 var healthFormRequired = false;
 
 jQuery( document ).ready(function() {
-
+    // GENERAL - Disable enter
+    jQuery("body").keypress(function(e) {
+        if (e.which == 13) {
+            return false;
+        }
+    });
     // GENERAL - Display modal
     if (jQuery('#PMmodal').length) {
 
@@ -481,7 +486,7 @@ jQuery( document ).ready(function() {
         var ws = "getProductConfiguration";
         var productor = jQuery("#quote-productor").val();
         var product = jQuery("#quote input[name='quote-product']:checked").val();
-        //var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
+        var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
         var productModality = jQuery("#quote input[name='quote-product-modality']:checked").val();
         window.PMSelectedProductModality = productModality;
         //console.log(productModality);
@@ -493,7 +498,7 @@ jQuery( document ).ready(function() {
                 ws: ws,
                 productor: productor,
                 product: product,
-                // productVariation: productVariation,
+                productVariation: productVariation,
                 productModality: productModality
             },
             success: function (response) {
@@ -517,12 +522,7 @@ jQuery( document ).ready(function() {
         window.PMproductConfig = data;
         //console.log('load_Product');
         //console.log(data);
-
-
-
         //var timestamp = window.PMproductConfig.coberturas;//'{{ Session::get("quote")}}';
-
-
         // Loads jobs
         var jobsArray = data.P_PROFESION_CLIENTE.values;
 
@@ -670,6 +670,10 @@ jQuery( document ).ready(function() {
             if (modificaConfiguracion){
                 modConfig = " configChange";
             }
+            var helpFranquicia ='';
+            if (data.P_FRANQUICIA.WS.textoAyuda != null){
+                helpFranquicia = '<i class="fas fa-info-circle" title="' + data.P_FRANQUICIA.WS.textoAyuda + '"></i>';
+            }
             //window.PMEnfGraves = true;
             //console.log(data.P_FRANQUICIA);
             var hidden = "";
@@ -677,7 +681,7 @@ jQuery( document ).ready(function() {
                 hidden = " type='hidden' ";
             }
             franchiseField += "";
-            franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
+            franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + " "+helpFranquicia+"</label>";
             franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
             if( data.P_FRANQUICIA.fieldType == "select"){
 
@@ -823,8 +827,8 @@ jQuery( document ).ready(function() {
                 }
                 cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
                 discountFields += "<div class='col-"+cols+" impersonator-field'>";
-                discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
-                discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+                discountFields += "<label class='quote-forma-cobro-label mb-1' for='quote-forma-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+                discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-forma-cobro valid' name='quote-forma-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
 
                 if (data.P_CANAL_COBRO.fieldType == "select") {
                     var cobroArray = data.P_CANAL_COBRO.values;
@@ -927,9 +931,18 @@ jQuery( document ).ready(function() {
             if (data.P_DESCUENTO_06.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='mb-1 quote-discount-label' for='quote-discount'>" + data.P_DESCUENTO_06.name + "</label>";
-            discountFields += "<" + data.P_DESCUENTO_06.fieldType + hidden + " class='form-control w-100 quote-discount valid' name='quote-discount' " + data.P_DESCUENTO_06.attributes + ">\n";
+            cols = Math.floor(12 / data.P_DESCUENTO_06.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DESCUENTO_06.name + "</label>";
+            discountFields += "<" + data.P_DESCUENTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DESCUENTO_06.attributes + ">\n";
+
+            if (data.P_DESCUENTO_06.fieldType == "select") {
+                var cobroArray = data.P_DESCUENTO_06.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
             discountFields += "</div>";
         }
 
@@ -938,9 +951,18 @@ jQuery( document ).ready(function() {
             if (data.P_ANYOS_DTO_06.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='mb-1 quote-discount-years-label' for='quote-discount-years'>" + data.P_ANYOS_DTO_06.name + "</label>";
-            discountFields += "<" + data.P_ANYOS_DTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-years valid' name='quote-discount-years' " + data.P_ANYOS_DTO_06.attributes + ">\n";
+            cols = Math.floor(12 / data.P_ANYOS_DTO_06.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_ANYOS_DTO_06.name + "</label>";
+            discountFields += "<" + data.P_ANYOS_DTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_ANYOS_DTO_06.attributes + ">\n";
+
+            if (data.P_ANYOS_DTO_06.fieldType == "select") {
+                var cobroArray = data.P_ANYOS_DTO_06.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
             discountFields += "</div>";
         }
 
@@ -949,9 +971,18 @@ jQuery( document ).ready(function() {
             if (data.P_SOBREPRIMA_DEL.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='mb-1 quote-discount-sobreprima-label' for='quote-discount-sobreprima'>" + data.P_SOBREPRIMA_DEL.name + "</label>";
-            discountFields += "<" + data.P_SOBREPRIMA_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-sobreprima valid' name='quote-discount-sobreprima' " + data.P_SOBREPRIMA_DEL.attributes + ">\n";
+            cols = Math.floor(12 / data.P_SOBREPRIMA_DEL.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_SOBREPRIMA_DEL.name + "</label>";
+            discountFields += "<" + data.P_SOBREPRIMA_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_SOBREPRIMA_DEL.attributes + ">\n";
+
+            if (data.P_SOBREPRIMA_DEL.fieldType == "select") {
+                var cobroArray = data.P_SOBREPRIMA_DEL.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
             discountFields += "</div>";
         }
 
@@ -960,42 +991,79 @@ jQuery( document ).ready(function() {
             if (data.P_DTO_COMISION_MED.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='mb-1 quote-discount-commision-med-label' for='quote-discount-commision-med'>" + data.P_DTO_COMISION_MED.name + "</label>";
-            discountFields += "<" + data.P_DTO_COMISION_MED.fieldType + hidden + " class='form-control w-100 quote-discount-commision-med valid' name='quote-discount-commision-med' " + data.P_DTO_COMISION_MED.attributes + ">\n";
+            cols = Math.floor(12 / data.P_DTO_COMISION_MED.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DTO_COMISION_MED.name + "</label>";
+            discountFields += "<" + data.P_DTO_COMISION_MED.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DTO_COMISION_MED.attributes + ">\n";
+
+            if (data.P_DTO_COMISION_MED.fieldType == "select") {
+                var cobroArray = data.P_DTO_COMISION_MED.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
             discountFields += "</div>";
         }
 
         if( typeof data.P_DTO_COMISION_DEL !== 'undefined' ) {
             var hidden = "";
-            discountFields +=  "";
-            if(data.P_DTO_COMISION_DEL.hidden == "S"){
+            if (data.P_DTO_COMISION_DEL.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='mb-1 quote-discount-commision-del-label' for='quote-discount-commision-del'>" + data.P_DTO_COMISION_DEL.name + "</label>";
-            discountFields += "<" + data.P_DTO_COMISION_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-commision-del valid' name='quote-discount-commision-del' " + data.P_DTO_COMISION_DEL.attributes + ">\n";
+            cols = Math.floor(12 / data.P_DTO_COMISION_DEL.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DTO_COMISION_DEL.name + "</label>";
+            discountFields += "<" + data.P_DTO_COMISION_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DTO_COMISION_DEL.attributes + ">\n";
+
+            if (data.P_DTO_COMISION_DEL.fieldType == "select") {
+                var cobroArray = data.P_DTO_COMISION_DEL.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
             discountFields += "</div>";
         }
 
         if( typeof data.P_RECARGO_FINANCIACION !== 'undefined' ) {
             var hidden = "";
-            if(data.P_RECARGO_FINANCIACION.hidden == "S"){
+            if (data.P_RECARGO_FINANCIACION.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            benefits +=  "<div class='col-6 impersonator-field'>";
-            benefits += "<label class='quote-discount-recargo-financiacion-label mb-1' for='quote-discount-recargo-financiacion'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
-            benefits +=  "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-recargo-financiacion valid' name='quote-discount-recargo-financiacion' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
+            cols = Math.floor(12 / data.P_RECARGO_FINANCIACION.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
+            discountFields += "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
 
             if (data.P_RECARGO_FINANCIACION.fieldType == "select") {
-
-                var recargoArray = data.P_RECARGO_FINANCIACION.values;
-                Object.keys(recargoArray).forEach(function (key) {
-                    benefits += "<option value='" + key + "'>" + recargoArray[key] + "</option>";
+                var cobroArray = data.P_RECARGO_FINANCIACION.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
                 });
-                benefits += "</select>";
+                discountFields += "</select>";
             }
-            benefits += "</div>";
+            discountFields += "</div>";
+        }
+
+        if( typeof data.P_CANAL_COBRO !== 'undefined' ) {
+            var hidden = "";
+            if (data.P_CANAL_COBRO.hidden == "S") {
+                hidden = " type='hidden' ";
+            }
+            cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-forma-cobro-label mb-1' for='quote-forma-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+            discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-forma-cobro valid' name='quote-forma-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+
+            if (data.P_CANAL_COBRO.fieldType == "select") {
+                var cobroArray = data.P_CANAL_COBRO.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
+            discountFields += "</div>";
         }
 
 
@@ -1279,13 +1347,17 @@ jQuery( document ).ready(function() {
                         if (modificaConfiguracion){
                             modConfig = " configChange";
                         }
+                        var helpFranquicia ='';
+                        if (data.P_FRANQUICIA.WS.textoAyuda != null){
+                            helpFranquicia = '<i class="fas fa-info-circle" title="' + data.P_FRANQUICIA.textoAyuda + '"></i>';
+                        }
                         window.PMEnfGraves = true;
                         var hidden = "";
                         if(data.P_FRANQUICIA.hidden == "S"){
                             hidden = " type='hidden' ";
                         }
                         franchiseField += "";
-                        franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
+                        franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + ""+helpFranquicia+"</label>";
                         franchiseField += "<" + data.P_FRANQUICIA.WS.tipoCampoHTML + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
 
                         if( data.P_FRANQUICIA.fieldType == "select"){
@@ -1449,8 +1521,8 @@ jQuery( document ).ready(function() {
                         }
                         cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
                         discountFields += "<div class='col-"+cols+" impersonator-field'>";
-                        discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
-                        discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+                        discountFields += "<label class='quote-forma-cobro-label mb-1' for='quote-forma-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+                        discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-forma-cobro valid' name='quote-forma-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
 
                         if (data.P_CANAL_COBRO.fieldType == "select") {
                             var cobroArray = data.P_CANAL_COBRO.values;
@@ -1484,14 +1556,24 @@ jQuery( document ).ready(function() {
                 }
 
                 // load discount fields for impersonator users
+                var discountFields = "";
                 if( typeof data.P_DESCUENTO_06 !== 'undefined' ) {
                     var hidden = "";
                     if (data.P_DESCUENTO_06.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='mb-1 quote-discount-label' for='quote-discount'>" + data.P_DESCUENTO_06.name + "</label>";
-                    discountFields += "<" + data.P_DESCUENTO_06.fieldType + hidden + " class='form-control w-100 quote-discount valid' name='quote-discount' " + data.P_DESCUENTO_06.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_DESCUENTO_06.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DESCUENTO_06.name + "</label>";
+                    discountFields += "<" + data.P_DESCUENTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DESCUENTO_06.attributes + ">\n";
+
+                    if (data.P_DESCUENTO_06.fieldType == "select") {
+                        var cobroArray = data.P_DESCUENTO_06.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                        });
+                        discountFields += "</select>";
+                    }
                     discountFields += "</div>";
                 }
 
@@ -1500,9 +1582,18 @@ jQuery( document ).ready(function() {
                     if (data.P_ANYOS_DTO_06.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='mb-1 quote-discount-years-label' for='quote-discount-years'>" + data.P_ANYOS_DTO_06.name + "</label>";
-                    discountFields += "<" + data.P_ANYOS_DTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-years valid' name='quote-discount-years' " + data.P_ANYOS_DTO_06.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_ANYOS_DTO_06.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_ANYOS_DTO_06.name + "</label>";
+                    discountFields += "<" + data.P_ANYOS_DTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_ANYOS_DTO_06.attributes + ">\n";
+
+                    if (data.P_ANYOS_DTO_06.fieldType == "select") {
+                        var cobroArray = data.P_ANYOS_DTO_06.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                        });
+                        discountFields += "</select>";
+                    }
                     discountFields += "</div>";
                 }
 
@@ -1511,9 +1602,18 @@ jQuery( document ).ready(function() {
                     if (data.P_SOBREPRIMA_DEL.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='mb-1 quote-discount-sobreprima-label' for='quote-discount-sobreprima'>" + data.P_SOBREPRIMA_DEL.name + "</label>";
-                    discountFields += "<" + data.P_SOBREPRIMA_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-sobreprima valid' name='quote-discount-sobreprima' " + data.P_SOBREPRIMA_DEL.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_SOBREPRIMA_DEL.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_SOBREPRIMA_DEL.name + "</label>";
+                    discountFields += "<" + data.P_SOBREPRIMA_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_SOBREPRIMA_DEL.attributes + ">\n";
+
+                    if (data.P_SOBREPRIMA_DEL.fieldType == "select") {
+                        var cobroArray = data.P_SOBREPRIMA_DEL.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                        });
+                        discountFields += "</select>";
+                    }
                     discountFields += "</div>";
                 }
 
@@ -1522,38 +1622,55 @@ jQuery( document ).ready(function() {
                     if (data.P_DTO_COMISION_MED.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='mb-1 quote-discount-commision-med-label' for='quote-discount-commision-med'>" + data.P_DTO_COMISION_MED.name + "</label>";
-                    discountFields += "<" + data.P_DTO_COMISION_MED.fieldType + hidden + " class='form-control w-100 quote-discount-commision-med valid' name='quote-discount-commision-med' " + data.P_DTO_COMISION_MED.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_DTO_COMISION_MED.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DTO_COMISION_MED.name + "</label>";
+                    discountFields += "<" + data.P_DTO_COMISION_MED.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DTO_COMISION_MED.attributes + ">\n";
+
+                    if (data.P_DTO_COMISION_MED.fieldType == "select") {
+                        var cobroArray = data.P_DTO_COMISION_MED.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                        });
+                        discountFields += "</select>";
+                    }
                     discountFields += "</div>";
                 }
 
                 if( typeof data.P_DTO_COMISION_DEL !== 'undefined' ) {
                     var hidden = "";
-                    discountFields +=  "";
-                    if(data.P_DTO_COMISION_DEL.hidden == "S"){
+                    if (data.P_DTO_COMISION_DEL.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='mb-1 quote-discount-commision-del-label' for='quote-discount-commision-del'>" + data.P_DTO_COMISION_DEL.name + "</label>";
-                    discountFields += "<" + data.P_DTO_COMISION_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-commision-del valid' name='quote-discount-commision-del' " + data.P_DTO_COMISION_DEL.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_DTO_COMISION_DEL.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DTO_COMISION_DEL.name + "</label>";
+                    discountFields += "<" + data.P_DTO_COMISION_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DTO_COMISION_DEL.attributes + ">\n";
+
+                    if (data.P_DTO_COMISION_DEL.fieldType == "select") {
+                        var cobroArray = data.P_DTO_COMISION_DEL.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                        });
+                        discountFields += "</select>";
+                    }
                     discountFields += "</div>";
                 }
 
                 if( typeof data.P_RECARGO_FINANCIACION !== 'undefined' ) {
                     var hidden = "";
-                    if(data.P_RECARGO_FINANCIACION.hidden == "S"){
+                    if (data.P_RECARGO_FINANCIACION.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields +=  "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='quote-discount-recargo-financiacion-label mb-1' for='quote-discount-recargo-financiacion'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
-                    discountFields +=  "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-recargo-financiacion valid' name='quote-discount-recargo-financiacion' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_RECARGO_FINANCIACION.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
+                    discountFields += "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
 
                     if (data.P_RECARGO_FINANCIACION.fieldType == "select") {
-
-                        var recargoArray = data.P_RECARGO_FINANCIACION.values;
-                        Object.keys(recargoArray).forEach(function (key) {
-                            discountFields += "<option value='" + key + "'>" + recargoArray[key] + "</option>";
+                        var cobroArray = data.P_RECARGO_FINANCIACION.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
                         });
                         discountFields += "</select>";
                     }
@@ -1565,9 +1682,10 @@ jQuery( document ).ready(function() {
                     if (data.P_CANAL_COBRO.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
-                    discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-forma-cobro-label mb-1' for='quote-forma-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+                    discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-forma-cobro valid' name='quote-forma-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
 
                     if (data.P_CANAL_COBRO.fieldType == "select") {
                         var cobroArray = data.P_CANAL_COBRO.values;
@@ -1675,7 +1793,24 @@ jQuery( document ).ready(function() {
         jQuery('#quote .get-rates').fadeIn();
     }
 
-
+    // QUOTE - Validate legal age
+    jQuery("#quote .quote-person-entity-birthdate-show").on('focusout', function(){
+        var actualBirthay = jQuery('.quote-person-entity-birthdate-show').val().substr(6,4);
+        var today = new Date();
+        var actualYear = today.getFullYear();
+        var difYear = actualYear - actualBirthay;
+        if (difYear > 18){
+            console.log('Mayor de edad');
+            jQuery(this).removeClass("invalid");
+            jQuery(this).addClass("valid");
+            jQuery(this).next().hide();
+        } else {
+            console.log('Menor de edad');
+            jQuery(this).addClass("invalid");
+            jQuery(this).removeClass("valid");
+            jQuery(this).next().show();
+        }
+    });
     // QUOTE - Date field behavior (only numbers and /)
     jQuery("#quote").on('keypress',
         ".quote-birthdate, .quote-person-entity-birthdate-show, .quote-another-insurance-ends, .datetimepickerHealth input, .quote-starting-date,  .quote-another-insurance-ends, .date-input",
@@ -1907,7 +2042,7 @@ jQuery( document ).ready(function() {
                 var discountCommisionDel = jQuery('#quote .quote-discount-commision-del').val();
                 var discountRecargoFinanciacion = jQuery('#quote .quote-discount-recargo-financiacion').val();
                 var discountCobro = jQuery('#quote .quote-discount-cobro').val();
-                var formaPago = jQuery('#quote .quote-discount-cobro').val();
+                var formaPago = jQuery('#quote .quote-forma-cobro').val();
 
                 var enfCob = null;
                 var enfSub  = null;
@@ -2478,6 +2613,7 @@ jQuery( document ).ready(function() {
                 var height = jQuery("#quote #quote-height").val();
                 var weight = jQuery("#quote #quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
+                var date = jQuery('#quote .quote-starting-date').val();
 
                 var duration = null;
                 if (window.PMduration != null)
@@ -2502,7 +2638,9 @@ jQuery( document ).ready(function() {
                     height : height,
                     weight : weight,
                     commercialKey : commercialKey,
-                    duration: duration
+                    duration: duration,
+                    date: date
+
                 }
                 //console.log(window.PMgetRatesData);
 
@@ -2998,11 +3136,12 @@ jQuery( document ).ready(function() {
                     //console.log(response['data']['url']);
                     // Stores it to use later
                     window.PMbudgetURL = response['data']['url'];
+                    budgetDownload = '/'+response['data']['url'];
                     jQuery('#quote #step-1 #send-budget').removeAttr("disabled");
                     jQuery('#quote #step-1 #send-budget').addClass("active");
                     jQuery('#quote #step-1 #print-budget').removeAttr("disabled");
                     jQuery('#quote #step-1 #print-budget').addClass("active");
-                    jQuery('a.print-budget').attr("href", response['data']['url']);
+                    jQuery('a.print-budget').attr("href", budgetDownload);
                     jQuery('#quote #generate-budget .loadingIcon').hide();
                     jQuery('#quote #generate-budget').removeAttr("disabled");
                     jQuery(".loader-wrapper-get-budget").hide();
@@ -3098,7 +3237,7 @@ jQuery( document ).ready(function() {
         html += jQuery('#quote #step-1 .print1').html();
         var email = jQuery(".modal-send-email input[type=email]").val();
         var product = jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html();
-        var body = "Le remitimos el presupuesto del coste de su Seguro de " + jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html() +", solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
+        var body = "Le remitimos presupuesto de su Seguro de " + jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html() +", solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
 
         // Send email with attachment from /downloads
         jQuery.ajax({
@@ -3198,6 +3337,7 @@ jQuery( document ).ready(function() {
     // QUOTES - postal code max numbers
     jQuery("#quote .quote-postal-code, " +
         "#quote .quote-company-postal-code," +
+        "#quote .quote-person-entity-postal-code," +
         "#quote .quote-legal-entity-postal-code").on("keyup", function(e){
 
         if (jQuery(this).val().length > 5) {
@@ -3212,6 +3352,9 @@ jQuery( document ).ready(function() {
         }
         if( jQuery(this).hasClass("quote-legal-entity-postal-code") ) {
             currentClass = "quote-legal-entity-postal-code";
+        }
+        if( jQuery(this).hasClass("quote-person-entity-postal-code") ) {
+            currentClass = "quote-person-entity-postal-code";
         }
         resetQuoteCityProvince(currentClass);
 
@@ -3244,6 +3387,11 @@ jQuery( document ).ready(function() {
                             case "quote-legal-entity-postal-code":
                                 quote_load_cityProvince(response.data, "quote-legal-entity-postal-code");
                                 break;
+
+                            case "quote-person-entity-postal-code":
+                                quote_load_cityProvince(response.data, "quote-person-entity-postal-code");
+                                break;
+
                         }
                     } else {
                         //console.error( response.e);
@@ -3298,6 +3446,14 @@ jQuery( document ).ready(function() {
                 jQuery('#quote .quote-legal-entity-province').removeAttr("disabled");
                 jQuery("#quote .quote-legal-entity-postal-code").change();
                 break;
+
+            case "quote-person-entity-postal-code":
+                jQuery('#quote .quote-person-entity-city').html(citiesSelect);
+                jQuery('#quote .quote-person-entity-city').removeAttr("disabled");
+                jQuery('#quote .quote-person-entity-province').html(provincesSelect);
+                jQuery('#quote .quote-person-entity-province').removeAttr("disabled");
+                jQuery("#quote .quote-person-entity-postal-code").change();
+                break;
         }
 
 
@@ -3316,6 +3472,7 @@ jQuery( document ).ready(function() {
                 jQuery(this).hasClass("quote-company-address") ||
                 jQuery(this).hasClass("quote-legal-entity-name") ||
                 jQuery(this).hasClass("quote-legal-entity-address") ||
+                jQuery(this).hasClass("quote-person-entity-address") ||
                 jQuery(this).hasClass("quote-another-insurance-name")  ){
 
                 if (jQuery(this).val().length > 0) {
@@ -3442,7 +3599,8 @@ jQuery( document ).ready(function() {
             if (jQuery(this).hasClass("quote-first-name") ||
                 jQuery(this).hasClass("quote-last-name") ||
                 jQuery(this).hasClass("quote-person-entity-name") ||
-                jQuery(this).hasClass("quote-person-entity-last-name") ) {
+                jQuery(this).hasClass("quote-person-entity-last-name") ||
+                jQuery(this).hasClass("quote-legal-entity-name")) {
                 if (onlyLetters(this.value)==true) {
                     jQuery(this).removeClass("invalid");
                     jQuery(this).addClass("valid");
@@ -3532,6 +3690,32 @@ jQuery( document ).ready(function() {
                 }
             }
 
+            if ( jQuery(this).hasClass("quote-person-entity-postal-code") ) {
+                if (jQuery(this).val().length == 5) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                }
+
+                if (jQuery("#quote .quote-person-entity-city").children("option:selected").val() > 0) {
+                    jQuery("#quote .quote-person-entity-city").removeClass("invalid");
+                    jQuery("#quote .quote-person-entity-city").addClass("valid");
+                } else {
+                    jQuery("#quote .quote-person-entity-city").addClass("invalid");
+                    jQuery("#quote .quote-person-entity-city").removeClass("valid");
+                }
+
+                if (jQuery("#quote .quote-person-entity-province").children("option:selected").val() > 0) {
+                    jQuery("#quote .quote-person-entity-province").removeClass("invalid");
+                    jQuery("#quote .quote-person-entity-province").addClass("valid");
+                } else {
+                    jQuery("#quote .quote-person-entity-province").addClass("invalid");
+                    jQuery("#quote .quote-person-entity-province").removeClass("valid");
+                }
+            }
+
             if (jQuery(this).hasClass("quote-email") ||
                 jQuery(this).hasClass("quote-person-entity-email") ||
                 jQuery(this).hasClass("quote-legal-entity-email") ||
@@ -3552,7 +3736,7 @@ jQuery( document ).ready(function() {
         });
 
     // QUOTE - postal code  and price (only numbers)
-    jQuery( '#quote #personal-info').on('keypress', ".quote-postal-code, .quote-company-postal-code, .quote-legal-entity-postal-code, .quote-another-insurance-price", function (evt) {
+    jQuery( '#quote #personal-info').on('keypress', ".quote-postal-code, .quote-company-postal-code, .quote-legal-entity-postal-code, .quote-person-entity-postal-code, .quote-another-insurance-price", function (evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -3643,7 +3827,8 @@ jQuery( document ).ready(function() {
         '#quote #personal-info .quote-job-location,' +
         '#quote #personal-info .quote-company-address-pick,' +
         '#quote #personal-info .quote-company-address-type,' +
-        '#quote #personal-info .quote-legal-entity-address-type').change( function() {
+        '#quote #personal-info .quote-legal-entity-address-type,' +
+        '#quote #personal-info .quote-person-entity-address-type').change( function() {
 
         if (jQuery(this).children("option:selected").val() != null) {
             jQuery(this).removeClass("invalid");
@@ -3696,9 +3881,9 @@ jQuery( document ).ready(function() {
             .each(function() {
                 if( !jQuery(this).hasClass("valid") ){
                     allValid = false;
-                    // console.log( "FAIL | " + this.className.split(' ')[2] );
+                    //console.log( "FAIL | " + this.className.split(' ')[2] );
                 }else{
-                    // console.log( "OK | " + this.className.split(' ')[2] );
+                    //console.log( "OK | " + this.className.split(' ')[2] );
                 }
             });
         //console.log( "------------------------");
@@ -3714,47 +3899,31 @@ jQuery( document ).ready(function() {
 
     // QUOTES - Saves step 2 data into JS variable
     function storeStep2Data(){
-        if ( jQuery('#quote .quote-legal-entity-name').val() != '' ) {
-            var quoteEntityName = jQuery('#quote .quote-legal-entity-name').val();
-        } else if ( jQuery('#quote .quote-person-entity-name').val() != '' ) {
+        if(jQuery('#quote .natural-person').hasClass("active")) {
             var quoteEntityName = jQuery('#quote .quote-person-entity-name').val();
-        } else {
-            var quoteEntityName = '';
-        }
-        if ( jQuery('#quote .quote-person-entity-last-name').val() != '' ) {
             var quoteEntityLastName= jQuery('#quote .quote-person-entity-last-name').val();
-        } else {
-            var quoteEntityLastName = '';
-        }
-        if ( jQuery('#quote .quote-legal-entity-id').val() != '' ) {
-            var quoteEntityId = jQuery('#quote .quote-legal-entity-id').val();
-        } else if ( jQuery('#quote .quote-person-entity-personal-id').val() != '' ) {
             var quoteEntityId = jQuery('#quote .quote-person-entity-personal-id').val();
-        }
-        if ( jQuery('#quote .quote-legal-entity-email').val() != '' ) {
-            var quoteEntityEmail = jQuery('#quote .quote-legal-entity-email').val();
-        } else if ( jQuery('#quote .quote-person-entity-email').val() != '' ) {
             var quoteEntityEmail = jQuery('#quote .quote-person-entity-email').val();
-        }
-        if ( jQuery('#quote .quote-legal-entity-phone').val() != '' ) {
-            var quoteEntityPhone = jQuery('#quote .quote-legal-entity-phone').val();
-        } else if ( jQuery('#quote .quote-person-entity-phone').val() != '' ) {
             var quoteEntityPhone = jQuery('#quote .quote-person-entity-phone').val();
-        }
-        if(jQuery('#quote .quote-legal-entity-type.active').data("person-type") == undefined) {
             var quoteLegalEntity = 'F';
-        } else {
-            var quoteLegalEntity = jQuery('#quote .quote-legal-entity-type.active').data("person-type");
-        }
-        if(jQuery('#quote .quote-legal-entity-address').val() != '') {
-            var quoteEntityAddress = jQuery('#quote .quote-legal-entity-address').val();
-        } else if ( jQuery('#quote .quote-person-entity-address').val() != '' ) {
             var quoteEntityAddress = jQuery('#quote .quote-person-entity-address').val();
+            var quoteEntityAddressType =jQuery('#quote .quote-person-entity-address-type').val();
+            var quoteEntityCP = jQuery('#quote .quote-person-entity-postal-code').val();
+            var quoteEntityCity = jQuery('#quote .quote-person-entity-city').val();
+            var quoteEntityProvince = jQuery('#quote .quote-person-entity-province').val();
         }
-        if(jQuery('#quote .quote-legal-entity-address-type').val() != '') {
+        if(jQuery('#quote .legal-entity').hasClass("active")) {
+            var quoteEntityName = jQuery('#quote .quote-legal-entity-name').val();
+            var quoteEntityLastName = '';
+            var quoteEntityId = jQuery('#quote .quote-legal-entity-id').val();
+            var quoteEntityEmail = jQuery('#quote .quote-legal-entity-email').val();
+            var quoteEntityPhone = jQuery('#quote .quote-legal-entity-phone').val();
+            var quoteLegalEntity = jQuery('#quote .quote-legal-entity-type.active').data("person-type");
+            var quoteEntityAddress = jQuery('#quote .quote-legal-entity-address').val();
             var quoteEntityAddressType = jQuery('#quote .quote-legal-entity-address-type').val();
-        } else if ( jQuery('#quote .quote-person-entity-address-type').val() != '' ) {
-            var quoteEntityAddressType = jQuery('#quote .quote-person-entity-address-type').val();
+            var quoteEntityCP = jQuery('#quote .quote-legal-entity-postal-code').val();
+            var quoteEntityCity = jQuery('#quote .quote-legal-entity-city').val();
+            var quoteEntityProvince = jQuery('#quote .quote-legal-entity-province').val();
         }
 
         window.PMquoteStep2 = {
@@ -3795,13 +3964,14 @@ jQuery( document ).ready(function() {
             legalEntityBirthay : jQuery('#quote .quote-person-entity-birthdate-show').val(),
             legalEntityAddressType : quoteEntityAddressType,
             legalEntityAddress : quoteEntityAddress,
-            legalEntityPostalCode : jQuery('#quote .quote-legal-entity-postal-code').val(),
-            legalEntityCity : jQuery('#quote .quote-legal-entity-city').val(),
-            legalEntityProvince : jQuery('#quote .quote-legal-entity-province').val(),
+            legalEntityPostalCode : quoteEntityCP,
+            legalEntityCity : quoteEntityCity,
+            legalEntityProvince : quoteEntityProvince,
 
             additionalBeneficiary : jQuery('#quote .quote-beneficiary').val(),
             additionalIncreasedValue : jQuery('#quote .quote-increased-value').val()
         }
+        console.log(window.PMquoteStep2);
     }
 
     // QUOTES - step 2 previous button
@@ -4524,7 +4694,9 @@ jQuery( document ).ready(function() {
                         if( data.P_CODIGO_ESTADO != 'V') {
                             quote_load_policyCPRequestDownload(data.P_NUMERO_POLIZA);
                             quote_load_policyCGRequestDownload(data.P_NUMERO_POLIZA);
+                            quote_load_receiptRequestDownload(data.P_NUMERO_POLIZA);
                             jQuery('#dowload-condition').fadeIn();
+                            jQuery('#dowload-receipt').fadeIn();
                         }
                         break;
 
@@ -4701,6 +4873,45 @@ jQuery( document ).ready(function() {
         jQuery('#send-policy-request-cg .productor').prop("value",window.PMquoteStep1.productor);
         jQuery('#send-policy-request-cg .refId').prop("value", docId);
 
+
+    }
+    function quote_load_receiptRequestDownload(docId){
+        var url = "/get-data";
+        var ws = "getReceipt";
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                ws: ws,
+                docId : docId
+            },
+            success: function (response) {
+                if (response['success'] == true) {
+                    var receiptNumber = response.data.number;
+                    var productor = window.PMquoteStep1.productor;
+                    var source = 5;
+                    var type = "REC";
+                    var format  = "A4";
+
+                    jQuery('#quote-download-receipt-form .docId').prop("value", receiptNumber );
+                    jQuery('#quote-download-receipt-form .productor').prop("value", productor);
+                    jQuery('#quote-download-receipt-form .source').prop("value", source);
+                    jQuery('#quote-download-receipt-form .type').prop("value", type);
+                    jQuery('#quote-download-receipt-form .format').prop("value",format);
+
+                    jQuery('#send-policy-request-cg .productor').prop("value",window.PMquoteStep1.productor);
+                    jQuery('#send-policy-request-cg .refId').prop("value", receiptNumber );
+                } else {
+                    displayModal("connection", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
+                    console.error(response.e);
+                }
+            },
+            error: function (response) {
+                displayModal("connection", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
+                console.error(lang["WS.error"]);
+            }
+        });
 
     }
 
@@ -6053,8 +6264,14 @@ jQuery( document ).ready(function() {
                 jQuery('#quote .quote-legal-entity-province').html("");
                 jQuery('#quote .quote-legal-entity-province').attr("disabled","disabled");
                 break;
-        }
 
+            case "quote-person-entity-postal-code":
+                jQuery('#quote .quote-person-entity-city').html("");
+                jQuery('#quote .quote-person-entity-city').attr("disabled","disabled");
+                jQuery('#quote .quote-person-entity-province').html("");
+                jQuery('#quote .quote-person-entity-province').attr("disabled","disabled");
+                break;
+        }
     }
 
     function resetQuoteCompanyCityProvince(){
