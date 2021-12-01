@@ -1953,6 +1953,7 @@ class PMWShandler
      * @param "holderType" - holder type
      * @param "holderLanguage" - holder language
      * @param "holderName" - holder name
+     * @param "legalEntityName" - holder name
      * @param "holderSurname" - holder surname
      * @param "holderBirthdate" - holder birthdate
      * @param "hiring" - Type of hiring
@@ -2006,6 +2007,7 @@ class PMWShandler
             $parameters["holderAddress"] = $parameters["address"];
             $parameters["holderCity"] = $parameters["city"];
             $parameters["holderProvince"] = $parameters["province"];
+            $parameters["holderType"] = 'F';
         }
 
         // get doc types from different variables
@@ -2024,8 +2026,8 @@ class PMWShandler
         if( app('session')->has('healthForm') ){
             $parameters["healthQ"] = session('healthForm');
         }
-        //app('debugbar')->info('PMWS HANDLER $parameters');
-        //app('debugbar')->info($parameters);
+        app('debugbar')->info('PMWS HANDLER submit policy $parameters');
+        app('debugbar')->info($parameters);
         $response = $this->PMWS->submitPolicy($parameters);
         //app('debugbar')->info('PMWS HANDLER $response');
         //app('debugbar')->info($response);

@@ -345,7 +345,7 @@
     "quote.modal.underage.message" : "La tramitación de una póliza para un menor de edad debe realizarse a través de un tutor legal contactando directamente con nosotros.",
     "quote.modal.underage.button" : "De acuerdo",
     "quote.modal.error" : "Se ha producido un error",
-    "quote.modal.pending" : "Solicitud generada",
+    "quote.modal.pending" : "Solicitud pendiente",
     "quote.modal.close" : "Cerrar",
 
     "modal.title.sendEmail" : "Enviar información por e-mail",

@@ -3911,8 +3911,7 @@ jQuery( document ).ready(function() {
             var quoteEntityCP = jQuery('#quote .quote-person-entity-postal-code').val();
             var quoteEntityCity = jQuery('#quote .quote-person-entity-city').val();
             var quoteEntityProvince = jQuery('#quote .quote-person-entity-province').val();
-        }
-        if(jQuery('#quote .legal-entity').hasClass("active")) {
+        } else if(jQuery('#quote .legal-entity').hasClass("active")) {
             var quoteEntityName = jQuery('#quote .quote-legal-entity-name').val();
             var quoteEntityLastName = '';
             var quoteEntityId = jQuery('#quote .quote-legal-entity-id').val();
@@ -3924,6 +3923,18 @@ jQuery( document ).ready(function() {
             var quoteEntityCP = jQuery('#quote .quote-legal-entity-postal-code').val();
             var quoteEntityCity = jQuery('#quote .quote-legal-entity-city').val();
             var quoteEntityProvince = jQuery('#quote .quote-legal-entity-province').val();
+        } else {
+            var quoteEntityName = '';
+            var quoteEntityLastName = '';
+            var quoteEntityId = '';
+            var quoteEntityEmail = '';
+            var quoteEntityPhone = '';
+            var quoteLegalEntity = '';
+            var quoteEntityAddress = '';
+            var quoteEntityAddressType = '';
+            var quoteEntityCP = '';
+            var quoteEntityCity = '';
+            var quoteEntityProvince = '';
         }
 
         window.PMquoteStep2 = {
@@ -4521,7 +4532,7 @@ jQuery( document ).ready(function() {
 
             var holderName  = window.PMquoteStep2.legalEntityName;
             var holderSurname = window.PMquoteStep2.legalLastName;
-            var holderDocId  = window.PMquoteStep2.legalEntityId
+            var holderDocId  = window.PMquoteStep2.legalEntityId;
             // var holderDocType  =   Generated on PMWShandler;
             var holderEmail  = window.PMquoteStep2.legalEntityEmail;
             var holderPhone  = window.PMquoteStep2.legalEntityPhone;
