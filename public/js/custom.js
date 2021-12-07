@@ -2157,7 +2157,7 @@ jQuery( document ).ready(function() {
                     date: date,
                     formaPago: formaPago
                 }
-
+                console.log(window.PMgetRatesData);
                 jQuery.ajax({
                     type: "POST",
                     url: url,
@@ -3569,7 +3569,7 @@ jQuery( document ).ready(function() {
                 return regex.test(texto);
             }
             function onlyLetters(texto) {
-                var regex = /^[a-zA-Z ]+$/;
+                var regex = /^[a-zçA-ZÇ\u00f1\u00d1]+$/;
                 return regex.test(texto);
             }
             if (jQuery(this).hasClass("quote-company-phone")) {

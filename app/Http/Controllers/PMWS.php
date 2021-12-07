@@ -1101,7 +1101,7 @@ class PMWS extends controller
         if ( isset($data["paymentChannel"]) ) {
             $fData[] = array(
                 "nombreParametro"	=> "P_FORMA_PAGO",
-                "valorParametro"	=> $data["formaPago"]
+                "valorParametro"	=> $data["paymentChannel"]
             );
         }
 
@@ -1696,8 +1696,8 @@ class PMWS extends controller
     public function submitPolicy($data) {
 
         //app('debugbar')->info('submitPolicy: $data["productId"]: ');
-        //app('debugbar')->info($data["productId"]);
-        //app('debugbar')->info($data);
+        app('debugbar')->info('$data submitPolicy');
+        app('debugbar')->info($data);
         $endpoint = $this->baseUrl . "/v3/wspoliza" . $this->environment . "/Poliza?WSDL";
         $client = new SoapClient($endpoint);
 
@@ -1824,18 +1824,18 @@ class PMWS extends controller
                 "nombreParametro"	=> "P_TIENE_OTRO_SEGURO",
                 "valorParametro"	=> $data["hasMorePolicies"]);
 
-            if ( $data["hasMorePolicies"] == "S" ) {
-                if ( isset($data["extraCompanyName"]) ) {
+            if ( $data["hasMorePolicies"] = "S" ) {
+                if ( isset($data["anotherInsuranceName"]) ) {
                     $inputData[] =  array(
                         "nombreParametro"	=> "P_COMPAÑIA_OTRO_SEGURO",
                         "valorParametro"	=> $data["anotherInsuranceName"]);
                 }
-                if ( isset($data["extraInsurancePrice"]) ) {
+                if ( isset($data["anotherInsuranceAmount"]) ) {
                     $inputData[] =  array(
                         "nombreParametro"	=> "P_CAPITAL_OTRO_SEGURO",
-                        "valorParametro"	=> $data["anotherInsurancePrice"]);
+                        "valorParametro"	=> $data["anotherInsuranceAmount"]);
                 }
-                if ( isset($data["extraInsuranceDate"]) ) {
+                if ( isset($data["anotherInsuranceEnds"]) ) {
                     $inputData[] =  array(
                         "nombreParametro"	=> "P_OTRO_SEGURO_FECHA_VENCIM",
                         "valorParametro"	=> $data["anotherInsuranceEnds"]);
@@ -1985,8 +1985,8 @@ class PMWS extends controller
                 "pDatosConexion"	=> $cData
             );
         }
-        //app('debugbar')->info('$params submit policy');
-        //app('debugbar')->info($params);
+        app('debugbar')->info('$params submit policy');
+        app('debugbar')->info($params);
         //file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/log.txt', serialize($params) );
         $result = $client->altaPoliza($params);
         //app('debugbar')->info('$result submit policy');

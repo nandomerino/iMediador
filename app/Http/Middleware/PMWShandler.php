@@ -1216,11 +1216,14 @@ class PMWShandler
                     }
 
                     // Get price
-                    foreach (array_reverse($row->coberturas->array) as $row2) {
-
+                    if (is_array($row->coberturas->array)) {
+                        foreach (array_reverse($row->coberturas->array) as $row2) {
                             $rates["table"][$fila][$columna]["price"] = str_replace(",", ".",$row2->capital);
                             $messages[$fila][$columna] = str_replace(",", ".", $row2->capital);
-
+                        }
+                    } else {
+                        $rates["table"][$fila][$columna]["price"] = str_replace(",", ".",$row->coberturas->array->capital);
+                        $messages[$fila][$columna] = str_replace(",", ".", $row->coberturas->array->capital);
                     }
 
                     // Get description option)
@@ -1234,14 +1237,28 @@ class PMWShandler
 
                     // Get coverages (coberturas)
                     $j = 0;
-                    foreach ($row->coberturas->array as $row2) {
-                        $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
-                        $j++;
+                    if (is_array($row->coberturas->array)){
+
+                        foreach ($row->coberturas->array as $row2) {
+                            $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
+                            $j++;
+                        }
+                    } else {
+
+                        foreach ($row->coberturas as $row2) {
+                            $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
+                            $j++;
+                        }
                     }
 
                     // Get quotes
