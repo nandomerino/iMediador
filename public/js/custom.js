@@ -1866,10 +1866,13 @@ jQuery( document ).ready(function() {
         jQuery("#quote .product-extra-info").on('keypress', ".quote-benefit[required]", function (evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            if (charCode > 31 && jQuery(this).val().indexOf('.') != -1 && (charCode < 48 || charCode > 57)) {
                 return false;
             }
 
+            if ((jQuery(this).val().indexOf('.') != -1) && (jQuery(this).val().substring(jQuery(this).val().indexOf('.')).length > 2) ) {
+                return false;
+            }
             enableQuoteButton();
         });
 
@@ -1926,7 +1929,6 @@ jQuery( document ).ready(function() {
         }
 
         if (jQuery(element).hasClass("quote-birthdate") ||
-            jQuery(element).hasClass("quote-starting-date") ||
             jQuery(element).hasClass("quote-person-entity-birthdate-show")) {
             var valid;
 
@@ -1934,7 +1936,7 @@ jQuery( document ).ready(function() {
                 var splitDate = jQuery(element).val().split("/");
                 if (splitDate[0] >= 1 && splitDate[0] <= 31) {
                     if (splitDate[1] >= 1 && splitDate[1] <= 12) {
-                        if (splitDate[2] >= 1920 && splitDate[2] <= 2021) {
+                        if (splitDate[2] >= 1920 && splitDate[2] <= 2022) {
                             valid = true;
                         } else {
                             valid = false;
@@ -3569,7 +3571,7 @@ jQuery( document ).ready(function() {
                 return regex.test(texto);
             }
             function onlyLetters(texto) {
-                var regex = /^[a-zçA-ZÇ\u00f1\u00d1]+$/;
+                var regex = /^[a-zçA-ZÇ\u00f1\u00d1\s]+$/;
                 return regex.test(texto);
             }
             if (jQuery(this).hasClass("quote-company-phone")) {
@@ -4214,7 +4216,7 @@ jQuery( document ).ready(function() {
                         var splitDate = jQuery(this).val().split("/");
                         if (splitDate[0] >= 1 && splitDate[0] <= 31) {
                             if (splitDate[1] >= 1 && splitDate[1] <= 12) {
-                                if (splitDate[2] >= 1920 && splitDate[2] <= 2021) {
+                                if (splitDate[2] >= 1920 && splitDate[2] <= 2022) {
                                     valid = true;
                                 } else {
                                     valid = false;
@@ -4492,6 +4494,7 @@ jQuery( document ).ready(function() {
             var weight = window.PMquoteStep1.weight;
             var paymentMethod  = window.PMquoteStep1.billingCycle;
             var hiring = window.PMquoteStep1.hiring;
+            var jobType = window.PMgetRatesData.jobType;
             if (hiring.length > 1) {
                 hiring= jQuery('#signing-method').val();
             }
@@ -4584,6 +4587,7 @@ jQuery( document ).ready(function() {
                     productId : productId,
                     startingDate : startingDate,
                     profession : profession,
+                    jobType : jobType,
                     birthdate : birthdate,
                     gender : gender,
                     height : height,
@@ -4846,6 +4850,18 @@ jQuery( document ).ready(function() {
         */
 
     }
+
+    jQuery('#quote #step-5 #quote-download-policy-request').click(function(e){
+        jQuery(".loader-wrapper-download").show();
+        jQuery(".loader-wrapper-download").show();
+    });
+    jQuery('#quote #step-5 #quote-download-policy-cp-request').click(function(e){
+        jQuery(".loader-wrapper-download").show();
+    });
+    jQuery('#quote #step-5 #quote-download-policy-receipt-request').click(function(e){
+        jQuery(".loader-wrapper-download").show();
+    });
+
     // QUOTE - gets the policy request to download and sign
     function quote_load_policyCPRequestDownload(docId){
 
@@ -4925,7 +4941,6 @@ jQuery( document ).ready(function() {
         });
 
     }
-
 
     // ------------------- STEP 5 ----------------------
 
@@ -5017,6 +5032,7 @@ jQuery( document ).ready(function() {
 
         // Load Freelancers fee
         var freelancerFees = "";
+        console.log(window.PMadvisorCuotaAutonomos);
         Object.keys(window.PMadvisorCuotaAutonomos).forEach(function(key) {
             freelancerFees += "<option value='" + key + "'>" + window.PMadvisorCuotaAutonomos[key]['nombre'] + "</option>\n";
         });

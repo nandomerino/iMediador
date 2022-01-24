@@ -1710,8 +1710,8 @@ class PMWS extends controller
             "valorParametro"	=> $data["productId"]);
 
         $scheme = "A";
-        if ( isset($data["scheme"]) ) {
-            $scheme = $data["scheme"];
+        if ( isset($data["jobType"]) ) {
+            $scheme = $data["jobType"];
         }
         $inputData[] =  array(
             "nombreParametro"	=> "P_REGIMEN_SEG_SOCIAL",

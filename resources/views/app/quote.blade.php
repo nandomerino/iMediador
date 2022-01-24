@@ -935,7 +935,7 @@
                                             <div class="row pt-xl-3">
                                                 <div class="col-12 col-lg-4">
                                                     <label for="quote-person-entity-name" class="quote-person-entity-name-label mb-1">{{ __('text.firstName') }}</label>
-                                                    <input type="text" class="form-control w-100 quote-person-entity-name" name="quote-person-entity-name" required maxlength="100">
+                                                    <input type="text" class="form-control w-100 quote-person-entity-name" name="quote-person-entity-name" required maxlength="20">
                                                     <div class="error" style="display:none;">{{ __('quote.name.error') }}</div>
                                                 </div>
                                                 <div class="col-12 col-lg-4">
@@ -1422,7 +1422,7 @@
                                             <input type="hidden" name="type" class="type" value="">
                                             <input type="hidden" name="format" class="format" value="">
                                             <input type="hidden" name="downloadType" class="downloadType" value="document">
-                                            <input type="submit" id="quote-download-policy-cp-request" class="quote-download-policy-cp-request"  value="{!! __('text.download') !!}">
+                                            <input type="submit" id="quote-download-policy-receipt-request" class="quote-download-policy-receipt-request"  value="{!! __('text.download') !!}">
                                         </form>
                                     </div>
                                 </div>
@@ -1438,6 +1438,10 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="loader-wrapper-download w-100 pt-5 text-center" style="display:none;">
+                        <h3 class="w-100 text-center"> Estamos generando el archivo.</h3>
+                        <i class="fas fa-circle-notch fa-spin fa-2x txt-navy-blue"></i>
                     </div>
                 </div>
                 <div class="logalty-synchronous-widget logalty-synchronous-method signing-method-screen" style="display: none;">

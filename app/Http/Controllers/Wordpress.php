@@ -35,7 +35,7 @@ class Wordpress extends Controller
         if( isset($query) ){
             // Gets data as JSON
 
-            
+
             $json = file_get_contents($query);
             if( $json != "[]" ){
                 // Decodes JSON

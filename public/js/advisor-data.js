@@ -19,10 +19,10 @@ window.PMadvisorRecibo = {
 }
 
 window.PMadvisorCuotaAutonomos = {
-    0 : { nombre : "CUOTA MÍNIMA 2020 (prov)", baseCotizacion : 944.40, tipoAplicable : 30.30, cuota : 286.15 },
+    0 : { nombre : "CUOTA MÍNIMA 2022 (prov)", baseCotizacion : 944.40, tipoAplicable : 30.30, cuota : 286.15 },
     1 : { nombre : "TARIFA PLANA 60 €", baseCotizacion : 944.40, tipoAplicable : "TARIFA PLANA", cuota : 60 },
     2 : { nombre : "MAX. > 47 AÑOS", baseCotizacion : 2077.88, tipoAplicable : 30.30, cuota : 629.60 },
-    3 : { nombre : "CUOTA MÁXIMA 2020 (prov)", baseCotizacion : 4070.10, tipoAplicable : 30.30, cuota : 1233.24 },
+    3 : { nombre : "CUOTA MÁXIMA 2022 (prov)", baseCotizacion : 4070.10, tipoAplicable : 30.30, cuota : 1233.24 },
     4 : { nombre : "CUOTA MÍNIMA SOCIETARIOS", baseCotizacion : 1214.08, tipoAplicable : 30.30, cuota : 367.87 },
     5 : { nombre : "Unos 300 euros", baseCotizacion : 990.10, tipoAplicable : 30.30, cuota : 300 },
     6 : { nombre : "Unos 500 euros", baseCotizacion : 1650.17, tipoAplicable : 30.30, cuota : 500 },

@@ -56,6 +56,8 @@
                             $alreadyGotNext = false;
                             $progressBar = [];
                             $currentProgress = $row["valorActual"];
+                            //$porcentajeActualConseguido = '0';
+                            //$anchoActual = '0';
 
                             $i = 0;
 
