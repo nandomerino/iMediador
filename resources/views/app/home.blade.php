@@ -9,8 +9,8 @@
     $pm = new \App\Http\Middleware\PMWShandler();
     $currentLanguage = App::getLocale();
     $campaignGoals = $pm->getGoals();
-    app('debugbar')->info('campaignGoals');
-    app('debugbar')->info($campaignGoals);
+    //app('debugbar')->info('campaignGoals');
+    //app('debugbar')->info($campaignGoals);
 
 @endphp
 
@@ -56,8 +56,7 @@
                             $alreadyGotNext = false;
                             $progressBar = [];
                             $currentProgress = $row["valorActual"];
-                            //$porcentajeActualConseguido = '0';
-                            //$anchoActual = '0';
+
 
                             $i = 0;
 

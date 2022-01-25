@@ -7,7 +7,7 @@
             <img class="navbar-brand" src="/img/logo-pm-small-blanco.png" alt="{{ __('menu.logo.pm.text') }}">
         </a>
     </div>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse 1" id="navbarNav">
         <ul class="navbar-nav w-100">
             <li class="nav-item m-auto">
                 <img src="/img/house.png" class="d-inline mr-1">
@@ -17,7 +17,7 @@
                 <a class="nav-link quote-link" href="{{ __('menu.quote.url') }}">{{ __('menu.quote.text') }}</a>
             </li>
             <li class="nav-item m-auto">
-                <a class="nav-link quote-link" href="{{ __('menu.queries.url') }}">{{ __('menu.queries.text') }}</a>
+                <a class="nav-link quote-link" href="https://demo.laprevisionmallorquina.com/iMediador_demo/index.jsp?username={{ session('login.user') }}&password={{ session('login.pass') }}&destino=consultas" target="_blank">{{ __('menu.queries.text') }}</a>
             </li>
             <li class="nav-item m-auto">
                 <a class="nav-link" href="{{ __('menu.documentation.url') }}">{{ __('menu.documentation.text') }}</a>

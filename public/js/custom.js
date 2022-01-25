@@ -4881,7 +4881,8 @@ jQuery( document ).ready(function() {
         jQuery( "#quote-download-policy" ).removeClass('active');
         jQuery( "#quote-download-policy" ).attr('disabled','disabled');
         jQuery('#quote-download-form').submit();
-        jQuery('.loader-wrapper-download').show();
+        //jQuery('.loader-wrapper-download').show();
+        //jQuery('.loader-wrapper-download').delay(30000).hide;
     });
 
     jQuery( "#test-download" ).click(function() {
@@ -4889,14 +4890,16 @@ jQuery( document ).ready(function() {
         jQuery( "#test-download" ).attr('disabled','disabled');
         jQuery('#quote-download-policy-cg-form').submit();
         jQuery('#quote-download-policy-cp-form').submit();
-        jQuery('.loader-wrapper-download').show();
+        //jQuery('.loader-wrapper-download').show();
+        //jQuery('.loader-wrapper-download').delay(60000).hide;
     });
 
     jQuery( "#quote-download-receipt" ).click(function() {
         jQuery( "#quote-download-receipt" ).removeClass('active');
         jQuery( "#quote-download-receipt" ).attr('disabled','disabled');
         jQuery('#quote-download-receipt-form').submit();
-        jQuery('.loader-wrapper-download').show();
+        //jQuery('.loader-wrapper-download').show();
+        //jQuery('.loader-wrapper-download').delay(30000).hide;
     });
 
     // QUOTE - gets the policy request to download and sign
