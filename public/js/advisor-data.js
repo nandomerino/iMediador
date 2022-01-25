@@ -1,7 +1,7 @@
 window.PMajusteRecomendacion = 1;
 window.PMajustePrimaTotalMensual = 1.05;
 window.PMadvisorSeguridadSocial = "AUTÓNOMO (RETA)";
-window.PMadvisorValorResultante = 286.15;
+window.PMadvisorValorResultante = 293.94;
 window.PMadvisorMermaDiaria = 60;
 window.PMadvisorValorRecomendado = 60;
 window.PMadvisorMaxAge = 65;
@@ -19,14 +19,14 @@ window.PMadvisorRecibo = {
 }
 
 window.PMadvisorCuotaAutonomos = {
-    0 : { nombre : "CUOTA MÍNIMA 2022 (prov)", baseCotizacion : 944.40, tipoAplicable : 30.30, cuota : 286.15 },
-    1 : { nombre : "TARIFA PLANA 60 €", baseCotizacion : 944.40, tipoAplicable : "TARIFA PLANA", cuota : 60 },
-    2 : { nombre : "MAX. > 47 AÑOS", baseCotizacion : 2077.88, tipoAplicable : 30.30, cuota : 629.60 },
-    3 : { nombre : "CUOTA MÁXIMA 2022 (prov)", baseCotizacion : 4070.10, tipoAplicable : 30.30, cuota : 1233.24 },
-    4 : { nombre : "CUOTA MÍNIMA SOCIETARIOS", baseCotizacion : 1214.08, tipoAplicable : 30.30, cuota : 367.87 },
-    5 : { nombre : "Unos 300 euros", baseCotizacion : 990.10, tipoAplicable : 30.30, cuota : 300 },
-    6 : { nombre : "Unos 500 euros", baseCotizacion : 1650.17, tipoAplicable : 30.30, cuota : 500 },
-    7 : { nombre : "Unos 1000 euros", baseCotizacion : 3300.33, tipoAplicable : 30.30, cuota : 1000 },
+    0 : { nombre : "CUOTA MÍNIMA 2022 (prov)", baseCotizacion : 960.60, tipoAplicable : 30.60, cuota : 293.94 },
+    1 : { nombre : "TARIFA PLANA 60 €", baseCotizacion : 960.60, tipoAplicable : "TARIFA PLANA", cuota : 60 },
+    2 : { nombre : "MAX. > 47 AÑOS", baseCotizacion : 2133.20, tipoAplicable : 30.60, cuota : 646.64 },
+    3 : { nombre : "CUOTA MÁXIMA 2022 (prov)", baseCotizacion : 4139.40, tipoAplicable : 30.60, cuota : 1266.66 },
+    4 : { nombre : "CUOTA MÍNIMA SOCIETARIOS", baseCotizacion : 1214.08, tipoAplicable : 30.60, cuota : 377.85 },
+    5 : { nombre : "Unos 300 euros", baseCotizacion : 990.10, tipoAplicable : 30.60, cuota : 300 },
+    6 : { nombre : "Unos 500 euros", baseCotizacion : 1650.17, tipoAplicable : 30.60, cuota : 500 },
+    7 : { nombre : "Unos 1000 euros", baseCotizacion : 3300.33, tipoAplicable : 30.60, cuota : 1000 },
 }
 
 window.PMadvisorGrupoRiesgo= {

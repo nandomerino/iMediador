@@ -338,6 +338,34 @@ jQuery( document ).ready(function() {
         });
     });
 
+    // QUOTE - products list
+    jQuery("#recogery-pass").on('click', function (e) {
+
+
+        var url = "/recovery-pass";
+        var ws = "recoveryPass";
+        var productor = jQuery("#quote-productor").val();
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                ws: ws,
+                productor: productor
+            },
+            success: function (response) {
+                if (response['success'] == true) {
+                    console.log('Email enviado');
+                } else {
+                    console.error( response.e);
+                }
+            },
+            error: function (response) {
+                console.error( lang["WS.error"] );
+            }
+        });
+    });
+
     // QUOTE - Loads product variations dynamically from WS
     function quote_load_ProductVariations( data ){
         // Stores this info in a global array to access it later on
@@ -593,7 +621,7 @@ jQuery( document ).ready(function() {
             hidden = " type='hidden' ";
         }
         var jobTypeField = "<div class='col-6'>";
-        jobTypeField += "<label class='quote-job-type-label mb-1' for='quote-job-type'>" + data.P_REGIMEN_SEG_SOCIAL.name + "</label>";
+        jobTypeField += "<label class='quote-job-type-label mb-1' for='quote-job-type'>" + data.P_REGIMEN_SEG_SOCIAL.WS.etiquetaPre + "</label>";
         jobTypeField += "<" + data.P_REGIMEN_SEG_SOCIAL.fieldType + hidden + " class='form-control w-100 quote-job-type valid' name='quote-job-type' " + data.P_REGIMEN_SEG_SOCIAL.attributes + ">\n";
 
         if( data.P_REGIMEN_SEG_SOCIAL.fieldType == "select"){
@@ -634,7 +662,6 @@ jQuery( document ).ready(function() {
         duration += '</div>';
         // Load commercial key
         window.PMcommercialKey = data.P_CLAVE_COMERCIAL;
-        //console.log(data.P_CLAVE_COMERCIAL);
         modificaConfiguracion = data.P_CLAVE_COMERCIAL.WS.modificaConfiguracion.toUpperCase()=="S";
         var modConfig = "";
         if (modificaConfiguracion){
@@ -1071,7 +1098,7 @@ jQuery( document ).ready(function() {
         //console.log(data);
 
         jQuery('#quote .product-extra-info .quote-job').html(jobSelect);
-        jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.name);
+        jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.WS.etiquetaPre);
         jQuery('#quote .product-extra-info .quote-job-type').html(jobTypeSelect);
         jQuery('#quote .product-extra-info .quote-commercialKey').html(commercialKey);
         jQuery('#quote .product-extra-info .quote-gender').html(genderSelect);
@@ -4022,7 +4049,6 @@ jQuery( document ).ready(function() {
 
                 },
                 success: function (response) {
-                    console.log(response);
                     if (response['success'] == true) {
                         if (response.data.html == 'KO') {
                             healthFormRequired = false;
@@ -4081,6 +4107,8 @@ jQuery( document ).ready(function() {
 
     // QUOTES - Loads html code of health form
     function quote_load_healthForm(data){
+        console.log('healthForm');
+        console.log(data);
         window.PMquoteHealthFormId = data.id;
         jQuery('#quote #health-form .dynamic-content').html(data.html);
         /*if( jQuery( ".datetimepickerHealth input" ).length ){
@@ -4810,8 +4838,6 @@ jQuery( document ).ready(function() {
         jQuery('#quote-download-form .type').prop("value", type);
         jQuery('#quote-download-form .format').prop("value",format);
 
-
-
         jQuery('#send-policy-request .productor').prop("value",window.PMquoteStep1.productor);
         jQuery('#send-policy-request .refId').prop("value", docId);
 
@@ -4851,15 +4877,26 @@ jQuery( document ).ready(function() {
 
     }
 
-    jQuery('#quote #step-5 #quote-download-policy-request').click(function(e){
-        jQuery(".loader-wrapper-download").show();
-        jQuery(".loader-wrapper-download").show();
+    jQuery( "#quote-download-policy" ).click(function() {
+        jQuery( "#quote-download-policy" ).removeClass('active');
+        jQuery( "#quote-download-policy" ).attr('disabled','disabled');
+        jQuery('#quote-download-form').submit();
+        jQuery('.loader-wrapper-download').show();
     });
-    jQuery('#quote #step-5 #quote-download-policy-cp-request').click(function(e){
-        jQuery(".loader-wrapper-download").show();
+
+    jQuery( "#test-download" ).click(function() {
+        jQuery( "#test-download" ).removeClass('active');
+        jQuery( "#test-download" ).attr('disabled','disabled');
+        jQuery('#quote-download-policy-cg-form').submit();
+        jQuery('#quote-download-policy-cp-form').submit();
+        jQuery('.loader-wrapper-download').show();
     });
-    jQuery('#quote #step-5 #quote-download-policy-receipt-request').click(function(e){
-        jQuery(".loader-wrapper-download").show();
+
+    jQuery( "#quote-download-receipt" ).click(function() {
+        jQuery( "#quote-download-receipt" ).removeClass('active');
+        jQuery( "#quote-download-receipt" ).attr('disabled','disabled');
+        jQuery('#quote-download-receipt-form').submit();
+        jQuery('.loader-wrapper-download').show();
     });
 
     // QUOTE - gets the policy request to download and sign
@@ -6143,18 +6180,6 @@ jQuery( document ).ready(function() {
                 break;
         }
     });
-    jQuery('#quote-download-policy-cp-request').on('click', function () {
-        setTimeout(function(){ jQuery('#quote-download-policy-cg-request').trigger('click'); }, 30000);
-    });
-
-
-
-
-
-
-
-
-
 
     // ------------------- RESETS ----------------------
 

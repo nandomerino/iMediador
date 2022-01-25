@@ -217,6 +217,10 @@ class PMWShandler
         return $response;
     }
 
+
+
+
+
     /**
      * @param $productor
      * @param $productGroup
@@ -446,8 +450,8 @@ class PMWShandler
         // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productId . " | " . $productVariationId . " | " . $entryChannel . " | " . $application);
 
         $response = $this->PMWS->getProductConfiguration($this->user, $this->pass, $this->language, $productor, $productId, $productModalityId, $entryChannel, $application, $this->userPM, $modifiedField);
-        app('debugbar')->info('pmwshandler getProductConfiguration');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('pmwshandler getProductConfiguration');
+        //app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S" ){
@@ -533,7 +537,7 @@ class PMWShandler
                     }
                 }
 
-                if( $row->nombre == "porcentajeActualConseguido"){
+                if( $row->nombre == "P_REGIMEN_SEG_SOCIAL"){
                     $productConfig[$row->nombre]["name"] = $row->etiquetaPre;
                     $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
                     $productConfig[$row->nombre]["attributes"] = $row->atributosHTML;
@@ -1352,8 +1356,8 @@ class PMWShandler
             $this->pass = $p;
         }
         $response = $this->PMWS->getHealthForm($this->user, $this->pass, $this->language, $productor, $product, $commercialKey);
-        //app('debugbar')->info('healthform $response');
-        //app('debugbar')->info($response);
+        app('debugbar')->info('healthform $response');
+        app('debugbar')->info($response);
         $data = $response->return;
         if( $data->correcto == "S" ){
             $healthForm = array();
@@ -1365,7 +1369,7 @@ class PMWShandler
                         $healthForm["groups"][$group->codigoAgrupacion] = array();
                     }
                     $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = $this->get_question_default_value($group->valoresDefecto);
-                    // $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = ANSWER_RADIO_NO;
+                    $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = ANSWER_RADIO_NO;
                     $healthForm["groups"][$group->codigoAgrupacion]["desc"] = $group->descripcionAgrupacion;
                     $healthForm["groups"][$group->codigoAgrupacion]["questions"] = array();
 
@@ -2241,8 +2245,8 @@ class PMWShandler
         //app('debugbar')->info($response);
 
         $data = $response->return;
-        app('debugbar')->info('Data getGoals');
-        app('debugbar')->info($data);
+        //app('debugbar')->info('Data');
+        //app('debugbar')->info($data);
         if( $data->correcto == "S" ){
 
             $campaigns = [];
@@ -2297,7 +2301,7 @@ class PMWShandler
                             } else {
                                 $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'NO';
                             }
-                            if ($row->valorActual >= $row2->desde && $row->valorActual < $row2->hasta ){
+                            if ($row->valorActual > $row2->desde && $row->valorActual < $row2->hasta ){
                                 $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'SI';
                             } else {
                                 $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'NO';

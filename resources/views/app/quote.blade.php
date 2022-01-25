@@ -1276,16 +1276,16 @@
                             </div>
                             <div class="row pt-1">
                                 <div class="col hand-write text-center txt-navy-blue mb-3">
-
+                                    <button id="quote-download-policy" class="text-white bold py-2 px-3 px-md-5 border-0 rounded w-20 mt-4 position-relative active">{!! __('text.download') !!}</button>
                                     <div class="col-12">
-                                        <form id="quote-download-form" action="/download" method="get">
+                                        <form id="quote-download-form" action="/download" method="get" target="iframe1" style="display: none;">
                                             <input type="hidden" name="docId" class="docId" value="">
                                             <input type="hidden" name="productor" class="productor" value="">
                                             <input type="hidden" name="source" class="source" value="">
                                             <input type="hidden" name="type" class="type" value="">
                                             <input type="hidden" name="format" class="format" value="">
                                             <input type="hidden" name="downloadType" class="downloadType" value="document">
-                                            <input type="submit" id="quote-download-policy-request" class="quote-download-policy-request"  value="{!! __('text.download') !!}">
+                                            <input type="submit" id="quote-download-policy-request" class="quote-download-policy-request active"  value="{!! __('text.download') !!}">
                                         </form>
                                     </div>
                                     <p></p>
@@ -1325,14 +1325,17 @@
                                 <div class="col-12 hand-write text-center txt-navy-blue mb-3">
                                     <p class="">{!! __('quote.sign.handWrite.instructionscp.step1') !!}</p>
                                     <div class="col-12">
-                                        <form id="quote-download-policy-cp-form" action="/download" method="get">
+                                        <button id="test-download" class="text-white bold py-2 px-3 px-md-5 border-0 rounded w-20 mt-4 position-relative active">{!! __('text.download') !!}</button>
+                                        <iframe name="iframe1" sandbox="allow-downloads"></iframe>
+                                        <iframe name="iframe2" sandbox="allow-downloads"></iframe>
+                                        <form id="quote-download-policy-cp-form" action="/download" method="get" style="display: none" target="iframe1">
                                             <input type="hidden" name="docId" class="docId" value="">
                                             <input type="hidden" name="productor" class="productor" value="">
                                             <input type="hidden" name="source" class="source" value="">
                                             <input type="hidden" name="type" class="type" value="">
                                             <input type="hidden" name="format" class="format" value="">
                                             <input type="hidden" name="downloadType" class="downloadType" value="document">
-                                            <input type="submit" id="quote-download-policy-cp-request" class="quote-download-policy-cp-request"  value="{!! __('text.download') !!}">
+                                            <input type="submit" id="quote-download-policy-cp-request" class="quote-download-policy-cp-request  active"  value="{!! __('text.download') !!}">
                                         </form>
                                         <form id="send-policy-request-cp" autocomplete="off">
                                             <div class="select-file row my-4">
@@ -1374,14 +1377,14 @@
                                 </div>
                                 <div style="display:none;">
                                     <div class="col-12">
-                                        <form id="quote-download-policy-cg-form" action="/download" method="get">
+                                        <form id="quote-download-policy-cg-form" action="/download" method="get" target="iframe2">
                                             <input type="hidden" name="docId" class="docId" value="">
                                             <input type="hidden" name="productor" class="productor" value="">
                                             <input type="hidden" name="source" class="source" value="">
                                             <input type="hidden" name="type" class="type" value="">
                                             <input type="hidden" name="format" class="format" value="">
                                             <input type="hidden" name="downloadType" class="downloadType" value="document">
-                                            <input type="submit" id="quote-download-policy-cg-request" class="quote-download-policy-cg-request"  value="{!! __('text.download') !!}">
+                                            <input type="submit" id="quote-download-policy-cg-request" class="quote-download-policy-cg-request  active"  value="{!! __('text.download') !!}">
                                         </form>
                                         <form id="send-policy-request-cg" autocomplete="off">
                                             <div class="row my-4">
@@ -1415,14 +1418,15 @@
                                 </div>
                                 <div class="col-12 hand-write text-center txt-navy-blue mb-3">
                                     <div class="col-12">
-                                        <form id="quote-download-receipt-form" action="/download" method="get">
+                                        <button id="quote-download-receipt" class="text-white bold py-2 px-3 px-md-5 border-0 rounded w-20 mt-4 position-relative active" >{!! __('text.download') !!}</button>
+                                        <form id="quote-download-receipt-form" action="/download" method="get" target="iframe1" style="display: none;">
                                             <input type="hidden" name="docId" class="docId" value="">
                                             <input type="hidden" name="productor" class="productor" value="">
                                             <input type="hidden" name="source" class="source" value="">
                                             <input type="hidden" name="type" class="type" value="">
                                             <input type="hidden" name="format" class="format" value="">
                                             <input type="hidden" name="downloadType" class="downloadType" value="document">
-                                            <input type="submit" id="quote-download-policy-receipt-request" class="quote-download-policy-receipt-request"  value="{!! __('text.download') !!}">
+                                            <input type="submit" id="quote-download-policy-receipt-request" class="quote-download-policy-receipt-request active"  value="{!! __('text.download') !!}">
                                         </form>
                                     </div>
                                 </div>
@@ -1440,7 +1444,7 @@
                         </div>
                     </div>
                     <div class="loader-wrapper-download w-100 pt-5 text-center" style="display:none;">
-                        <h3 class="w-100 text-center"> Estamos generando el archivo.</h3>
+                        <h3 class="w-100 text-center"> Estamos generando tus documentos.</h3>
                         <i class="fas fa-circle-notch fa-spin fa-2x txt-navy-blue"></i>
                     </div>
                 </div>

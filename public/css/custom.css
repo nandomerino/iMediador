@@ -573,7 +573,8 @@ table td{
 }
 .app-core .toggles button.active,
 #quote .get-rates button.active,
-#quote .get-advice button.active{
+#quote .get-advice button.active,
+section#step-5 button.active{
     background-color: #D1D546;
     color: white !important;
 }
@@ -947,11 +948,16 @@ table.ui-datepicker-calendar tbody td span{
     line-height: 1.2;
 }
 
-#quote-download-policy-request, #dowload-condition input[type=submit], #quote-download-receipt-form input[type=submit]{
+#quote-download-policy-request.active, #dowload-condition input[type=submit].active, #quote-download-receipt-form input[type=submit].active{
     background-color: #D1D546;
     color: white;
     padding: 10px 15px;
     border-radius: 3px;
+}
+
+#quote-download-policy-request.inactive, #dowload-condition input[type=submit].inactive, #quote-download-receipt-form input[type=submit].inactive{
+    background-color: rgb(225, 225, 225);
+    cursor: default;
 }
 
 #quote-insurance-policy-upload-button{
@@ -960,6 +966,16 @@ table.ui-datepicker-calendar tbody td span{
     padding: 5px 15px;
     border-radius: 3px;
     border: none;
+}
+
+iframe {
+    z-index: -1;
+    position: absolute;
+    border: none;
+    top: 0px;
+    left: 0px;
+    height: 2px;
+    width: 2px;
 }
 
 .advisor-results table{
