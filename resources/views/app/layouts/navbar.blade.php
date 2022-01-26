@@ -17,7 +17,7 @@
                 <a class="nav-link quote-link" href="{{ __('menu.quote.url') }}">{{ __('menu.quote.text') }}</a>
             </li>
             <li class="nav-item m-auto">
-                <a class="nav-link quote-link" href="https://demo.laprevisionmallorquina.com/iMediador_demo/index.jsp?username={{ session('login.user') }}&password={{ session('login.pass') }}&destino=consultas" target="_blank">{{ __('menu.queries.text') }}</a>
+                <a class="nav-link quote-link" href="https://demo.laprevisionmallorquina.com/iMediador_demo/index.jsp?codigoAcceso={{ session('login.tokenAcceso') }}" target="_blank">{{ __('menu.queries.text') }}</a>
             </li>
             <li class="nav-item m-auto">
                 <a class="nav-link" href="{{ __('menu.documentation.url') }}">{{ __('menu.documentation.text') }}</a>

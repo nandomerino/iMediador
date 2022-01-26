@@ -115,6 +115,9 @@ class PMWShandler
                         case "P_NOMBRE_PRODUCTOR":
                             $nombreProductor = $row->valorParametro;
                             break;
+                        case "P_CODIGO_ACCESO":
+                            $tokenAcceso = $row->valorParametro;
+                            break;
                     }
 
                 }
@@ -193,6 +196,7 @@ class PMWShandler
                     'userPM' => $userPM,
                     'action' => $action,
                     'loggedSince' => time(),
+                    'tokenAcceso' => $tokenAcceso,
                 ],
                 'home' => [
                     'homeMessage1' => $homeMessage1,
@@ -1748,8 +1752,8 @@ class PMWShandler
     {
 
         $response = $this->PMWS->getAccessData($this->language, $token);
-        //app('debugbar')->info('getAccessData $response');
-        //app('debugbar')->info($response);
+        app('debugbar')->info('getAccessData $response');
+        app('debugbar')->info($response);
         $data = $response->return;
 
         if( $data->correcto == "S" ){
