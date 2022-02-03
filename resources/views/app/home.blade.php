@@ -119,7 +119,7 @@
 
                         @endphp
 
-                        <div class="col-12 col-md-6 pt-4 pt-md-0">
+                        <div class="col-12 col-md-12 pt-4 pt-md-0">
                             <div class="card campaign">
                                 <div class="card-header bg-white">
                                     <h4 class="card-title m-0 text-center">{{ $row["titulo"] }}</h4>
@@ -143,8 +143,8 @@
                                     <div class="separator bg-navy-blue my-2">&nbsp;</div>
                                     <div class="current-progress">
                                         <h5 class="text-center">{{ __('campaigns.progress.title') }}</h5>
-                                        <div class="progress-text">{{ $currentProgress }}  ({{ $porcentajeActualConseguido }}%)</div>
-                                        <div class="progress">
+                                        <div class="progress-text" style="color: #fff;">{{ $currentProgress }}  ({{ $porcentajeActualConseguido }}%)</div>
+                                        <div class="progress" style="background-color: #c3c5c7;">
                                             {!! $barsHTML !!}
                                         </div>
                                     </div>
@@ -179,9 +179,9 @@
                     </a>
                 </div>
                 <div class="col-12 col-md-4 text-center mb-3">
-                    <a href="{{ __('menu.queries.url') }}">
+                    <a href="https://demo.laprevisionmallorquina.com/iMediador_demo/index.jsp?codigoAcceso={{ session('login.tokenAcceso') }}" target="_blank">
                         <div class="shortcut-button bg-lime-yellow text-white p-4 rounded">
-                            <img src="/img/document.png"> {{ __('menu.queries.text') }}
+                           <img src="/img/document.png"> {{ __('menu.queries.text') }}
                         </div>
                     </a>
                 </div>

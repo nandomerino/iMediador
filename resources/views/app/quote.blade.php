@@ -201,8 +201,8 @@
                                             </div>
 
                                             <div class="row pt-3 quote-price-wrapper">
-                                                <div class="col-4">
-                                                    <label class="quote-price-label mb-1" for="quote-price">{{ __('quote.amount') }}</label>
+                                                <div class="col-12">
+                                                    <label class="quote-price-label mb-1" for="quote-price">{{ __('quote.amount.insurance') }}</label>
                                                     <input type='number' class="form-control w-100 quote-price" data-index="3" name="quote-price" autocomplete="off" required>
                                                 </div>
                                             </div>
@@ -375,6 +375,9 @@
                         <div class="row print1">
                             <div class="col">
                                 <div class="rates-table-description"></div>
+                                <div class="col instructions hiddenprint">
+                                    <p style="color: red;">{!! __("quote.instructions.selectRowAndBillingCycle") !!}</p>
+                                </div>
                                 <table class="table" >
                                     @php
                                         // Dynamically filled with JS
@@ -423,11 +426,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col instructions hiddenprint">
-                                <p>{!! __("quote.instructions.selectRowAndBillingCycle") !!}</p>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-6 advisor-results pt-5 pt-md-0" style="display: none;">
@@ -709,12 +708,12 @@
 
                                 <div class="row pt-xl-3">
                                     <div class="col-12 col-lg-4">
-                                        <label for="quote-first-name" class="quote-first-name-label mb-1">{{ __('text.firstName') }}</label>
+                                        <label for="quote-first-name" class="quote-first-name-label mb-1">{{ __('text.firstName') }}<i class="fas fa-info-circle" title="{{ __('text.helpName') }}"></i></label>
                                         <input type="text" class="form-control w-100 quote-first-name" name="quote-first-name" required maxlength="20">
                                         <div class="error" style="display:none;">{{ __('quote.name.error') }}</div>
                                     </div>
                                     <div class="col-12 col-lg-4">
-                                        <label for="quote-last-name" class="quote-last-name-label mb-1">{{ __('text.lastName') }}</label>
+                                        <label for="quote-last-name" class="quote-last-name-label mb-1">{{ __('text.lastName') }}<i class="fas fa-info-circle" title="{{ __('text.helpName') }}"></i></label>
                                         <input type="text" class="form-control w-100 quote-last-name" name="quote-last-name" required maxlength="30">
                                         <div class="error" style="display:none;">{{ __('quote.lastname.error') }}</div>
                                     </div>
@@ -934,12 +933,12 @@
                                         <div class="tab-content personEntityInfo" style="display: none;">
                                             <div class="row pt-xl-3">
                                                 <div class="col-12 col-lg-4">
-                                                    <label for="quote-person-entity-name" class="quote-person-entity-name-label mb-1">{{ __('text.firstName') }}</label>
+                                                    <label for="quote-person-entity-name" class="quote-person-entity-name-label mb-1">{{ __('text.firstName') }}<i class="fas fa-info-circle" title="{{ __('text.helpName') }}"></i></label>
                                                     <input type="text" class="form-control w-100 quote-person-entity-name" name="quote-person-entity-name" required maxlength="20">
                                                     <div class="error" style="display:none;">{{ __('quote.name.error') }}</div>
                                                 </div>
                                                 <div class="col-12 col-lg-4">
-                                                    <label for="quote-person-entity-last-name" class="quote-person-entity-last-name-label mb-1">{{ __('text.lastName') }}</label>
+                                                    <label for="quote-person-entity-last-name" class="quote-person-entity-last-name-label mb-1">{{ __('text.lastName') }}<i class="fas fa-info-circle" title="{{ __('text.helpName') }}"></i></label>
                                                     <input type="text" class="form-control w-100 quote-person-entity-last-name" name="quote-person-entity-last-name" required maxlength="30">
                                                     <div class="error" style="display:none;">{{ __('quote.lastname.error') }}</div>
                                                 </div>

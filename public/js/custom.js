@@ -2671,7 +2671,7 @@ jQuery( document ).ready(function() {
                     date: date
 
                 }
-                //console.log(window.PMgetRatesData);
+                console.log(window.PMgetRatesData);
 
 
                 jQuery.ajax({
@@ -2960,6 +2960,15 @@ jQuery( document ).ready(function() {
         jQuery('#quote .rates-table table th:nth-child(' + selectedColumnIndex +')' ).addClass("selected");
         window.PMselectedFinalProduct = jQuery('#quote .rates-table table th:nth-child(' + selectedColumnIndex +')' ).html();
         console.log(window.PMselectedFinalProduct);
+        var str1 = window.PMselectedFinalProduct;
+        if (jQuery('input[name="quote-product-modality"]:checked').val() == '22'){
+            if(str1.indexOf('ACC') == -1){
+                jQuery('p.card-text.product-exemption').hide();
+            } else {
+                jQuery('p.card-text.product-exemption').show();
+            }
+        }
+
         // Enables action buttons
         resetRatesTableActionsBilling();
         jQuery('#quote .rates-table .billing-cycle input').removeAttr("disabled");
@@ -2993,7 +3002,7 @@ jQuery( document ).ready(function() {
         var coverages = [];
         // Loads coverage (cobertura) info
         var j = 0;
-        for( i=0;i<10;i++ ) {
+        for( i=0;i<30;i++ ) {
 
             // Stores exemption (franquicia)
             if( i ===0 ){
@@ -3047,6 +3056,7 @@ jQuery( document ).ready(function() {
         }
 
         window.PMselectedFinalProductCoverages = coverages;
+        console.log(window.PMselectedFinalProductCoverages);
 
         selectionDescription = "<p>" + jQuery(this).data("info") + "<p>";
         jQuery('#quote .rates-table-selection-description').html(selectionDescription);
@@ -3123,7 +3133,8 @@ jQuery( document ).ready(function() {
                 discountRecargoFinanciacion : window.PMgetRatesData.discountRecargoFinanciacion,
                 discountCobro : window.PMgetRatesData.discountCobro,
                 coverages : window.PMselectedFinalProductCoverages,
-                paymentMethod : window.PMbillingCycle
+                paymentMethod : window.PMbillingCycle,
+                franchise : window.PMgetRatesData.franchise
             },
             success: function (response) {
                 console.log(response);

@@ -13,6 +13,9 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav w-100">
             <li class="nav-item m-auto">
+                <a class="nav-link d-inline" style="position: relative; top: 2px;" href="/" class="">{{ __('menu.home.text') }}</a>
+            </li>
+            <li class="nav-item m-auto">
                 <a class="nav-link" href="{{ __('menu.contact.url') }}" class="">{{ __('menu.contact.text') }}</a>
             </li>
             <li class="nav-item m-auto">

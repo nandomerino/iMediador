@@ -1381,6 +1381,9 @@ class PMWS extends controller
             "nombreParametro"	=> "P_IDIOMA_PRESUPUESTO",
             "valorParametro"	=> $data["language"]);
         $inputData[] =  array(
+            "nombreParametro"	=> "P_FRANQUINCIA",
+            "valorParametro"	=> $data["franchise"]);
+        $inputData[] =  array(
             "nombreParametro"	=> "P_ALTA_AUTOMATICA",
             "valorParametro"	=> "N");
 
@@ -1415,8 +1418,8 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        //app('debugbar')->info('getBudget');
-        //app('debugbar')->info($params);
+        app('debugbar')->info('getBudget');
+        app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'getBudget - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->altaPresupuesto($params);

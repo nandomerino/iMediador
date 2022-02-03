@@ -140,6 +140,7 @@
     "text.download" : "Descargar",
     "text.chooseFile" : "Seleccionar archivo",
     "text.save" : "Guardar",
+    "text.helpName" : "Introduce el nombre y apellidos del cliente sin acentos ortográficos ni diéresis",
 
     "error.404.title" : "Página no encontrada",
     "error.404.message" : "Error 404: No hemos podido encontrar la página solicitada.",
@@ -251,6 +252,7 @@
     "quote.legalEntity.name" : "Razón social",
     "quote.legalEntity.id" : "CIF",
     "quote.amount" : "Coste mensual del Seguro",
+    "quote.amount.insurance" : "¿Qué cantidad mensual podrías pagar por tu seguro?",
     "quote.additionalInfo" : "Datos adicionales",
     "quote.increasedValue" : "Revalorización",
     "quote.holder" : "El Tomador",
