@@ -2249,8 +2249,8 @@ class PMWShandler
         //app('debugbar')->info($response);
 
         $data = $response->return;
-        //app('debugbar')->info('Data');
-        //app('debugbar')->info($data);
+        app('debugbar')->info('Data');
+        app('debugbar')->info($data);
         if( $data->correcto == "S" ){
 
             $campaigns = [];
@@ -2262,7 +2262,7 @@ class PMWShandler
                         $posicion = --$total;
                         $campaigns[$i]["codigo"] = $row->codigo;
                         $campaigns[$i]["descripcion"] = $row->descripcion;
-                        $campaigns[$i]["titulo"] = $row->titulo;
+                        $campaigns[$i]["titulo"] = $row->titulo ?? null;
                         $campaigns[$i]["valorActual"] = $row->valorActual;
                         $campaigns[$i]["valorTotal"] = $row->tramosIncentivos->tramoIncentivo[$posicion]->hasta;
                         $campaigns[$i]["porcentajeConseguido"] = round(($row->valorActual*100)/$row->tramosIncentivos->tramoIncentivo[$posicion]->hasta, 2);
