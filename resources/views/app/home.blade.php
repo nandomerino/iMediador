@@ -28,7 +28,7 @@
             <div id="app-home-slider" class="splide">
                 <div class="splide__track">
                     <ul class="splide__list">
-                         {{--Dynamically generated--}}
+                        {{--Dynamically generated--}}
                     </ul>
                 </div>
             </div>
@@ -133,8 +133,8 @@
                                         <h5 class="text-center">{{ __('campaigns.rewards.title') }}</h5>
                                         <span class="font-weight-bold">{{ __('campaigns.rewards.current') }}: {{ $rewards }}</span>
                                         @if( $nextReward != "" )
-                                        <br>
-                                        <span class="font-weight-bold">{{ __('campaigns.rewards.next') }}: {{ $nextReward }}</span>
+                                            <br>
+                                            <span class="font-weight-bold">{{ __('campaigns.rewards.next') }}: {{ $nextReward }}</span>
                                         @else
                                             <br>
                                             <br>
@@ -181,7 +181,7 @@
                 <div class="col-12 col-md-4 text-center mb-3">
                     <a href="https://demo.laprevisionmallorquina.com/iMediador_demo/index.jsp?codigoAcceso={{ session('login.tokenAcceso') }}" target="_blank">
                         <div class="shortcut-button bg-lime-yellow text-white p-4 rounded">
-                           <img src="/img/document.png"> {{ __('menu.queries.text') }}
+                            <img src="/img/document.png"> {{ __('menu.queries.text') }}
                         </div>
                     </a>
                 </div>
@@ -214,15 +214,15 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach( $row["table"]["rows"] as $row2 )
-                                        <tr>
-                                            @foreach( $row2 as $row3 )
-                                                <td>
-                                                    {{ $row3 }}
-                                                </td>
-                                            @endforeach
-                                        </tr>
-                                    @endforeach
+                                @foreach( $row["table"]["rows"] as $row2 )
+                                    <tr>
+                                        @foreach( $row2 as $row3 )
+                                            <td>
+                                                {{ $row3 }}
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                @endforeach
 
                                 </tbody>
                             </table>

@@ -1139,6 +1139,9 @@ iframe {
 #campaigns h4{
     font-size: 17px
 }
+.card.campaign {
+    margin-bottom: 50px;
+}
 /*Home progress bar*/
 .progress {
     width: 100%;
