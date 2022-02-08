@@ -145,7 +145,7 @@ class SliderController extends Controller
             case "slider":
                 // Generates HTML for slider
 
-                //app('debugbar')->info(session('home.showSliders') );
+                app('debugbar')->info(session('home.showSliders') );
 
                 $output = "";
 

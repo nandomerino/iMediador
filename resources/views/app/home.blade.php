@@ -9,8 +9,8 @@
     $pm = new \App\Http\Middleware\PMWShandler();
     $currentLanguage = App::getLocale();
     $campaignGoals = $pm->getGoals();
-    //app('debugbar')->info('campaignGoals');
-    //app('debugbar')->info($campaignGoals);
+    app('debugbar')->info('campaignGoals');
+    app('debugbar')->info($campaignGoals);
 
 @endphp
 
@@ -79,11 +79,16 @@
                                 if ($row2['objetivoConseguido'] == 'SI') {
                                     $anchoConseguido[$i] = $row2['porcentajeTotal'];
                                 }
-                                if ($row2['objetivoActual'] == 'SI') {
-                                    $anchoActual = $row2['porcentajeTotal'];
-                                    $porcentajeActualConseguido = $row2['porcentajeParcialConseguido'];
-
+                                if ( $row["porcentajeConseguido"] >= 100) {
+                                        $anchoActual = '100';
+                                        $porcentajeActualConseguido = '100';
+                                } else {
+                                    if ($row2['objetivoActual'] == 'SI') {
+                                        $anchoActual = $row2['porcentajeTotal'];
+                                        $porcentajeActualConseguido = $row2['porcentajeParcialConseguido'];
+                                    }
                                 }
+
 
                                 $i++;
                             }

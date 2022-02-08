@@ -21,9 +21,9 @@
             <li class="nav-item m-auto">
                 <a class="nav-link" href="{{ __('menu.info.url') }}">{{ __('menu.info.text') }}</a>
             </li>
-            <li class="nav-item m-auto">
+            <!--<li class="nav-item m-auto">
                 <a class="nav-link" href="{{ __('menu.help.url') }}">{{ __('menu.help.text') }}</a>
-            </li>
+            </li>-->
             <li class="nav-item m-auto">
                 <a class="nav-link" href="tel:999888777"><i class="fas fa-phone-alt large"></i>&nbsp;999888777</a>
             </li>

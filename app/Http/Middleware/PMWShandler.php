@@ -95,9 +95,10 @@ class PMWShandler
                 $info = $this->PMWS->loginInt($user, $pass, $this->language, $userPM);
                 break;
         }
-        //app('debugbar')->info($info);
-        $data = $info->return;
 
+        $data = $info->return;
+        app('debugbar')->info('$data login');
+        app('debugbar')->info($data);
         if( $data->correcto == "S") {
             // Store user info in the session and redirects to app home
             if (property_exists($data->datosSalida, "listaParametros")) {
@@ -181,7 +182,7 @@ class PMWShandler
                 if( isset($data->datosSliders->idSlider) && is_array($data->datosSliders->idSlider)){
                     $showSliders = $data->datosSliders->idSlider;
                 }else{
-                    $showSliders = null;
+                    $showSliders = $data->datosSliders->idSlider;
                 }
             }else{
                 $showSliders = null;

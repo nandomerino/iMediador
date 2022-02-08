@@ -977,7 +977,14 @@ iframe {
     height: 2px;
     width: 2px;
 }
-
+iframe#logaltyFrame.mostrar {
+    z-index: 999;
+    width: 750px;
+    height: 1100px;
+    top: auto;
+    left: 20%;
+    position: relative;
+}
 .advisor-results table{
     display: block;
     overflow: hidden;

@@ -2272,7 +2272,7 @@ jQuery( document ).ready(function() {
         productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
 
         //console.log("Rates ");
-        //console.log(data);
+        console.log(data);
         var startIcon = "<i class='fas fa-info-circle'"; //comment-alt'";
         var endIcon = "></i>"
         var i;
@@ -4795,10 +4795,12 @@ jQuery( document ).ready(function() {
                                     format : format
                                 },
                                 success: function (response) {
+                                    console.log(response);
                                     if (response['success'] == true) {
                                         window.PMwidgetStep5 = {
                                             contenidoFichero : response.data.contenidoFichero
                                         }
+                                        jQuery('iframe#logaltyFrame').addClass('mostrar');
                                         // Initiates logalty iframe
                                         loadLogalty( data.P_NUMERO_SOLICITUD, data.P_NUMERO_POLIZA, response.data.contenidoFichero);
                                     } else {
@@ -5008,6 +5010,7 @@ jQuery( document ).ready(function() {
         if( jQuery(this).hasClass("logalty-synchronous")){
             selectedSigningMethod = "logalty-synchronous";
             jQuery('.logalty-synchronous-method').fadeIn();
+
         }
         if( jQuery(this).hasClass("hand-write")){
             selectedSigningMethod = "hand-write";
@@ -5057,7 +5060,7 @@ jQuery( document ).ready(function() {
             },
             success: function (response) {
                 if (response['success'] == true) {
-                    //console.log( response.data );
+                    console.log( response.data );
                     jQuery("#logaltyFrame").attr("src",response.data);
                     setTimeout(function() {
                         jQuery("#step-5 .loader-wrapper").hide();
