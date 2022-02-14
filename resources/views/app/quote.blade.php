@@ -147,7 +147,7 @@
                                         <div class="dynamic-content row pt-3 d-flex">
                                             <div class="col-6 align-self-end">
                                                 <label class="quote-job-type-label mb-1" for="quote-job-type"></label>
-                                                <select class="form-control quote-job-type valid" data-index="0" name="quote-job-type"required>
+                                                <select class="form-control quote-job-type configChange valid" data-index="0" name="quote-job-type"required>
 
                                                 </select>
                                             </div>
@@ -158,7 +158,7 @@
                                                             // Dynamically filled with JS
                                                         @endphp
                                                     </select>
-                                                <input class="form-control quote-job-picker" data-index="1" name="quote-job-picker" required>
+                                                <input class="form-control quote-job-picker  ui-autocomplete-input" data-index="1" name="quote-job-picker" required>
                                                     @php
                                                         // plugin loaded from JS quote_load_ProductConfiguration()
                                                     @endphp
@@ -430,7 +430,7 @@
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-6 advisor-results pt-5 pt-md-0" style="display: none;">
-                        <div class="row">
+                        <div class="row" id="advisor-results">
                             <div class="col">
                                 <table class="table" >
                                     <tr class="block1">
@@ -603,7 +603,22 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-6 table-actions mb-3">
+                                <button class="action-minibutton send-email-advisor text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded hiddenprint">
+                                    {{ __("text.send") }}
+                                    <img class="button-icon right" src="/img/paper-airplane-white.png">
+                                </button>
+                            </div>
+                            <div class="col-6 table-actions mb-3">
+                                <button class="action-minibutton print-advisor text-white bold py-1 px-2 border-0 mt-2 position-relative w-100 text-left rounded hiddenprint">
+                                    {{ __("text.print") }}
+                                    <img class="button-icon right" src="/img/print.png">
+                                </button>
+                            </div>
+                        </div>
                     </div>
+
 
 
                 </div>
@@ -913,14 +928,27 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col-12">
                                         <h4 class="secondary primary-color my-4 mb-lg-3">{{ __('quote.buyerInfo') }}</h4>
-                                        <p class="second gray-color">{{ __('quote.buyerInfoExplanation') }}</p>
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-12 col-lg-6">
+                                        <p class="second gray-color">{{ __('quote.buyerInfoExplanation') }}</p>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <label class="btn btn-radio btn-radio-left text-center mt-lg-0 quote-another-buyer yes">
+                                                <input type="radio" class="form-check-input position-static valid quote-another-buyer yes d-none" name="quote-another-buyer" value="S">{{ __('text.yes') }}
+                                            </label>
+                                            <label class="btn btn-radio btn-radio-right text-center mt-lg-0 active quote-another-buyer no">
+                                                <input type="radio" class="form-check-input position-static valid quote-another-buyer no d-none" name="quote-another-buyer" value="N" checked>{{ __('text.no') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row quote-another-buyer-extra-info pt-xl-3" style="display: none;">
                                     <div class="col-12">
                                         <ul class="nav nav-pills" id="contractTab" role="tablist">
                                             <li class="nav-item">

@@ -922,7 +922,7 @@ table.ui-datepicker-calendar tbody td span{
     margin: auto !important;
 }
 #step-5 .thank-you .message{
-    max-width: 300px !important;
+    max-width: 320px !important;
     margin: auto !important;
     font-size: 15.8px !important;
 }
@@ -1464,6 +1464,7 @@ iframe#logaltyFrame.mostrar {
 html,
 body{
     background-color: white !important;
+    text-align: justify;
 }
 input{
     border-radius: .25rem !important;
@@ -1644,7 +1645,9 @@ input#quote-starting-date[readonly] {
 
 
 @media print {
-
+    .row.print3 {
+        page-break-before: always;
+    }
      .hiddenprint {
           display: none;
      }

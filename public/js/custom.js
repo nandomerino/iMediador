@@ -548,8 +548,8 @@ jQuery( document ).ready(function() {
     function quote_load_ProductConfiguration( data ){
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
-        //console.log('load_Product');
-        //console.log(data);
+        console.log('data');
+        console.log(data);
         //var timestamp = window.PMproductConfig.coberturas;//'{{ Session::get("quote")}}';
         // Loads jobs
         var jobsArray = data.P_PROFESION_CLIENTE.values;
@@ -1260,15 +1260,10 @@ jQuery( document ).ready(function() {
     function quote_load_PartialProductConfiguration( data, index ){
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
-        //console.log('load_PartialProduct');
-        //console.log(data);
+        console.log('load_PartialProduct');
+        console.log(data);
 
-        // Signing method Logalty/handwriting
-        //if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
-        //    window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
-        //}else{
-        //    window.PMsigningMode = null;
-        //}
+
         var benefits = "";
         var franchiseField = "";
         var duration = "<div class='col-12'>";
@@ -1307,6 +1302,48 @@ jQuery( document ).ready(function() {
                 }else{
                     jobLabel = data.P_PROFESION_CLIENTE.name;
                 }
+                // Loads autocomplete input text.
+                jQuery( function() {
+                    var accentMap = {
+                        "á": "a",
+                        "é": "e",
+                        "í": "i",
+                        "ó": "o",
+                        "ú": "u",
+                        "ü": "u"
+                    };
+
+                    // "Remove" accents
+                    var normalize = function(termOriginal) {
+                        var term = termOriginal.toLowerCase();
+                        var ret = "";
+                        for ( var i = 0; i < term.length; i++ ) {
+                            ret += accentMap[ term.charAt(i) ] || term.charAt(i);
+                        }
+                        return ret;
+                    };
+
+                    // Load dynamic data and displays updated block
+                    jQuery( "#quote .quote-job-picker" ).autocomplete({
+                        minLength: 0,
+
+                        source: function( request, response ) {
+                            var matcher = new RegExp( jQuery.ui.autocomplete.escapeRegex( request.term ), "i" );
+                            response( jQuery.grep( jobPicker, function( value ) {
+                                value = value.label || value.value || value;
+                                return matcher.test( value ) || matcher.test( normalize( value ) );
+                            }) );
+                        },
+
+                        select: function(event,ui) {
+                            this.value=ui.item.value;
+                            jQuery(this).trigger('change');
+                            return false;
+                        }
+                    });
+
+                });
+
 
 
             case 1:     // Load commercial key
@@ -2908,6 +2945,25 @@ jQuery( document ).ready(function() {
     });
 
     // QUOTE - Send mail button
+    jQuery('#quote .advisor-results .action-minibutton.send-email-advisor').click(function(e){
+        e.preventDefault(); // prevent native submit
+
+        var form = "";
+        form += "<form class='modal-send-email'>";
+        form += "<label class='mt-4'>" + lang["modal.input.email"] + "</label>";
+        form += "<input class='my-2' type='email' required>";
+        form += "<button type='submit' id='advisor-results' class='my-2 bg-lime-yellow text-white mx-auto d-block rounded border-0 px-3 py-2' disabled>" + lang['modal.send'] + "</button>";
+        form += "<div class='loader-wrapper w-100 pt-5 text-center' style='display:none;'>";
+        form += "<i class='fas fa-circle-notch fa-spin fa-2x txt-navy-blue'></i>";
+        form += "</div>";
+        form += "<p class='result text-center txt-navy-blue mt-4'></p>";
+        form += "</form>";
+
+        displayModal("send-email", lang["modal.title.sendEmail"], form, lang['quote.modal.close']);
+
+    });
+
+    // QUOTE - Send mail button
     jQuery('#selected-product-info button#send-budget').click(function(e){
         e.preventDefault(); // prevent native submit
 
@@ -2942,6 +2998,12 @@ jQuery( document ).ready(function() {
 
     // QUOTE - Print button
     jQuery('#quote .rates-table .action-minibutton.print').click(function(e){
+
+        window.print();
+    });
+
+    // QUOTE - Print advisor button
+    jQuery('#quote .advisor-results .action-minibutton.print-advisor').click(function(e){
 
         window.print();
     });
@@ -3234,6 +3296,48 @@ jQuery( document ).ready(function() {
         var email = jQuery(".modal-send-email input[type=email]").val();
         var product = jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html();
         var body = "Le remitimos información del coste de su Seguro de " + jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html() +", solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
+
+        // Send email with attachment from /downloads
+        jQuery.ajax({
+            type: "POST",
+            url: "/send-mail-html",
+            data: {
+                email : email,
+                product : product,
+                body : body,
+                html : html,
+
+            },
+            success: function(response) {
+                jQuery('.modal-send-email .loader-wrapper').hide();
+                jQuery('.modal-send-email .result').html(response['body']);
+            },
+            error: function(response){
+                //console.error(response['e']);
+            }
+        });
+
+    });
+
+    // MODAL - SEND EMAIL send
+    jQuery("#PMmodal").on('click', '.modal-send-email button#advisor-results', function(e){
+        e.preventDefault(); // prevent native submit
+        //jQuery(this).attr("disabled");
+
+        jQuery('.modal-send-email .loader-wrapper').show();
+        jQuery('.modal-send-email .result').html();
+
+
+        // NEED TO GET INFO of the file FROM WS
+        var fileId = ""; // 323785;
+        var filename = ""; // "6600031_201911_2.pdf";
+        var tipoFichero = "" // 2;
+
+
+        var html = jQuery('#quote #step-1 #advisor-results').html();
+        var email = jQuery(".modal-send-email input[type=email]").val();
+        var product = 'Recomendador';
+        var body = "Le remitimos información de la recomendación del coste de su Seguro, solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
 
         // Send email with attachment from /downloads
         jQuery.ajax({
@@ -3888,6 +3992,13 @@ jQuery( document ).ready(function() {
     jQuery("#quote .quote-another-insurance.no").click( function(e){
         jQuery("#quote .quote-another-insurance-extra-info").hide();
         step2EnableNextButton();
+    });
+    // QUOTES - toggles another insurance extra info
+    jQuery("#quote .quote-another-buyer.yes").click( function(e){
+        jQuery("#quote .quote-another-buyer-extra-info").fadeIn();
+    });
+    jQuery("#quote .quote-another-buyer.no").click( function(e){
+        jQuery("#quote .quote-another-buyer-extra-info").hide();
     });
     // QUOTES - toggles person entity extra info
     jQuery("#quote .quote-legal-entity-type.natural-person").click( function(e){
@@ -4795,14 +4906,14 @@ jQuery( document ).ready(function() {
                                     format : format
                                 },
                                 success: function (response) {
-                                    console.log(response);
+                                    //console.log(response);
                                     if (response['success'] == true) {
                                         window.PMwidgetStep5 = {
                                             contenidoFichero : response.data.contenidoFichero
                                         }
-                                        jQuery('iframe#logaltyFrame').addClass('mostrar');
                                         // Initiates logalty iframe
                                         loadLogalty( data.P_NUMERO_SOLICITUD, data.P_NUMERO_POLIZA, response.data.contenidoFichero);
+                                        jQuery('iframe#logaltyFrame').addClass('mostrar');
                                     } else {
                                         displayModal("health", lang["quote.modal.error"], "OK", lang["quote.modal.close"]);
                                     }
@@ -5408,6 +5519,10 @@ jQuery( document ).ready(function() {
             //console.log(window.PMadvisorResult);
 
             jQuery('#quote .advisor-results').fadeIn();
+            jQuery('#quote .advisor-results .print-advisor').removeAttr("disabled");
+            jQuery('#quote .advisor-results .print-advisor').addClass("active");
+            jQuery('#quote .advisor-results .send-email-advisor').removeAttr("disabled");
+            jQuery('#quote .advisor-results .send-email-advisor').addClass("active");
 
         }
 

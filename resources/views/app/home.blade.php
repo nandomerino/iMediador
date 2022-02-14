@@ -50,7 +50,7 @@
                     @foreach( $campaignGoals as $row )
                         @php
 
-                            $rewards = "";
+                            $rewards = [];
                             $anchoConseguido = [];
                             $nextReward = "";
                             $alreadyGotNext = false;
@@ -64,7 +64,7 @@
                                 $getNextReward = true;
                                 // loads current rewards
                                 if($row["valorActual"] >= $row2["hasta"]){
-                                    $rewards .=  $row2["incentivo"] . ", ";
+                                    $rewards[$i]=  $row2["incentivo"];
                                     $getNextReward = false;
                                 }
 
@@ -92,10 +92,7 @@
 
                                 $i++;
                             }
-                            // Removes last ,
-                            if( strlen( $rewards ) > 0 ){
-                                $rewards = substr($rewards, 0, -2);
-                            }
+
 
                             //var_dump($anchoConseguido);
                             //var_dump($progressBar);
@@ -136,7 +133,7 @@
                                     <div class="separator bg-navy-blue my-2">&nbsp;</div>
                                     <div class="rewards">
                                         <h5 class="text-center">{{ __('campaigns.rewards.title') }}</h5>
-                                        <span class="font-weight-bold">{{ __('campaigns.rewards.current') }}: {{ $rewards }}</span>
+                                        <span class="font-weight-bold">{{ __('campaigns.rewards.current') }}: {{ end($rewards) }}</span>
                                         @if( $nextReward != "" )
                                             <br>
                                             <span class="font-weight-bold">{{ __('campaigns.rewards.next') }}: {{ $nextReward }}</span>
