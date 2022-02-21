@@ -43,16 +43,22 @@ class PMWS extends controller
      * @return bool
      * @throws \SoapFault
      */
-    function login($user, $pass, $language, $managerCode = null, $nombreMediador = null, $nombreProductor = null, $coberturasOpcionales = null, $riesgoTarificado= null) {
+    function login($user, $pass, $language, $managerCode = null, $nombreMediador = null, $nombreProductor = null, $coberturasOpcionales = null, $riesgoTarificado= null, $entryChannel = null) {
 
         $endpoint = $this->baseUrl . "/v4/wsautenticacion" . $this->environment . "/Autenticacion?WSDL";
         $client = new SoapClient($endpoint);
 
         $inputData = array();
-        $inputData[] =  array(
-            "nombreParametro"	=> "P_CANAL_ENTRADA",
-            "valorParametro"	=> "IM");
 
+        if ( $entryChannel != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CANAL_ENTRADA",
+                "valorParametro"	=> $entryChannel);
+        } else {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CANAL_ENTRADA",
+                "valorParametro"	=> "IM");
+        }
         if ( $managerCode != null ) {
             $inputData[] =  array(
                 "nombreParametro"	=> "P_CODIGO_GESTOR",
@@ -101,8 +107,134 @@ class PMWS extends controller
 
         $result = $client->obtenerDatosMediador($params);
 
+        app('debugbar')->info('result');
+        app('debugbar')->info($result);
+
+        if (is_soap_fault($result)) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $user - user from login form
+     * @param $language - current language
+     * @param null $managerCode - gestor from login form
+     * @return bool
+     * @throws \SoapFault
+     */
+    function recoveryLogin($user,$language, $managerCode = null, $nombreMediador = null, $nombreProductor = null, $coberturasOpcionales = null, $riesgoTarificado= null) {
+
+        $endpoint = $this->baseUrl . "/v4/wsautenticacion" . $this->environment . "/Autenticacion?WSDL";
+        $client = new SoapClient($endpoint);
+
+        $inputData = array();
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_CANAL_ENTRADA",
+            "valorParametro"	=> "IM");
+
+        if ( $managerCode != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CODIGO_GESTOR",
+                "valorParametro"	=> $managerCode);
+        }
+        if ( $nombreMediador != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_NOMBRE_MEDIADOR",
+                "valorParametro"	=> $nombreMediador);
+        }
+
+        if ( $nombreProductor != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_NOMBRE_PRODUCTOR",
+                "valorParametro"	=> $nombreProductor);
+        }
+        if ( $coberturasOpcionales != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_COBERTURAS_OPCIONALES",
+                "valorParametro"	=> $coberturasOpcionales);
+        }
+        if ( $riesgoTarificado != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_RIESGO_TARIFICADO",
+                "valorParametro"	=> $riesgoTarificado);
+        }
+
+
+        $cData = array();
+        $cData[] = array(
+            "nombreParametro"	=> "P_APLICACION",
+            "valorParametro"	=> "IMEDIADOR"
+        );
+
+        $params = array(
+            "pTipoAcceso"	=> "GEN",
+            "pUsuario"		=> $user,
+            "pIdioma"		=> $language,
+            "pDatosEntrada"	=> $inputData,
+            "pDatosConexion"=> $cData
+        );
+
+        //app('debugbar')->info('parametros');
+        //app('debugbar')->info($params);
+
+        $result = $client->recuperaPassword($params);
+
         //app('debugbar')->info('result');
         //app('debugbar')->info($result);
+
+        if (is_soap_fault($result)) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $user - user from login form
+     * @param $language - current language
+     * @param null $managerCode - gestor from login form
+     * @return bool
+     * @throws \SoapFault
+     */
+    function changePassword($user, $password, $language, $passwordNew) {
+
+        $endpoint = $this->baseUrl . "/v4/wsautenticacion" . $this->environment . "/Autenticacion?WSDL";
+        $client = new SoapClient($endpoint);
+
+        $inputData = array();
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_CANAL_ENTRADA",
+            "valorParametro"	=> "IM");
+
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_NUEVO_PASSWORD",
+            "valorParametro"	=> $passwordNew);
+
+
+        $cData = array();
+        $cData[] = array(
+            "nombreParametro"	=> "P_APLICACION",
+            "valorParametro"	=> "IMEDIADOR"
+        );
+
+        $params = array(
+            "pTipoAcceso"	=> "GEN",
+            "pUsuario"		=> $user,
+            "pPassword"		=> $password,
+            "pIdioma"		=> $language,
+            "pDatosEntrada"	=> $inputData,
+            "pDatosConexion"=> $cData
+        );
+
+        app('debugbar')->info('cambiarPassword parametros');
+        app('debugbar')->info($params);
+
+        $result = $client->cambiarPassword($params);
+
+        app('debugbar')->info('cambiarPassword result');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -129,15 +261,16 @@ class PMWS extends controller
         $inputData[] =  array(
             "nombreParametro"	=> "P_CANAL_ENTRADA",
             "valorParametro"	=> $this->getChannel($pmUserCode));
-        $inputData[] =  array(
-            "nombreParametro"	=> "P_USUARIO_INTERNO",
-            "valorParametro"	=> $pmUserCode);
+
 
         $cData = array();
         $cData[] = array(
             "nombreParametro"	=> "P_APLICACION",
             "valorParametro"	=> "IMEDIADOR"
         );
+        $cData[] =  array(
+            "nombreParametro"	=> "P_USU_INTERNO",
+            "valorParametro"	=> $pmUserCode);
 
         $params = array(
             "pTipoAcceso"	=> "GEN",
@@ -155,6 +288,7 @@ class PMWS extends controller
         }
 
         return $result;
+
     }
 
 

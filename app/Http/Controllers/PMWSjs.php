@@ -20,6 +20,12 @@ class PMWSjs extends Controller
         $this->parameters = $request->all();
 
         switch ($this->parameters["ws"]) {
+            case "recoveryLogin":
+                $response = $this->recoveryLogin();
+                break;
+            case "changePassword":
+                $response = $this->changePassword();
+                break;
             case "getProductVariations":
                 $response = $this->getProductVariations();
                 break;
@@ -69,6 +75,67 @@ class PMWSjs extends Controller
                 $response = false;
         }
         return $response;
+    }
+
+    public function recoveryLogin()
+    {
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["entryChannel"]) ){
+            $this->parameters["entryChannel"] = null;
+        }
+        if( !isset( $this->parameters["application"]) ) {
+            $this->parameters["application"] = null;
+        }
+        if( !isset( $this->parameters["u"]) ) {
+            $this->parameters["u"] = null;
+        }
+
+
+        // Call PM WS
+        $data = $this->PMWShandler->recoveryLogin(
+            $this->parameters["entryChannel"],
+            $this->parameters["application"],
+            $this->parameters["u"]
+        );
+
+        if (is_array($data)) {
+            return response()->json(['success' => true, 'data' => $data]);
+        } else {
+            return response()->json(['success' => false, 'e' => $data]);
+        }
+
+    }
+
+    public function changePassword()
+    {
+
+        // extra parameters for quote widget
+        if( !isset( $this->parameters["language"]) ) {
+            $this->parameters["language"] = null;
+        }
+        if( !isset( $this->parameters["u"]) ) {
+            $this->parameters["u"] = null;
+        }
+        if( !isset( $this->parameters["p"]) ) {
+            $this->parameters["p"] = null;
+        }
+
+
+        // Call PM WS
+        $data = $this->PMWShandler->changePassword(
+            $this->parameters["user"],
+            $this->parameters["password"],
+            $this->parameters["passwordNew"]
+        );
+        app('debugbar')->info('changePassword data');
+        app('debugbar')->info($data);
+
+        if ($data == true) {
+            return response()->json(['success' => true, 'data' => $data]);
+        } else {
+            return response()->json(['success' => false, 'e' => $data]);
+        }
+
     }
 
     public function getProductsList(){

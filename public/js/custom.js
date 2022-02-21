@@ -179,6 +179,7 @@ jQuery( document ).ready(function() {
             var gestor = jQuery("#loginForm input[name='gestor']").val();
             var loginType = jQuery("#loginForm input[name='login-type']").val();
             var action = jQuery("#loginForm input[name='action']").val();
+            var entryChannel = jQuery("#loginForm input[name='entry-channel']").val();
 
             jQuery.ajax({
                 type: "POST",
@@ -188,6 +189,190 @@ jQuery( document ).ready(function() {
                     pass: pass,
                     gestor: gestor,
                     loginType: loginType,
+                    action: action,
+                    entryChannel : entryChannel
+                },
+                success: function(response){
+                    console.log(response);
+                    if(response['success'] == true){
+                        window.location.href = response['redirect'];
+                    } else if(response['e'] == 'redirect') {
+                       jQuery('#cambiarPWD').show();
+                        jQuery('#loginForm .loadingIcon').hide();
+                        jQuery('#loginChangeForm .loadingIcon').hide();
+                        jQuery('#loginChangeForm .user').val(jQuery('#loginForm .user').val());
+                    }
+                    else{
+                        jQuery('#loginForm .loadingIcon').hide();
+                        jQuery('.public-core #loginForm .error-message').html( response['e']);
+                        jQuery('.public-core #loginForm .error-message').hide();
+                        jQuery('.public-core #loginForm .error-message').fadeIn(1000);
+                    }
+                },
+                error: function(response){
+                    jQuery('#loginForm .loadingIcon').hide();
+                    jQuery('.public-core #loginForm .error-message').html( lang["error.login"] );
+                    jQuery('.public-core #loginForm .error-message').hide();
+                    jQuery('.public-core #loginForm .error-message').fadeIn(1000);
+                    console.error( lang["login.form.error"] );
+                }
+            });
+        });
+    }
+
+    // PUBLIC - Validate new password
+
+    if (jQuery('#loginChangeForm').length){
+        //variables
+        var pass1 = jQuery('[name=password]');
+        var pass2 = jQuery('[name=passwordNew]');
+        var pass3 = jQuery('[name=repitPassword]');
+        var longitud = "La contraseña debe estar formada entre 8-30 carácteres alfanuméricos";
+        var negacion = "No coinciden las contraseñas";
+        var vacio = "La contraseña no puede estar vacía";
+        var diferentes = "La nueva contraseña debe ser diferente de la contraseña actual";
+        //función que comprueba las dos contraseñas
+        function diferentePassword(){
+            var valor1= pass1.val();
+            var valor2 = pass2.val();
+            //muestro el span
+            if(valor1 == valor2){
+                jQuery('#loginChangeForm .message').text(diferentes).removeClass("ok-message").addClass('error-message');
+                jQuery('#loginChangeForm .message').show();
+                jQuery('[name=password]').addClass('invalid');
+                jQuery('[name=passwordNew]').addClass('invalid');
+            } else {
+                jQuery('#loginChangeForm .message').hide();
+                jQuery('[name=password]').removeClass('invalid').addClass('valid');
+                jQuery('[name=passwordNew]').removeClass('invalid').addClass('valid');
+            }
+        }
+        //ejecuto la función al soltar la tecla
+        pass2.keyup(function(){
+            diferentePassword();
+        });
+        function coincidePassword(){
+            var valor2 = pass2.val();
+            var valor3 = pass3.val();
+            //condiciones dentro de la función
+            if(valor2 != valor3){
+                jQuery('#loginChangeForm .message').text(negacion).removeClass("ok-message").addClass('error-message');
+                jQuery('#loginChangeForm .message').show();
+                jQuery('[name=repitPassword]').addClass('invalid');
+                jQuery('[name=passwordNew]').addClass('invalid');
+            }
+            if(valor2.length==0 || valor2==""){
+                jQuery('#loginChangeForm .message').text(vacio).removeClass("ok-message").addClass('error-message');
+                jQuery('#loginChangeForm .message').show();
+                jQuery('[name=repitPassword]').addClass('invalid');
+                jQuery('[name=passwordNew]').addClass('invalid');
+            }
+            if(valor2.length<8 || valor2.length>30){
+                jQuery('#loginChangeForm .message').text(longitud).removeClass("ok-message").addClass('error-message');
+                jQuery('#loginChangeForm .message').show();
+                jQuery('[name=repitPassword]').addClass('invalid');
+                jQuery('[name=passwordNew]').addClass('invalid');
+            }
+            if(valor2.length!=0 && valor2==valor3){
+                jQuery('#loginChangeForm .message').removeClass("error-message").addClass('ok-message');
+                jQuery('#loginChangeForm .message').hide();
+                jQuery('[name=repitPassword]').removeClass('invalid').addClass('valid');
+                jQuery('[name=passwordNew]').removeClass('invalid').addClass('valid');
+
+            } else {
+                jQuery('[name=repitPassword]').removeClass('valid').addClass('invalid');
+                jQuery('[name=passwordNew]').removeClass('valid').addClass('invalid');
+            }
+        }
+        //ejecuto la función al soltar la tecla
+        pass3.keyup(function(){
+            coincidePassword();
+            if(jQuery('[name=password]').hasClass( "valid" )
+                && jQuery('[name=repitPassword]').hasClass( "valid" )
+                && jQuery('[name=passwordNew]').hasClass( "valid" ) ) {
+                jQuery("#loginSubmitChangeForm").prop("disabled", false);
+                jQuery("#loginSubmitChangeForm").removeClass('invalid').addClass('valid');
+            } else {
+                jQuery("#loginSubmitChangeForm").prop('disabled', true);
+                jQuery("#loginSubmitChangeForm").removeClass('valid').addClass('invalid');
+            }
+        });
+        jQuery('#loginChangeForm #loginSubmitChangeForm').on('click', function(e) {
+            e.preventDefault(); // prevent native submit
+            jQuery('#loginChangeForm .loadingIcon').show();
+
+            var user = jQuery("#loginChangeForm input[name='user']").val();
+            var password = jQuery("#loginChangeForm input[name='password']").val();
+            var passwordNew = jQuery("#loginChangeForm input[name='passwordNew']").val();
+            var loginType = jQuery("#loginChangeForm input[name='login-type']").val();
+            var action = jQuery("#loginChangeForm input[name='action']").val();
+            var url = "/get-data";
+            var ws = "changePassword";
+
+            jQuery.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    ws: ws,
+                    user: user,
+                    password: password,
+                    passwordNew: passwordNew,
+                    loginType: loginType,
+                    action: action
+                },
+                success: function(response){
+                    if(response['success'] == true){
+
+                        jQuery('#loginChangeForm .message').text('Contraseña cambiada con éxito').removeClass("error-message").addClass('ok-message');
+                        jQuery('#loginChangeForm .message').show();
+                        jQuery('#cambiarPWD').delay(2000).fadeOut();
+                    }else{
+                        console.log('FALSE');
+                        console.log(response);
+                        jQuery('#loginChangeForm .message').text(response['e']).removeClass("ok-message").addClass('error-message');
+                        jQuery('#loginChangeForm .message').show();
+                    }
+                },
+                error: function(response){
+                    jQuery('#loginForm .loadingIcon').hide();
+                    jQuery('.public-core #loginForm .error-message').html( lang["error.login"] );
+                    jQuery('.public-core #loginForm .error-message').hide();
+                    jQuery('.public-core #loginForm .error-message').fadeIn(1000);
+                    console.error( lang["login.form.error"] );
+                }
+            });
+        });
+
+    }
+
+    // PUBLIC - Sends public login form as JSON and gets response
+    if (jQuery('#loginForm').length){
+
+        jQuery('#loginForm input[type="submit"]').on('click', function() {
+            jQuery('#loginForm input[type="text"]:invalid,' +
+                '#loginForm textarea:invalid').css('border-color','RGBA(255,0,0,0.5)');
+            jQuery('#loginForm input[type="text"]:valid,' +
+                '#loginForm textarea:valid').css('border-color','RGBA(210,210,210,1)');
+        });
+        jQuery('#loginForm #recoverypass').on('click', function(e) {
+            e.preventDefault(); // prevent native submit
+            jQuery('#loginForm .loadingIcon').show();
+
+            var user = jQuery("#loginForm input[name='user']").val();
+            var gestor = jQuery("#loginForm input[name='gestor']").val();
+            var loginType = 'recovery-login';
+            var action = jQuery("#loginForm input[name='action']").val();
+            var url = "/get-data";
+            var ws = "recoveryLogin";
+
+            jQuery.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    ws: ws,
+                    user: user,
+                    gestor: gestor,
+                    loginType: loginType,
                     action: action
                 },
                 success: function(response){
@@ -195,7 +380,7 @@ jQuery( document ).ready(function() {
                         window.location.href = response['redirect'];
                     }else{
                         jQuery('#loginForm .loadingIcon').hide();
-                        jQuery('.public-core #loginForm .error-message').html( response['e']);
+                        jQuery('.public-core #loginForm .error-message').html('Email enviado');
                         jQuery('.public-core #loginForm .error-message').hide();
                         jQuery('.public-core #loginForm .error-message').fadeIn(1000);
                     }
@@ -326,6 +511,7 @@ jQuery( document ).ready(function() {
                 product: product
             },
             success: function (response) {
+                console.log(response);
                 if (response['success'] == true) {
                     quote_load_ProductVariations(response.data);
                 } else {
@@ -2298,7 +2484,8 @@ jQuery( document ).ready(function() {
     function quote_load_Rates(data){
 
         window.PMrates = data;
-        console.log(window.PMrates);
+        //console.log(window.PMrates);
+
         // Signing method Logalty/handwriting
         if( typeof window.PMrates.hiringType !== 'undefined' ) {
             window.PMsigningMode = window.PMrates.hiringType;
@@ -2309,7 +2496,8 @@ jQuery( document ).ready(function() {
         productVariation = jQuery("#quote input[name='quote-product-modality']:checked").next().html().trim().toUpperCase();
 
         //console.log("Rates ");
-        console.log(data);
+        //console.log(data);
+
         var startIcon = "<i class='fas fa-info-circle'"; //comment-alt'";
         var endIcon = "></i>"
         var i;
@@ -3021,7 +3209,10 @@ jQuery( document ).ready(function() {
         selectedColumnIndex = jQuery(this).index() + 1;
         jQuery('#quote .rates-table table th:nth-child(' + selectedColumnIndex +')' ).addClass("selected");
         window.PMselectedFinalProduct = jQuery('#quote .rates-table table th:nth-child(' + selectedColumnIndex +')' ).html();
-        console.log(window.PMselectedFinalProduct);
+        //console.log(window.PMselectedFinalProduct);
+        if( jQuery('.quote-benefit-covidPrestacion').attr('checked') || jQuery('.quote-benefit-covidHospitalizacion').attr('checked') ) {
+            window.PMselectedFinalProduct = jQuery('#quote .rates-table table th:nth-child(' + selectedColumnIndex +')' ).html() + ' y complementaria Covid-19';
+        }
         var str1 = window.PMselectedFinalProduct;
         if (jQuery('input[name="quote-product-modality"]:checked').val() == '22'){
             if(str1.indexOf('ACC') == -1){
@@ -5005,8 +5196,8 @@ jQuery( document ).ready(function() {
         jQuery( "#quote-download-policy" ).removeClass('active');
         jQuery( "#quote-download-policy" ).attr('disabled','disabled');
         jQuery('#quote-download-form').submit();
-        //jQuery('.loader-wrapper-download').show();
-        //jQuery('.loader-wrapper-download').delay(30000).hide;
+        jQuery('.loader-wrapper-download').show();
+        jQuery('.loader-wrapper-download').delay(20000).fadeOut();
     });
 
     jQuery( "#test-download" ).click(function() {
@@ -5014,16 +5205,16 @@ jQuery( document ).ready(function() {
         jQuery( "#test-download" ).attr('disabled','disabled');
         jQuery('#quote-download-policy-cg-form').submit();
         jQuery('#quote-download-policy-cp-form').submit();
-        //jQuery('.loader-wrapper-download').show();
-        //jQuery('.loader-wrapper-download').delay(60000).hide;
+        jQuery('.loader-wrapper-download').show();
+        jQuery('.loader-wrapper-download').delay(50000).fadeOut();
     });
 
     jQuery( "#quote-download-receipt" ).click(function() {
         jQuery( "#quote-download-receipt" ).removeClass('active');
         jQuery( "#quote-download-receipt" ).attr('disabled','disabled');
         jQuery('#quote-download-receipt-form').submit();
-        //jQuery('.loader-wrapper-download').show();
-        //jQuery('.loader-wrapper-download').delay(30000).hide;
+        jQuery('.loader-wrapper-download').show();
+        jQuery('.loader-wrapper-download').delay(20000).fadeOut();
     });
 
     // QUOTE - gets the policy request to download and sign
@@ -5969,6 +6160,7 @@ jQuery( document ).ready(function() {
             var loginType = jQuery("#loginFormPrivate input[name='login-type']").val();
             var action = jQuery("#loginFormPrivate input[name='action']").val();
             var userPM = jQuery("#loginFormPrivate input[name='pm-user']").val();
+            var entryChannel = jQuery("#loginFormPrivate input[name='entry-channel']").val();
 
             jQuery.ajax({
                 type: "POST",
@@ -5980,6 +6172,7 @@ jQuery( document ).ready(function() {
                     loginType: loginType,
                     action: action,
                     userPM: userPM,
+                    entryChannel : entryChannel
                 },
                 success: function(response){
                     if(response['success'] == true){

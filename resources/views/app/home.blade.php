@@ -39,7 +39,7 @@
             <p>{{ session('home.homeMessage2') }}</p>
         </section>
 
-        @if( $campaignGoals )
+        @if((is_array($campaignGoals) || is_object($campaignGoals)) )
             <section id="campaigns" class="py-4 ">
                 <div class="row">
                     <div class="col">
@@ -56,7 +56,9 @@
                             $alreadyGotNext = false;
                             $progressBar = [];
                             $currentProgress = $row["valorActual"];
-
+                            $fechaFin = strtotime(str_replace('/', '-', $row["fechaFin"]));
+                            $fechaHoy = strtotime(date("d") . "-" . date("m") . "-" . date("Y"));
+                            $diasFaltan = ($fechaFin-$fechaHoy)/86400;
 
                             $i = 0;
 
@@ -133,14 +135,29 @@
                                     <div class="separator bg-navy-blue my-2">&nbsp;</div>
                                     <div class="rewards">
                                         <h5 class="text-center">{{ __('campaigns.rewards.title') }}</h5>
-                                        <span class="font-weight-bold">{{ __('campaigns.rewards.current') }}: {{ end($rewards) }}</span>
-                                        @if( $nextReward != "" )
-                                            <br>
-                                            <span class="font-weight-bold">{{ __('campaigns.rewards.next') }}: {{ $nextReward }}</span>
-                                        @else
-                                            <br>
-                                            <br>
-                                        @endif
+                                        <div class="row">
+                                            <div class="col-8 col-md-8">
+                                                <span class="font-weight-bold">{{ __('campaigns.rewards.current') }}: {{ end($rewards) }}</span>
+                                                @if( $nextReward != "" )
+                                                    <br>
+                                                    <span class="font-weight-bold">{{ __('campaigns.rewards.next') }}: {{ $nextReward }}</span>
+                                                @else
+                                                    <br>
+                                                    <br>
+                                                @endif
+                                            </div>
+                                            <div class="col-4 col-md-4">
+                                                <div class="row fechaFin align-items-center">
+                                                    <div class="col-6 col-md-6">
+                                                        <p>Tiempo restante <br>de campaña</p>
+                                                    </div>
+                                                    <div class="col-6 col-md-6 text-center">
+                                                        <h3>{{ $diasFaltan }} </h3>
+                                                        <p>días</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="separator bg-navy-blue my-2">&nbsp;</div>
                                     <div class="current-progress">
@@ -148,6 +165,14 @@
                                         <div class="progress-text" style="color: #fff;">{{ $currentProgress }}  ({{ $porcentajeActualConseguido }}%)</div>
                                         <div class="progress" style="background-color: #c3c5c7;">
                                             {!! $barsHTML !!}
+                                        </div>
+                                    </div>
+                                    <div class="separator bg-navy-blue my-2">&nbsp;</div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-12">
+                                            <div class="message py-3">
+                                                <p>{{ $row["mensaje"] }}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

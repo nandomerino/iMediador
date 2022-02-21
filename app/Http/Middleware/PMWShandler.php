@@ -80,7 +80,7 @@ class PMWShandler
      *
      * Validates login information and stores retrieved data into session
      */
-    public function login($user, $pass, $gestor, $loginType, $action, $userPM = null)
+    public function login($user, $pass, $gestor, $loginType, $action, $userPM = null, $entryChannel = null)
     {
         switch( $loginType ){
             case "app-login":
@@ -92,7 +92,7 @@ class PMWShandler
                 break;
 
             case "private-login":
-                $info = $this->PMWS->loginInt($user, $pass, $this->language, $userPM);
+                $info = $this->PMWS->loginInt($user, $pass, $this->language, $userPM, $entryChannel);
                 break;
         }
 
@@ -118,6 +118,9 @@ class PMWShandler
                             break;
                         case "P_CODIGO_ACCESO":
                             $tokenAcceso = $row->valorParametro;
+                            break;
+                        case "P_FORZAR_CAMBIO_PWD":
+                            $cambiarPWD = $row->valorParametro;
                             break;
                     }
 
@@ -212,8 +215,11 @@ class PMWShandler
                     'products' => $products
                 ]
             ]);
-
-            $response = true;
+            if ($cambiarPWD == 'S') {
+                $response = 'redirect';
+            } else {
+                $response = true;
+            }
 
         }else{
             $response = $data->mensajeError;
@@ -222,7 +228,55 @@ class PMWShandler
         return $response;
     }
 
+    /**
+     * @param $user
+     * @param $gestor
+     * @param $action
+     * @return bool
+     * @throws \SoapFault
+     *
+     * Validates login information and stores retrieved data into session
+     */
+    public function recoveryLogin($user, $gestor, $action, $userPM = null)
+    {
+        $response = $this->PMWS->recoveryLogin($this->user, $this->language);
 
+        $data = $response->return;
+        if( $data->correcto == "S") {
+            $response = true;
+        }else{
+            $response = $data->mensajeError;
+        }
+
+        return $response;
+
+    }
+
+    /**
+     * @param $user
+     * @param $gestor
+     * @param $action
+     * @return bool
+     * @throws \SoapFault
+     *
+     * Validates login information and stores retrieved data into session
+     */
+    public function changePassword($user, $password, $passwordNew)
+    {
+        $response = $this->PMWS->changePassword($user, $password, $this->language, $passwordNew);
+        app('debugbar')->info('changePassword $response');
+        app('debugbar')->info($response);
+
+        $data = $response->return;
+        if( $data->correcto == "S") {
+            $response = true;
+        }else{
+            $response = $data->mensajeError;
+        }
+
+        return $response;
+
+    }
 
 
 
@@ -1374,7 +1428,7 @@ class PMWShandler
                         $healthForm["groups"][$group->codigoAgrupacion] = array();
                     }
                     $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = $this->get_question_default_value($group->valoresDefecto);
-                    $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = ANSWER_RADIO_NO;
+                    //$healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = ANSWER_RADIO_NO;
                     $healthForm["groups"][$group->codigoAgrupacion]["desc"] = $group->descripcionAgrupacion;
                     $healthForm["groups"][$group->codigoAgrupacion]["questions"] = array();
 
@@ -2263,6 +2317,8 @@ class PMWShandler
                         $posicion = --$total;
                         $campaigns[$i]["codigo"] = $row->codigo;
                         $campaigns[$i]["descripcion"] = $row->descripcion;
+                        $campaigns[$i]["fechaFin"] = $row->fechaFin ?? null;
+                        $campaigns[$i]["mensaje"] = $row->mensaje ?? null;
                         $campaigns[$i]["titulo"] = $row->titulo ?? null;
                         $campaigns[$i]["valorActual"] = $row->valorActual;
                         $campaigns[$i]["valorTotal"] = $row->tramosIncentivos->tramoIncentivo[$posicion]->hasta;

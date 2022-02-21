@@ -57,6 +57,8 @@ td:first-child {
 
      </head>
      <body>
+     <div style="max-width: 600px;margin: auto;">
           <table> {DATA_TABLE} </table>
+     </div>
      </body>
 </html>

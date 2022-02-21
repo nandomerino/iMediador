@@ -32,12 +32,18 @@
 
     "login.user" : "Usuario",
     "login.password" : "Contraseña",
+    "login.newpassword" : "Nueva contraseña",
+    "login.nowpassword" : "Contraseña actual",
+    "login.repitpassword" : "Repita la contraseña",
     "login.submit" : "Entrar >",
+    "login.submitpassword" : "Cambiar contraseña >",
     "login.title" : "Iniciar sesión",
     "login.PM.gestor" : "Gestor",
     "login.PM.productor" : "Productor",
     "login.PM.user" : "Usuario interno",
     "login.PM.submit" : "Iniciar sesión",
+    "login.recovery.pass" : "Recordar contraseña",
+    "login.change.title" : "Debe actualizar la contraseña",
 
     "footer.avisolegal.url" : "/aviso-legal",
     "footer.avisolegal.text" : "Aviso legal",

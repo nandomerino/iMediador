@@ -375,15 +375,20 @@
                         <div class="row print1">
                             <div class="col">
                                 <div class="rates-table-description"></div>
-                                <div class="col instructions hiddenprint">
-                                    <p style="color: red;">{!! __("quote.instructions.selectRowAndBillingCycle") !!}</p>
-                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col instructions hiddenprint">
+                                <p style="color: red;">{!! __("quote.instructions.selectRowAndBillingCycle") !!}</p>
+                            </div>
+                        </div>
+                        <div class="row print2">
+                            <div class="col">
                                 <table class="table" >
                                     @php
                                         // Dynamically filled with JS
                                     @endphp
                                 </table>
-
                             </div>
                         </div>
                         <div class="row print2">
@@ -1471,7 +1476,7 @@
                         </div>
                     </div>
                     <div class="loader-wrapper-download w-100 pt-5 text-center" style="display:none;">
-                        <h3 class="w-100 text-center"> Estamos generando tus documentos.</h3>
+                        <h3 class="w-100 text-center"> Estamos generando tus documentos.<br>En breve se iniciará la descarga.</h3>
                         <i class="fas fa-circle-notch fa-spin fa-2x txt-navy-blue"></i>
                     </div>
                 </div>

@@ -365,6 +365,10 @@ label {
     color: red;
     font-size: 1rem;
 }
+.ok-message{
+    color: #28a745;
+    font-size: 1rem;
+}
 form .error-message{
     display: none;
 }
@@ -1214,7 +1218,30 @@ iframe#logaltyFrame.mostrar {
 #info-boxes .col{
     border-radius: 15px;
 }
-
+.message {
+    text-align: center;
+    font-weight: bold;
+    padding-top: 20px;
+}
+.message p {
+    font-size: 16px;
+    margin-bottom: 0;
+    color: #a31366;
+}
+.row.fechaFin {
+    background: #002A66;
+    color: #fff;
+    padding: 15px;
+    margin-right: 0;
+    margin-left: 0;
+    margin-top: -25px;
+}
+.row.fechaFin p {
+    margin-bottom: 0;
+}
+.row.fechaFin h3 {
+    color: #fff;
+}
 #recent-activity h3{
     font-size: 19px;
     font-weight: normal
@@ -1254,7 +1281,24 @@ iframe#logaltyFrame.mostrar {
     max-width: 80%;
     margin: auto;
 }
-
+div#cambiarPWD {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100vw;
+    height: 100vh;
+    background: #ffffffba;
+}
+div#cambiarPWD .card {
+    width: 500px;
+    position: absolute;
+    top: 25%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
 #PMmodal .modal-send-email button:disabled{
     background-color: #E1E1E1 !important;
 }
@@ -1464,7 +1508,6 @@ iframe#logaltyFrame.mostrar {
 html,
 body{
     background-color: white !important;
-    text-align: justify;
 }
 input{
     border-radius: .25rem !important;
