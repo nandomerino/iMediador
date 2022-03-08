@@ -185,7 +185,7 @@ class PMWShandler
                 if( isset($data->datosSliders->idSlider) && is_array($data->datosSliders->idSlider)){
                     $showSliders = $data->datosSliders->idSlider;
                 }else{
-                    $showSliders = $data->datosSliders->idSlider;
+                    $showSliders = null;
                 }
             }else{
                 $showSliders = null;
@@ -2336,7 +2336,7 @@ class PMWShandler
                                 } else {
                                     $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'NO';
                                 }
-                                if ($row->valorActual >= $row2->desde && $row->valorActual < $row2->hasta ){
+                                if ($row->valorActual >= $row2->desde && $row->valorActual < $row2->hasta || $row->valorActual== '0' ){
                                     $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'SI';
                                 } else {
                                     $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'NO';
@@ -2358,6 +2358,8 @@ class PMWShandler
                     $posicion = --$total;
                     $campaigns[$i]["codigo"] = $row->codigo;
                     $campaigns[$i]["descripcion"] = $row->descripcion;
+                    $campaigns[$i]["fechaFin"] = $row->fechaFin ?? null;
+                    $campaigns[$i]["mensaje"] = $row->mensaje ?? null;
                     $campaigns[$i]["titulo"] = $row->titulo;
                     $campaigns[$i]["valorActual"] = $row->valorActual;
                     $campaigns[$i]["valorTotal"] = $row->tramosIncentivos->tramoIncentivo[$posicion]->hasta;
@@ -2377,7 +2379,7 @@ class PMWShandler
                             } else {
                                 $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'NO';
                             }
-                            if ($row->valorActual >= $row2->desde && $row->valorActual < $row2->hasta ){
+                            if ($row->valorActual >= $row2->desde && $row->valorActual < $row2->hasta || $row->valorActual== '0'){
                                 $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'SI';
                             } else {
                                 $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'NO';

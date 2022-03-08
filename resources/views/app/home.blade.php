@@ -36,7 +36,7 @@
 
         <section id="briefing" class="pt-4 pb-0">
             <p>{{ session('home.homeMessage1') }}</p>
-            <p>{{ session('home.homeMessage2') }}</p>
+            <p class="text-justify">{{ session('home.homeMessage2') }}</p>
         </section>
 
         @if((is_array($campaignGoals) || is_object($campaignGoals)) )
@@ -129,7 +129,7 @@
                                     <h4 class="card-title m-0 text-center">{{ $row["titulo"] }}</h4>
                                 </div>
                                 <div class="card-body">
-                                    <div class="description">
+                                    <div class="description text-justify">
                                         {{ $row["descripcion"] }}
                                     </div>
                                     <div class="separator bg-navy-blue my-2">&nbsp;</div>

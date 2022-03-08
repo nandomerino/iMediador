@@ -5051,8 +5051,9 @@ jQuery( document ).ready(function() {
                             quote_load_policyCPRequestDownload(data.P_NUMERO_POLIZA);
                             quote_load_policyCGRequestDownload(data.P_NUMERO_POLIZA);
                             quote_load_receiptRequestDownload(data.P_NUMERO_POLIZA);
-                            jQuery('#dowload-condition').fadeIn();
-                            jQuery('#dowload-receipt').fadeIn();
+                            jQuery('button#quote-download-policy').click(function(){jQuery('#dowload-condition').fadeIn()});
+                            jQuery('button#test-download').click(function(){jQuery('#dowload-receipt').fadeIn();});
+
                         }
                         break;
 
@@ -5206,7 +5207,7 @@ jQuery( document ).ready(function() {
         jQuery('#quote-download-policy-cg-form').submit();
         jQuery('#quote-download-policy-cp-form').submit();
         jQuery('.loader-wrapper-download').show();
-        jQuery('.loader-wrapper-download').delay(50000).fadeOut();
+        jQuery('.loader-wrapper-download').delay(40000).fadeOut();
     });
 
     jQuery( "#quote-download-receipt" ).click(function() {
@@ -5214,7 +5215,7 @@ jQuery( document ).ready(function() {
         jQuery( "#quote-download-receipt" ).attr('disabled','disabled');
         jQuery('#quote-download-receipt-form').submit();
         jQuery('.loader-wrapper-download').show();
-        jQuery('.loader-wrapper-download').delay(20000).fadeOut();
+        jQuery('.loader-wrapper-download').delay(15000).fadeOut();
     });
 
     // QUOTE - gets the policy request to download and sign

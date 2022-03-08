@@ -378,7 +378,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col instructions hiddenprint">
+                            <div class="col instructions hiddenprint text-justify">
                                 <p style="color: red;">{!! __("quote.instructions.selectRowAndBillingCycle") !!}</p>
                             </div>
                         </div>
@@ -1167,7 +1167,7 @@
         <section id="step-3" class="pb-5 row" style="display: none;">
             <div class="col">
                 <div class="row">
-                    <div id="health-form" class="col-12 col-md-9">
+                    <div id="health-form" class="col-12 col-md-9  text-justify">
                         <div class="loading-lock"></div>
                         <h4>{{ __('quote.healthForm') }}</h4>
                         <div class="loader-wrapper w-100 pt-5 text-center" style="display:none;">
