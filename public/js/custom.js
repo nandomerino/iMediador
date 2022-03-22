@@ -195,7 +195,9 @@ jQuery( document ).ready(function() {
                 success: function(response){
                     console.log(response);
                     if(response['success'] == true){
-                        window.location.href = response['redirect'];
+                        //HARDCODE PARA REDIRECT EN LOCAL
+                        //window.location.href = response['redirect'];
+                        window.location.href = 'http://127.0.0.1:8000/app';
                     } else if(response['e'] == 'redirect') {
                        jQuery('#cambiarPWD').show();
                         jQuery('#loginForm .loadingIcon').hide();
@@ -377,7 +379,9 @@ jQuery( document ).ready(function() {
                 },
                 success: function(response){
                     if(response['success'] == true){
-                        window.location.href = response['redirect'];
+                        //HARDCODE PARA REDIRECT EN LOCAL
+                        //window.location.href = response['redirect'];
+                        window.location.href = 'http://127.0.0.1:8000/app';
                     }else{
                         jQuery('#loginForm .loadingIcon').hide();
                         jQuery('.public-core #loginForm .error-message').html('Email enviado');
@@ -6177,7 +6181,9 @@ jQuery( document ).ready(function() {
                 },
                 success: function(response){
                     if(response['success'] == true){
-                        window.location.href = response['redirect'];
+                        //HARDCODE PARA REDIRECT EN LOCAL
+                        //window.location.href = response['redirect'];
+                        window.location.href = 'http://127.0.0.1:8000/app';
                     }else{
                         jQuery('#loginFormPrivate .loadingIcon').hide();
                         jQuery('#loginFormPrivate .error-message').html( response['e']);

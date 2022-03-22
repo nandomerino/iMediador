@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://imediador.wldev.es'),
+    'url' => env('APP_URL', 'https://imediador.wldev.es/'),
 
     'asset_url' => env('ASSET_URL', null),
 
