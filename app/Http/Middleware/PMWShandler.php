@@ -80,7 +80,7 @@ class PMWShandler
      *
      * Validates login information and stores retrieved data into session
      */
-    public function login($user, $pass, $gestor, $loginType, $action, $userPM = null)
+    public function login($user, $pass, $gestor, $loginType, $action, $userPM = null, $entryChannel = null)
     {
         switch( $loginType ){
             case "app-login":
@@ -92,12 +92,13 @@ class PMWShandler
                 break;
 
             case "private-login":
-                $info = $this->PMWS->loginInt($user, $pass, $this->language, $userPM);
+                $info = $this->PMWS->loginInt($user, $pass, $this->language, $userPM, $entryChannel);
                 break;
         }
-        //app('debugbar')->info($info);
-        $data = $info->return;
 
+        $data = $info->return;
+        app('debugbar')->info('$data login');
+        app('debugbar')->info($data);
         if( $data->correcto == "S") {
             // Store user info in the session and redirects to app home
             if (property_exists($data->datosSalida, "listaParametros")) {
@@ -114,6 +115,12 @@ class PMWShandler
                             break;
                         case "P_NOMBRE_PRODUCTOR":
                             $nombreProductor = $row->valorParametro;
+                            break;
+                        case "P_CODIGO_ACCESO":
+                            $tokenAcceso = $row->valorParametro;
+                            break;
+                        case "P_FORZAR_CAMBIO_PWD":
+                            $cambiarPWD = $row->valorParametro;
                             break;
                     }
 
@@ -174,10 +181,9 @@ class PMWShandler
             }
 
             if (property_exists($data, "datosSliders")) {
-                // Sliders to show
-                if( isset($data->datosSliders->idSlider) && is_array($data->datosSliders->idSlider)){
+                if (property_exists($data->datosSliders, "idSlider")) {
                     $showSliders = $data->datosSliders->idSlider;
-                }else{
+                } else {
                     $showSliders = null;
                 }
             }else{
@@ -193,6 +199,7 @@ class PMWShandler
                     'userPM' => $userPM,
                     'action' => $action,
                     'loggedSince' => time(),
+                    'tokenAcceso' => $tokenAcceso,
                 ],
                 'home' => [
                     'homeMessage1' => $homeMessage1,
@@ -207,8 +214,11 @@ class PMWShandler
                     'products' => $products
                 ]
             ]);
-
-            $response = true;
+            if ($cambiarPWD == 'S') {
+                $response = 'redirect';
+            } else {
+                $response = true;
+            }
 
         }else{
             $response = $data->mensajeError;
@@ -216,6 +226,58 @@ class PMWShandler
 
         return $response;
     }
+
+    /**
+     * @param $user
+     * @param $gestor
+     * @param $action
+     * @return bool
+     * @throws \SoapFault
+     *
+     * Validates login information and stores retrieved data into session
+     */
+    public function recoveryLogin($user, $gestor, $action, $userPM = null)
+    {
+        $response = $this->PMWS->recoveryLogin($this->user, $this->language);
+
+        $data = $response->return;
+        if( $data->correcto == "S") {
+            $response = true;
+        }else{
+            $response = $data->mensajeError;
+        }
+
+        return $response;
+
+    }
+
+    /**
+     * @param $user
+     * @param $gestor
+     * @param $action
+     * @return bool
+     * @throws \SoapFault
+     *
+     * Validates login information and stores retrieved data into session
+     */
+    public function changePassword($user, $password, $passwordNew)
+    {
+        $response = $this->PMWS->changePassword($user, $password, $this->language, $passwordNew);
+        app('debugbar')->info('changePassword $response');
+        app('debugbar')->info($response);
+
+        $data = $response->return;
+        if( $data->correcto == "S") {
+            $response = true;
+        }else{
+            $response = $data->mensajeError;
+        }
+
+        return $response;
+
+    }
+
+
 
     /**
      * @param $productor
@@ -234,9 +296,10 @@ class PMWShandler
             $this->pass = $p;
         }
 
-        // app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productGroup . " | " . $entryChannel . " | " . $application . " | " . $pmUserCode);
+        //app('debugbar')->info($this->user . " | " . $this->pass . " | " . $this->language . " | " . $productor . " | " . $productGroup . " | " . $entryChannel . " | " . $application . " | " . $pmUserCode);
         $response = $this->PMWS->getProductVariations($this->user, $this->pass, $this->language, $productor, $productGroup, $entryChannel, $application, $this->userPM);
-        //app('debugbar')->info($response);
+        app('debugbar')->info('getProductVariations $response');
+        app('debugbar')->info($response);
 
 
         $data = $response->return;
@@ -593,7 +656,7 @@ class PMWShandler
                     $productConfig[$row->nombre]["fieldType"] = $row->tipoCampoHTML;
                     $productConfig[$row->nombre]["attributes"] = $row->atributosHTML;
                     $productConfig[$row->nombre]["hidden"] = $row->esOculto;
-                    app('debugbar')->info($row);
+                    //app('debugbar')->info($row);
                     if( $productConfig[$row->nombre]["fieldType"] == "select"){
                         if (isset($row->listaValores->listaValores)) {
                             if (is_array($row->listaValores->listaValores)) {
@@ -685,7 +748,8 @@ class PMWShandler
 
         //app('debugbar')->info($parameters);
         $response = $this->PMWS->getRates($parameters);
-        app('debugbar')->info($response);
+        //app('debugbar')->info('getRates $response');
+        //app('debugbar')->info($response);
 
         $rates = [];
 
@@ -882,8 +946,8 @@ class PMWShandler
         session([
             'budget' => $budget
         ]);
-        //app('debugbar')->info("budget:");
-        //app('debugbar')->info($budget);
+        app('debugbar')->info("budget:");
+        app('debugbar')->info($budget);
         return $budget;
     }
 
@@ -897,14 +961,15 @@ class PMWShandler
             $parameters["pass"] = $this->pass;
         }
 
+
         $parameters["language"] = $this->language;
         $parameters["pmUserCode"] = $this->userPM;
 
-        app('debugbar')->info('getBudgetDocument PMWS HANDLER $parameters');
-        app('debugbar')->info($parameters);
+        //app('debugbar')->info('getBudgetDocument PMWS HANDLER $parameters');
+        //app('debugbar')->info($parameters);
         $response = $this->PMWS->getBudgetDocument($parameters);
-        app('debugbar')->info('getBudgetDocument PMWS HANDLER $response');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('getBudgetDocument PMWS HANDLER $response');
+        //app('debugbar')->info($response);
 
         $budgetDocument = [];
         $data = $response->return;
@@ -915,10 +980,11 @@ class PMWShandler
                 $budgetId = $data->datosSalida->array->valor;
             }
             //Content file
+
             $dataDocument = $data->contenidoFichero;
             $base = base64_decode($dataDocument);
-            $budgetURL = "/WP/wp-content/uploads/presupuestos/p".$budgetId.".pdf";
-            $destinationPath = public_path() . "/WP/wp-content/uploads/presupuestos/p".$budgetId.".pdf";
+            $budgetURL = "uploads/presupuestos/ppto-".$budgetId.".pdf";
+            $destinationPath = public_path() . "/uploads/presupuestos/ppto-".$budgetId.".pdf";
             file_put_contents($destinationPath, $base);
             $budgetDocument["data"] = "OK";
             $budgetDocument["url"] = $budgetURL;
@@ -927,9 +993,7 @@ class PMWShandler
         } else{
             $budgetDocument= $data->mensajeError;
         }
-        session([
-            'budgetDocument' => $budgetURL,
-        ]);
+
         //app('debugbar')->info("budget:");
         //app('debugbar')->info($budget);
         return $budgetDocument;
@@ -1152,6 +1216,9 @@ class PMWShandler
                         $desc = $info->valorParametro;
                         $rates["description"] = $desc;
                     }
+                    if ($info->nombreParametro == "P_TIPO_CONTRATACION"){
+                        $rates["hiringType"] = $info->valorParametro;
+                    }
                 }
             }
 
@@ -1211,11 +1278,14 @@ class PMWShandler
                     }
 
                     // Get price
-                    foreach (array_reverse($row->coberturas->array) as $row2) {
-
+                    if (is_array($row->coberturas->array)) {
+                        foreach (array_reverse($row->coberturas->array) as $row2) {
                             $rates["table"][$fila][$columna]["price"] = str_replace(",", ".",$row2->capital);
                             $messages[$fila][$columna] = str_replace(",", ".", $row2->capital);
-
+                        }
+                    } else {
+                        $rates["table"][$fila][$columna]["price"] = str_replace(",", ".",$row->coberturas->array->capital);
+                        $messages[$fila][$columna] = str_replace(",", ".", $row->coberturas->array->capital);
                     }
 
                     // Get description option)
@@ -1229,14 +1299,28 @@ class PMWShandler
 
                     // Get coverages (coberturas)
                     $j = 0;
-                    foreach ($row->coberturas->array as $row2) {
-                        $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
-                        $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
-                        $j++;
+                    if (is_array($row->coberturas->array)){
+
+                        foreach ($row->coberturas->array as $row2) {
+                            $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
+                            $j++;
+                        }
+                    } else {
+
+                        foreach ($row->coberturas as $row2) {
+                            $rates["table"][$fila][$columna]["coverages"][$j]["capital"] = $row2->capital;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["codigo"] = $row2->codigo;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["descripcion"] = $row2->descripcion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["duracion"] = $row2->duracion;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["franquicia"] = $row2->franquicia;
+                            $rates["table"][$fila][$columna]["coverages"][$j]["primaNeta"] = $row2->primaNeta;
+                            $j++;
+                        }
                     }
 
                     // Get quotes
@@ -1330,6 +1414,7 @@ class PMWShandler
             $this->pass = $p;
         }
         $response = $this->PMWS->getHealthForm($this->user, $this->pass, $this->language, $productor, $product, $commercialKey);
+        app('debugbar')->info('healthform $response');
         app('debugbar')->info($response);
         $data = $response->return;
         if( $data->correcto == "S" ){
@@ -1342,7 +1427,7 @@ class PMWShandler
                         $healthForm["groups"][$group->codigoAgrupacion] = array();
                     }
                     $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = $this->get_question_default_value($group->valoresDefecto);
-                    // $healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = ANSWER_RADIO_NO;
+                    //$healthForm["groups"][$group->codigoAgrupacion]["bulkAnswer"] = ANSWER_RADIO_NO;
                     $healthForm["groups"][$group->codigoAgrupacion]["desc"] = $group->descripcionAgrupacion;
                     $healthForm["groups"][$group->codigoAgrupacion]["questions"] = array();
 
@@ -1364,7 +1449,7 @@ class PMWShandler
         } else {
             $healthFormData = $data->codigoError;
         }
-        app('debugbar')->info($healthFormData);
+        //app('debugbar')->info($healthFormData);
 
         return $healthFormData;
     }
@@ -1721,7 +1806,8 @@ class PMWShandler
     {
 
         $response = $this->PMWS->getAccessData($this->language, $token);
-        //app('debugbar')->info($response);
+        app('debugbar')->info('getAccessData $response');
+        app('debugbar')->info($response);
         $data = $response->return;
 
         if( $data->correcto == "S" ){
@@ -1737,10 +1823,10 @@ class PMWShandler
                         case "P_CODIGO_PRODUCTOR":
                             $productor = $row->valorParametro;
                             break;
-                        case "P_AGRUPACION":
+                        case "P_PRODUCTO":
                             $product = $row->valorParametro;
                             break;
-                        case "P_PRODUCTO":
+                        case "P_AGRUPACION":
                             $productVariation = $row->valorParametro;
                             break;
                     }
@@ -1780,7 +1866,8 @@ class PMWShandler
     {
 
         $response = $this->PMWS->validateUser($this->user, $this->pass, $this->language, $productVariationId);
-        //app('debugbar')->info($response);
+        app('debugbar')->info('validateUser $response');
+        app('debugbar')->info($response);
         $data = $response->return;
 
         if( $data->correcto == "S" ){
@@ -1945,6 +2032,7 @@ class PMWShandler
      * @param "holderType" - holder type
      * @param "holderLanguage" - holder language
      * @param "holderName" - holder name
+     * @param "legalEntityName" - holder name
      * @param "holderSurname" - holder surname
      * @param "holderBirthdate" - holder birthdate
      * @param "hiring" - Type of hiring
@@ -1998,6 +2086,7 @@ class PMWShandler
             $parameters["holderAddress"] = $parameters["address"];
             $parameters["holderCity"] = $parameters["city"];
             $parameters["holderProvince"] = $parameters["province"];
+            $parameters["holderType"] = 'F';
         }
 
         // get doc types from different variables
@@ -2016,11 +2105,11 @@ class PMWShandler
         if( app('session')->has('healthForm') ){
             $parameters["healthQ"] = session('healthForm');
         }
-        app('debugbar')->info('PMWS HANDLER $parameters');
+        app('debugbar')->info('PMWS HANDLER submit policy $parameters');
         app('debugbar')->info($parameters);
         $response = $this->PMWS->submitPolicy($parameters);
-        app('debugbar')->info('PMWS HANDLER $response');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('PMWS HANDLER $response');
+        //app('debugbar')->info($response);
 
         $data = $response->return;
 
@@ -2037,6 +2126,40 @@ class PMWShandler
         }
 
         return $submitPolicy;
+
+    }
+
+    public function getReceipt($parameters) {
+
+        if($parameters["u"] != null && $parameters["p"] != null){
+            $parameters["user"] = $parameters["u"] ;
+            $parameters["pass"] = $parameters["p"] ;
+        }else{
+            $parameters["user"] = $this->user;
+            $parameters["pass"] = $this->pass;
+        }
+        $parameters["language"] = $this->language;
+        $parameters["pmUserCode"] = $this->userPM;
+
+
+
+        app('debugbar')->info('PMWS HANDLER $parameters');
+        app('debugbar')->info($parameters);
+        $response = $this->PMWS->getReceipt($parameters);
+        app('debugbar')->info('PMWS HANDLER $response');
+        app('debugbar')->info($response);
+
+        $data = $response->return;
+
+        if( $data->correcto == "S" ){
+
+            $receipt = [];
+            $receipt["number"] = $data->recibos->codigo_recibo;
+
+        }else{
+            $receipt = $data->mensajeError;
+        }
+        return $receipt;
 
     }
 
@@ -2106,6 +2229,7 @@ class PMWShandler
     function getFile($fileId, $pmUserCode = null){
 
         $response = $this->PMWS->getFile($this->user, $this->pass, $this->language, $fileId, $pmUserCode);
+        app('debugbar')->info('getFile $response');
         app('debugbar')->info($response);
 
         $data = $response->return;
@@ -2179,6 +2303,8 @@ class PMWShandler
         //app('debugbar')->info($response);
 
         $data = $response->return;
+        app('debugbar')->info('Data');
+        app('debugbar')->info($data);
         if( $data->correcto == "S" ){
 
             $campaigns = [];
@@ -2186,17 +2312,34 @@ class PMWShandler
             if(! empty($data->datosObjetivos->objetivo)) {
                 if (is_array($data->datosObjetivos->objetivo)) {
                     foreach ($data->datosObjetivos->objetivo as $row) {
+                        $total = count($row->tramosIncentivos->tramoIncentivo);
+                        $posicion = --$total;
                         $campaigns[$i]["codigo"] = $row->codigo;
                         $campaigns[$i]["descripcion"] = $row->descripcion;
-                        $campaigns[$i]["titulo"] = $row->titulo;
+                        $campaigns[$i]["fechaFin"] = $row->fechaFin ?? null;
+                        $campaigns[$i]["mensaje"] = $row->mensaje ?? null;
+                        $campaigns[$i]["titulo"] = $row->titulo ?? null;
                         $campaigns[$i]["valorActual"] = $row->valorActual;
-
+                        $campaigns[$i]["valorTotal"] = $row->tramosIncentivos->tramoIncentivo[$posicion]->hasta;
+                        $campaigns[$i]["porcentajeConseguido"] = round(($row->valorActual*100)/$row->tramosIncentivos->tramoIncentivo[$posicion]->hasta, 2);
                         if (is_array($row->tramosIncentivos->tramoIncentivo)) {
                             $j = 0;
                             foreach ($row->tramosIncentivos->tramoIncentivo as $row2) {
                                 $campaigns[$i]["tramosIncentivos"][$j]["desde"] = $row2->desde;
                                 $campaigns[$i]["tramosIncentivos"][$j]["hasta"] = $row2->hasta;
                                 $campaigns[$i]["tramosIncentivos"][$j]["incentivo"] = $row2->incentivo;
+                                $campaigns[$i]["tramosIncentivos"][$j]["porcentajeParcialConseguido"]  = round(($row->valorActual*100)/$row2->hasta, 2);
+                                $campaigns[$i]["tramosIncentivos"][$j]["porcentajeTotal"]  = round((($row2->hasta - $row2->desde)*100)/$row->tramosIncentivos->tramoIncentivo[$posicion]->hasta, 2);
+                                if (round(($row->valorActual*100)/$row2->hasta, 2) >= 100){
+                                    $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'SI';
+                                } else {
+                                    $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'NO';
+                                }
+                                if ($row->valorActual >= $row2->desde && $row->valorActual < $row2->hasta || $row->valorActual== '0' ){
+                                    $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'SI';
+                                } else {
+                                    $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'NO';
+                                }
                                 $j++;
                             }
                         } else {
@@ -2210,10 +2353,17 @@ class PMWShandler
                     }
                 }else{
                     $row = $data->datosObjetivos->objetivo;
+                    $total = count($row->tramosIncentivos->tramoIncentivo);
+                    $posicion = --$total;
                     $campaigns[$i]["codigo"] = $row->codigo;
                     $campaigns[$i]["descripcion"] = $row->descripcion;
+                    $campaigns[$i]["fechaFin"] = $row->fechaFin ?? null;
+                    $campaigns[$i]["mensaje"] = $row->mensaje ?? null;
                     $campaigns[$i]["titulo"] = $row->titulo;
                     $campaigns[$i]["valorActual"] = $row->valorActual;
+                    $campaigns[$i]["valorTotal"] = $row->tramosIncentivos->tramoIncentivo[$posicion]->hasta;
+                    $campaigns[$i]["porcentajeConseguido"] = round(($row->valorActual*100)/$row->tramosIncentivos->tramoIncentivo[$posicion]->hasta, 2);
+
 
                     if( is_array($row->tramosIncentivos->tramoIncentivo) ) {
                         $j = 0;
@@ -2221,6 +2371,18 @@ class PMWShandler
                             $campaigns[$i]["tramosIncentivos"][$j]["desde"]  = $row2->desde;
                             $campaigns[$i]["tramosIncentivos"][$j]["hasta"]  = $row2->hasta;
                             $campaigns[$i]["tramosIncentivos"][$j]["incentivo"]  = $row2->incentivo;
+                            $campaigns[$i]["tramosIncentivos"][$j]["porcentajeParcialConseguido"]  = round(($row->valorActual*100)/$row2->hasta, 2);
+                            $campaigns[$i]["tramosIncentivos"][$j]["porcentajeTotal"]  = round((($row2->hasta - $row2->desde)*100)/$row->tramosIncentivos->tramoIncentivo[$posicion]->hasta, 2);
+                            if (round(($row->valorActual*100)/$row2->hasta, 2) >= 100){
+                                $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'SI';
+                            } else {
+                                $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'NO';
+                            }
+                            if ($row->valorActual >= $row2->desde && $row->valorActual < $row2->hasta || $row->valorActual== '0'){
+                                $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'SI';
+                            } else {
+                                $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'NO';
+                            }
                             $j++;
                         }
                     }else{

@@ -27,11 +27,16 @@
                 </div>
                 <input name="login-type" type="hidden" class="login-type" value="app-login">
                 <input type="hidden" name="action" value="sendLoginForm">
+                <input name="entry-channel" type="hidden" class="login-type" value="IM">
+
                 <div class="position-relative">
                     <input type="submit" class="btn btn-block text-white font-weight-bold bg-lime-yellow" value="{{ __('login.submit') }}">
                     <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
                 </div>
-                <div class="error-message mt-3"></div>
+                <div class="text-center pt-3">
+                    <a href="#" id="recoverypass">{{ __('login.recovery.pass') }}</a>
+                </div>
+                <div class="error-message mt-3 text-center"></div>
             </form>
 
         </div>

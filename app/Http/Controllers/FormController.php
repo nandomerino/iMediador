@@ -24,7 +24,7 @@ class FormController extends Controller
         $PMWShandler = new PMWShandler();
         switch( $input["loginType"] ){
             case "app-login":
-                $data = $PMWShandler->login($input["user"], $input["pass"], $input["gestor"], $input["loginType"], $input["action"]);
+                $data = $PMWShandler->login($input["user"], $input["pass"], $input["gestor"], $input["loginType"], $input["action"], $input["entryChannel"]);
                 if( $data === true) {
                     return response()->json(['success'=> true, 'redirect'=> config('filesystems.disks.app.home') ]);
                 }else {
@@ -34,7 +34,7 @@ class FormController extends Controller
                 break;
 
             case "private-login":
-                $data = $PMWShandler->login($input["user"], $input["pass"], $input["gestor"], $input["loginType"], $input["action"], $input["userPM"]);
+                $data = $PMWShandler->login($input["user"], $input["pass"], $input["gestor"], $input["loginType"], $input["action"], $input["userPM"], $input["entryChannel"]);
                 if( $data === true) {
                     if( $input["action"] == "urlLogin"){
                         header("Location: " . config('filesystems.disks.panel.home') );

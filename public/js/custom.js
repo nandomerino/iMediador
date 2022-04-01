@@ -2,7 +2,12 @@ var companyAddressTypeOthers = "O";
 var healthFormRequired = false;
 
 jQuery( document ).ready(function() {
-
+    // GENERAL - Disable enter
+    jQuery("body").keypress(function(e) {
+        if (e.which == 13) {
+            return false;
+        }
+    });
     // GENERAL - Display modal
     if (jQuery('#PMmodal').length) {
 
@@ -174,6 +179,7 @@ jQuery( document ).ready(function() {
             var gestor = jQuery("#loginForm input[name='gestor']").val();
             var loginType = jQuery("#loginForm input[name='login-type']").val();
             var action = jQuery("#loginForm input[name='action']").val();
+            var entryChannel = jQuery("#loginForm input[name='entry-channel']").val();
 
             jQuery.ajax({
                 type: "POST",
@@ -183,14 +189,202 @@ jQuery( document ).ready(function() {
                     pass: pass,
                     gestor: gestor,
                     loginType: loginType,
+                    action: action,
+                    entryChannel : entryChannel
+                },
+                success: function(response){
+                    console.log(response);
+                    if(response['success'] == true){
+                        //HARDCODE PARA REDIRECT EN LOCAL
+                        //window.location.href = response['redirect'];
+                        window.location.href = 'http://127.0.0.1:8000/app';
+                    } else if(response['e'] == 'redirect') {
+                       jQuery('#cambiarPWD').show();
+                        jQuery('#loginForm .loadingIcon').hide();
+                        jQuery('#loginChangeForm .loadingIcon').hide();
+                        jQuery('#loginChangeForm .user').val(jQuery('#loginForm .user').val());
+                    }
+                    else{
+                        jQuery('#loginForm .loadingIcon').hide();
+                        jQuery('.public-core #loginForm .error-message').html( response['e']);
+                        jQuery('.public-core #loginForm .error-message').hide();
+                        jQuery('.public-core #loginForm .error-message').fadeIn(1000);
+                    }
+                },
+                error: function(response){
+                    jQuery('#loginForm .loadingIcon').hide();
+                    jQuery('.public-core #loginForm .error-message').html( lang["error.login"] );
+                    jQuery('.public-core #loginForm .error-message').hide();
+                    jQuery('.public-core #loginForm .error-message').fadeIn(1000);
+                    console.error( lang["login.form.error"] );
+                }
+            });
+        });
+    }
+
+    // PUBLIC - Validate new password
+
+    if (jQuery('#loginChangeForm').length){
+        //variables
+        var pass1 = jQuery('[name=password]');
+        var pass2 = jQuery('[name=passwordNew]');
+        var pass3 = jQuery('[name=repitPassword]');
+        var longitud = "La contraseña debe estar formada entre 8-30 carácteres alfanuméricos";
+        var negacion = "No coinciden las contraseñas";
+        var vacio = "La contraseña no puede estar vacía";
+        var diferentes = "La nueva contraseña debe ser diferente de la contraseña actual";
+        //función que comprueba las dos contraseñas
+        function diferentePassword(){
+            var valor1= pass1.val();
+            var valor2 = pass2.val();
+            //muestro el span
+            if(valor1 == valor2){
+                jQuery('#loginChangeForm .message').text(diferentes).removeClass("ok-message").addClass('error-message');
+                jQuery('#loginChangeForm .message').show();
+                jQuery('[name=password]').addClass('invalid');
+                jQuery('[name=passwordNew]').addClass('invalid');
+            } else {
+                jQuery('#loginChangeForm .message').hide();
+                jQuery('[name=password]').removeClass('invalid').addClass('valid');
+                jQuery('[name=passwordNew]').removeClass('invalid').addClass('valid');
+            }
+        }
+        //ejecuto la función al soltar la tecla
+        pass2.keyup(function(){
+            diferentePassword();
+        });
+        function coincidePassword(){
+            var valor2 = pass2.val();
+            var valor3 = pass3.val();
+            //condiciones dentro de la función
+            if(valor2 != valor3){
+                jQuery('#loginChangeForm .message').text(negacion).removeClass("ok-message").addClass('error-message');
+                jQuery('#loginChangeForm .message').show();
+                jQuery('[name=repitPassword]').addClass('invalid');
+                jQuery('[name=passwordNew]').addClass('invalid');
+            }
+            if(valor2.length==0 || valor2==""){
+                jQuery('#loginChangeForm .message').text(vacio).removeClass("ok-message").addClass('error-message');
+                jQuery('#loginChangeForm .message').show();
+                jQuery('[name=repitPassword]').addClass('invalid');
+                jQuery('[name=passwordNew]').addClass('invalid');
+            }
+            if(valor2.length<8 || valor2.length>30){
+                jQuery('#loginChangeForm .message').text(longitud).removeClass("ok-message").addClass('error-message');
+                jQuery('#loginChangeForm .message').show();
+                jQuery('[name=repitPassword]').addClass('invalid');
+                jQuery('[name=passwordNew]').addClass('invalid');
+            }
+            if(valor2.length!=0 && valor2==valor3){
+                jQuery('#loginChangeForm .message').removeClass("error-message").addClass('ok-message');
+                jQuery('#loginChangeForm .message').hide();
+                jQuery('[name=repitPassword]').removeClass('invalid').addClass('valid');
+                jQuery('[name=passwordNew]').removeClass('invalid').addClass('valid');
+
+            } else {
+                jQuery('[name=repitPassword]').removeClass('valid').addClass('invalid');
+                jQuery('[name=passwordNew]').removeClass('valid').addClass('invalid');
+            }
+        }
+        //ejecuto la función al soltar la tecla
+        pass3.keyup(function(){
+            coincidePassword();
+            if(jQuery('[name=password]').hasClass( "valid" )
+                && jQuery('[name=repitPassword]').hasClass( "valid" )
+                && jQuery('[name=passwordNew]').hasClass( "valid" ) ) {
+                jQuery("#loginSubmitChangeForm").prop("disabled", false);
+                jQuery("#loginSubmitChangeForm").removeClass('invalid').addClass('valid');
+            } else {
+                jQuery("#loginSubmitChangeForm").prop('disabled', true);
+                jQuery("#loginSubmitChangeForm").removeClass('valid').addClass('invalid');
+            }
+        });
+        jQuery('#loginChangeForm #loginSubmitChangeForm').on('click', function(e) {
+            e.preventDefault(); // prevent native submit
+            jQuery('#loginChangeForm .loadingIcon').show();
+
+            var user = jQuery("#loginChangeForm input[name='user']").val();
+            var password = jQuery("#loginChangeForm input[name='password']").val();
+            var passwordNew = jQuery("#loginChangeForm input[name='passwordNew']").val();
+            var loginType = jQuery("#loginChangeForm input[name='login-type']").val();
+            var action = jQuery("#loginChangeForm input[name='action']").val();
+            var url = "/get-data";
+            var ws = "changePassword";
+
+            jQuery.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    ws: ws,
+                    user: user,
+                    password: password,
+                    passwordNew: passwordNew,
+                    loginType: loginType,
                     action: action
                 },
                 success: function(response){
                     if(response['success'] == true){
-                        window.location.href = response['redirect'];
+
+                        jQuery('#loginChangeForm .message').text('Contraseña cambiada con éxito').removeClass("error-message").addClass('ok-message');
+                        jQuery('#loginChangeForm .message').show();
+                        jQuery('#cambiarPWD').delay(2000).fadeOut();
+                    }else{
+                        console.log('FALSE');
+                        console.log(response);
+                        jQuery('#loginChangeForm .message').text(response['e']).removeClass("ok-message").addClass('error-message');
+                        jQuery('#loginChangeForm .message').show();
+                    }
+                },
+                error: function(response){
+                    jQuery('#loginForm .loadingIcon').hide();
+                    jQuery('.public-core #loginForm .error-message').html( lang["error.login"] );
+                    jQuery('.public-core #loginForm .error-message').hide();
+                    jQuery('.public-core #loginForm .error-message').fadeIn(1000);
+                    console.error( lang["login.form.error"] );
+                }
+            });
+        });
+
+    }
+
+    // PUBLIC - Sends public login form as JSON and gets response
+    if (jQuery('#loginForm').length){
+
+        jQuery('#loginForm input[type="submit"]').on('click', function() {
+            jQuery('#loginForm input[type="text"]:invalid,' +
+                '#loginForm textarea:invalid').css('border-color','RGBA(255,0,0,0.5)');
+            jQuery('#loginForm input[type="text"]:valid,' +
+                '#loginForm textarea:valid').css('border-color','RGBA(210,210,210,1)');
+        });
+        jQuery('#loginForm #recoverypass').on('click', function(e) {
+            e.preventDefault(); // prevent native submit
+            jQuery('#loginForm .loadingIcon').show();
+
+            var user = jQuery("#loginForm input[name='user']").val();
+            var gestor = jQuery("#loginForm input[name='gestor']").val();
+            var loginType = 'recovery-login';
+            var action = jQuery("#loginForm input[name='action']").val();
+            var url = "/get-data";
+            var ws = "recoveryLogin";
+
+            jQuery.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    ws: ws,
+                    user: user,
+                    gestor: gestor,
+                    loginType: loginType,
+                    action: action
+                },
+                success: function(response){
+                    if(response['success'] == true){
+                        //HARDCODE PARA REDIRECT EN LOCAL
+                        //window.location.href = response['redirect'];
+                        window.location.href = 'http://127.0.0.1:8000/app';
                     }else{
                         jQuery('#loginForm .loadingIcon').hide();
-                        jQuery('.public-core #loginForm .error-message').html( response['e']);
+                        jQuery('.public-core #loginForm .error-message').html('Email enviado');
                         jQuery('.public-core #loginForm .error-message').hide();
                         jQuery('.public-core #loginForm .error-message').fadeIn(1000);
                     }
@@ -321,8 +515,37 @@ jQuery( document ).ready(function() {
                 product: product
             },
             success: function (response) {
+                console.log(response);
                 if (response['success'] == true) {
                     quote_load_ProductVariations(response.data);
+                } else {
+                    console.error( response.e);
+                }
+            },
+            error: function (response) {
+                console.error( lang["WS.error"] );
+            }
+        });
+    });
+
+    // QUOTE - products list
+    jQuery("#recogery-pass").on('click', function (e) {
+
+
+        var url = "/recovery-pass";
+        var ws = "recoveryPass";
+        var productor = jQuery("#quote-productor").val();
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                ws: ws,
+                productor: productor
+            },
+            success: function (response) {
+                if (response['success'] == true) {
+                    console.log('Email enviado');
                 } else {
                     console.error( response.e);
                 }
@@ -481,7 +704,7 @@ jQuery( document ).ready(function() {
         var ws = "getProductConfiguration";
         var productor = jQuery("#quote-productor").val();
         var product = jQuery("#quote input[name='quote-product']:checked").val();
-        //var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
+        var productVariation = jQuery("#quote input[name='quote-product-variation']:checked").val();
         var productModality = jQuery("#quote input[name='quote-product-modality']:checked").val();
         window.PMSelectedProductModality = productModality;
         //console.log(productModality);
@@ -493,7 +716,7 @@ jQuery( document ).ready(function() {
                 ws: ws,
                 productor: productor,
                 product: product,
-                // productVariation: productVariation,
+                productVariation: productVariation,
                 productModality: productModality
             },
             success: function (response) {
@@ -515,14 +738,9 @@ jQuery( document ).ready(function() {
     function quote_load_ProductConfiguration( data ){
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
-        //console.log('load_Product');
-        //console.log(data);
-
-
-
+        console.log('data');
+        console.log(data);
         //var timestamp = window.PMproductConfig.coberturas;//'{{ Session::get("quote")}}';
-
-
         // Loads jobs
         var jobsArray = data.P_PROFESION_CLIENTE.values;
 
@@ -593,7 +811,7 @@ jQuery( document ).ready(function() {
             hidden = " type='hidden' ";
         }
         var jobTypeField = "<div class='col-6'>";
-        jobTypeField += "<label class='quote-job-type-label mb-1' for='quote-job-type'>" + data.P_REGIMEN_SEG_SOCIAL.name + "</label>";
+        jobTypeField += "<label class='quote-job-type-label mb-1' for='quote-job-type'>" + data.P_REGIMEN_SEG_SOCIAL.WS.etiquetaPre + "</label>";
         jobTypeField += "<" + data.P_REGIMEN_SEG_SOCIAL.fieldType + hidden + " class='form-control w-100 quote-job-type valid' name='quote-job-type' " + data.P_REGIMEN_SEG_SOCIAL.attributes + ">\n";
 
         if( data.P_REGIMEN_SEG_SOCIAL.fieldType == "select"){
@@ -634,7 +852,6 @@ jQuery( document ).ready(function() {
         duration += '</div>';
         // Load commercial key
         window.PMcommercialKey = data.P_CLAVE_COMERCIAL;
-        //console.log(data.P_CLAVE_COMERCIAL);
         modificaConfiguracion = data.P_CLAVE_COMERCIAL.WS.modificaConfiguracion.toUpperCase()=="S";
         var modConfig = "";
         if (modificaConfiguracion){
@@ -670,6 +887,10 @@ jQuery( document ).ready(function() {
             if (modificaConfiguracion){
                 modConfig = " configChange";
             }
+            var helpFranquicia ='';
+            if (data.P_FRANQUICIA.WS.textoAyuda != null){
+                helpFranquicia = '<i class="fas fa-info-circle" title="' + data.P_FRANQUICIA.WS.textoAyuda + '"></i>';
+            }
             //window.PMEnfGraves = true;
             //console.log(data.P_FRANQUICIA);
             var hidden = "";
@@ -677,7 +898,7 @@ jQuery( document ).ready(function() {
                 hidden = " type='hidden' ";
             }
             franchiseField += "";
-            franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
+            franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + " "+helpFranquicia+"</label>";
             franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
             if( data.P_FRANQUICIA.fieldType == "select"){
 
@@ -823,8 +1044,8 @@ jQuery( document ).ready(function() {
                 }
                 cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
                 discountFields += "<div class='col-"+cols+" impersonator-field'>";
-                discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
-                discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+                discountFields += "<label class='quote-forma-cobro-label mb-1' for='quote-forma-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+                discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-forma-cobro valid' name='quote-forma-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
 
                 if (data.P_CANAL_COBRO.fieldType == "select") {
                     var cobroArray = data.P_CANAL_COBRO.values;
@@ -927,9 +1148,18 @@ jQuery( document ).ready(function() {
             if (data.P_DESCUENTO_06.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='mb-1 quote-discount-label' for='quote-discount'>" + data.P_DESCUENTO_06.name + "</label>";
-            discountFields += "<" + data.P_DESCUENTO_06.fieldType + hidden + " class='form-control w-100 quote-discount valid' name='quote-discount' " + data.P_DESCUENTO_06.attributes + ">\n";
+            cols = Math.floor(12 / data.P_DESCUENTO_06.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DESCUENTO_06.name + "</label>";
+            discountFields += "<" + data.P_DESCUENTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DESCUENTO_06.attributes + ">\n";
+
+            if (data.P_DESCUENTO_06.fieldType == "select") {
+                var cobroArray = data.P_DESCUENTO_06.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
             discountFields += "</div>";
         }
 
@@ -938,9 +1168,18 @@ jQuery( document ).ready(function() {
             if (data.P_ANYOS_DTO_06.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='mb-1 quote-discount-years-label' for='quote-discount-years'>" + data.P_ANYOS_DTO_06.name + "</label>";
-            discountFields += "<" + data.P_ANYOS_DTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-years valid' name='quote-discount-years' " + data.P_ANYOS_DTO_06.attributes + ">\n";
+            cols = Math.floor(12 / data.P_ANYOS_DTO_06.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_ANYOS_DTO_06.name + "</label>";
+            discountFields += "<" + data.P_ANYOS_DTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_ANYOS_DTO_06.attributes + ">\n";
+
+            if (data.P_ANYOS_DTO_06.fieldType == "select") {
+                var cobroArray = data.P_ANYOS_DTO_06.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
             discountFields += "</div>";
         }
 
@@ -949,9 +1188,18 @@ jQuery( document ).ready(function() {
             if (data.P_SOBREPRIMA_DEL.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='mb-1 quote-discount-sobreprima-label' for='quote-discount-sobreprima'>" + data.P_SOBREPRIMA_DEL.name + "</label>";
-            discountFields += "<" + data.P_SOBREPRIMA_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-sobreprima valid' name='quote-discount-sobreprima' " + data.P_SOBREPRIMA_DEL.attributes + ">\n";
+            cols = Math.floor(12 / data.P_SOBREPRIMA_DEL.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_SOBREPRIMA_DEL.name + "</label>";
+            discountFields += "<" + data.P_SOBREPRIMA_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_SOBREPRIMA_DEL.attributes + ">\n";
+
+            if (data.P_SOBREPRIMA_DEL.fieldType == "select") {
+                var cobroArray = data.P_SOBREPRIMA_DEL.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
             discountFields += "</div>";
         }
 
@@ -960,42 +1208,79 @@ jQuery( document ).ready(function() {
             if (data.P_DTO_COMISION_MED.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='mb-1 quote-discount-commision-med-label' for='quote-discount-commision-med'>" + data.P_DTO_COMISION_MED.name + "</label>";
-            discountFields += "<" + data.P_DTO_COMISION_MED.fieldType + hidden + " class='form-control w-100 quote-discount-commision-med valid' name='quote-discount-commision-med' " + data.P_DTO_COMISION_MED.attributes + ">\n";
+            cols = Math.floor(12 / data.P_DTO_COMISION_MED.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DTO_COMISION_MED.name + "</label>";
+            discountFields += "<" + data.P_DTO_COMISION_MED.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DTO_COMISION_MED.attributes + ">\n";
+
+            if (data.P_DTO_COMISION_MED.fieldType == "select") {
+                var cobroArray = data.P_DTO_COMISION_MED.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
             discountFields += "</div>";
         }
 
         if( typeof data.P_DTO_COMISION_DEL !== 'undefined' ) {
             var hidden = "";
-            discountFields +=  "";
-            if(data.P_DTO_COMISION_DEL.hidden == "S"){
+            if (data.P_DTO_COMISION_DEL.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            discountFields += "<div class='col-6 impersonator-field'>";
-            discountFields += "<label class='mb-1 quote-discount-commision-del-label' for='quote-discount-commision-del'>" + data.P_DTO_COMISION_DEL.name + "</label>";
-            discountFields += "<" + data.P_DTO_COMISION_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-commision-del valid' name='quote-discount-commision-del' " + data.P_DTO_COMISION_DEL.attributes + ">\n";
+            cols = Math.floor(12 / data.P_DTO_COMISION_DEL.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DTO_COMISION_DEL.name + "</label>";
+            discountFields += "<" + data.P_DTO_COMISION_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DTO_COMISION_DEL.attributes + ">\n";
+
+            if (data.P_DTO_COMISION_DEL.fieldType == "select") {
+                var cobroArray = data.P_DTO_COMISION_DEL.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
             discountFields += "</div>";
         }
 
         if( typeof data.P_RECARGO_FINANCIACION !== 'undefined' ) {
             var hidden = "";
-            if(data.P_RECARGO_FINANCIACION.hidden == "S"){
+            if (data.P_RECARGO_FINANCIACION.hidden == "S") {
                 hidden = " type='hidden' ";
             }
-            benefits +=  "<div class='col-6 impersonator-field'>";
-            benefits += "<label class='quote-discount-recargo-financiacion-label mb-1' for='quote-discount-recargo-financiacion'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
-            benefits +=  "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-recargo-financiacion valid' name='quote-discount-recargo-financiacion' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
+            cols = Math.floor(12 / data.P_RECARGO_FINANCIACION.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
+            discountFields += "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
 
             if (data.P_RECARGO_FINANCIACION.fieldType == "select") {
-
-                var recargoArray = data.P_RECARGO_FINANCIACION.values;
-                Object.keys(recargoArray).forEach(function (key) {
-                    benefits += "<option value='" + key + "'>" + recargoArray[key] + "</option>";
+                var cobroArray = data.P_RECARGO_FINANCIACION.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
                 });
-                benefits += "</select>";
+                discountFields += "</select>";
             }
-            benefits += "</div>";
+            discountFields += "</div>";
+        }
+
+        if( typeof data.P_CANAL_COBRO !== 'undefined' ) {
+            var hidden = "";
+            if (data.P_CANAL_COBRO.hidden == "S") {
+                hidden = " type='hidden' ";
+            }
+            cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-forma-cobro-label mb-1' for='quote-forma-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+            discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-forma-cobro valid' name='quote-forma-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+
+            if (data.P_CANAL_COBRO.fieldType == "select") {
+                var cobroArray = data.P_CANAL_COBRO.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
+            discountFields += "</div>";
         }
 
 
@@ -1003,7 +1288,7 @@ jQuery( document ).ready(function() {
         //console.log(data);
 
         jQuery('#quote .product-extra-info .quote-job').html(jobSelect);
-        jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.name);
+        jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.WS.etiquetaPre);
         jQuery('#quote .product-extra-info .quote-job-type').html(jobTypeSelect);
         jQuery('#quote .product-extra-info .quote-commercialKey').html(commercialKey);
         jQuery('#quote .product-extra-info .quote-gender').html(genderSelect);
@@ -1165,15 +1450,10 @@ jQuery( document ).ready(function() {
     function quote_load_PartialProductConfiguration( data, index ){
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
-        //console.log('load_PartialProduct');
-        //console.log(data);
+        console.log('load_PartialProduct');
+        console.log(data);
 
-        // Signing method Logalty/handwriting
-        //if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
-        //    window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
-        //}else{
-        //    window.PMsigningMode = null;
-        //}
+
         var benefits = "";
         var franchiseField = "";
         var duration = "<div class='col-12'>";
@@ -1212,6 +1492,48 @@ jQuery( document ).ready(function() {
                 }else{
                     jobLabel = data.P_PROFESION_CLIENTE.name;
                 }
+                // Loads autocomplete input text.
+                jQuery( function() {
+                    var accentMap = {
+                        "á": "a",
+                        "é": "e",
+                        "í": "i",
+                        "ó": "o",
+                        "ú": "u",
+                        "ü": "u"
+                    };
+
+                    // "Remove" accents
+                    var normalize = function(termOriginal) {
+                        var term = termOriginal.toLowerCase();
+                        var ret = "";
+                        for ( var i = 0; i < term.length; i++ ) {
+                            ret += accentMap[ term.charAt(i) ] || term.charAt(i);
+                        }
+                        return ret;
+                    };
+
+                    // Load dynamic data and displays updated block
+                    jQuery( "#quote .quote-job-picker" ).autocomplete({
+                        minLength: 0,
+
+                        source: function( request, response ) {
+                            var matcher = new RegExp( jQuery.ui.autocomplete.escapeRegex( request.term ), "i" );
+                            response( jQuery.grep( jobPicker, function( value ) {
+                                value = value.label || value.value || value;
+                                return matcher.test( value ) || matcher.test( normalize( value ) );
+                            }) );
+                        },
+
+                        select: function(event,ui) {
+                            this.value=ui.item.value;
+                            jQuery(this).trigger('change');
+                            return false;
+                        }
+                    });
+
+                });
+
 
 
             case 1:     // Load commercial key
@@ -1279,13 +1601,17 @@ jQuery( document ).ready(function() {
                         if (modificaConfiguracion){
                             modConfig = " configChange";
                         }
+                        var helpFranquicia ='';
+                        if (data.P_FRANQUICIA.WS.textoAyuda != null){
+                            helpFranquicia = '<i class="fas fa-info-circle" title="' + data.P_FRANQUICIA.textoAyuda + '"></i>';
+                        }
                         window.PMEnfGraves = true;
                         var hidden = "";
                         if(data.P_FRANQUICIA.hidden == "S"){
                             hidden = " type='hidden' ";
                         }
                         franchiseField += "";
-                        franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
+                        franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + ""+helpFranquicia+"</label>";
                         franchiseField += "<" + data.P_FRANQUICIA.WS.tipoCampoHTML + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
 
                         if( data.P_FRANQUICIA.fieldType == "select"){
@@ -1449,8 +1775,8 @@ jQuery( document ).ready(function() {
                         }
                         cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
                         discountFields += "<div class='col-"+cols+" impersonator-field'>";
-                        discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
-                        discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+                        discountFields += "<label class='quote-forma-cobro-label mb-1' for='quote-forma-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+                        discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-forma-cobro valid' name='quote-forma-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
 
                         if (data.P_CANAL_COBRO.fieldType == "select") {
                             var cobroArray = data.P_CANAL_COBRO.values;
@@ -1484,14 +1810,24 @@ jQuery( document ).ready(function() {
                 }
 
                 // load discount fields for impersonator users
+                var discountFields = "";
                 if( typeof data.P_DESCUENTO_06 !== 'undefined' ) {
                     var hidden = "";
                     if (data.P_DESCUENTO_06.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='mb-1 quote-discount-label' for='quote-discount'>" + data.P_DESCUENTO_06.name + "</label>";
-                    discountFields += "<" + data.P_DESCUENTO_06.fieldType + hidden + " class='form-control w-100 quote-discount valid' name='quote-discount' " + data.P_DESCUENTO_06.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_DESCUENTO_06.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DESCUENTO_06.name + "</label>";
+                    discountFields += "<" + data.P_DESCUENTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DESCUENTO_06.attributes + ">\n";
+
+                    if (data.P_DESCUENTO_06.fieldType == "select") {
+                        var cobroArray = data.P_DESCUENTO_06.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                        });
+                        discountFields += "</select>";
+                    }
                     discountFields += "</div>";
                 }
 
@@ -1500,9 +1836,18 @@ jQuery( document ).ready(function() {
                     if (data.P_ANYOS_DTO_06.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='mb-1 quote-discount-years-label' for='quote-discount-years'>" + data.P_ANYOS_DTO_06.name + "</label>";
-                    discountFields += "<" + data.P_ANYOS_DTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-years valid' name='quote-discount-years' " + data.P_ANYOS_DTO_06.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_ANYOS_DTO_06.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_ANYOS_DTO_06.name + "</label>";
+                    discountFields += "<" + data.P_ANYOS_DTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_ANYOS_DTO_06.attributes + ">\n";
+
+                    if (data.P_ANYOS_DTO_06.fieldType == "select") {
+                        var cobroArray = data.P_ANYOS_DTO_06.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                        });
+                        discountFields += "</select>";
+                    }
                     discountFields += "</div>";
                 }
 
@@ -1511,9 +1856,18 @@ jQuery( document ).ready(function() {
                     if (data.P_SOBREPRIMA_DEL.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='mb-1 quote-discount-sobreprima-label' for='quote-discount-sobreprima'>" + data.P_SOBREPRIMA_DEL.name + "</label>";
-                    discountFields += "<" + data.P_SOBREPRIMA_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-sobreprima valid' name='quote-discount-sobreprima' " + data.P_SOBREPRIMA_DEL.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_SOBREPRIMA_DEL.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_SOBREPRIMA_DEL.name + "</label>";
+                    discountFields += "<" + data.P_SOBREPRIMA_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_SOBREPRIMA_DEL.attributes + ">\n";
+
+                    if (data.P_SOBREPRIMA_DEL.fieldType == "select") {
+                        var cobroArray = data.P_SOBREPRIMA_DEL.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                        });
+                        discountFields += "</select>";
+                    }
                     discountFields += "</div>";
                 }
 
@@ -1522,38 +1876,55 @@ jQuery( document ).ready(function() {
                     if (data.P_DTO_COMISION_MED.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='mb-1 quote-discount-commision-med-label' for='quote-discount-commision-med'>" + data.P_DTO_COMISION_MED.name + "</label>";
-                    discountFields += "<" + data.P_DTO_COMISION_MED.fieldType + hidden + " class='form-control w-100 quote-discount-commision-med valid' name='quote-discount-commision-med' " + data.P_DTO_COMISION_MED.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_DTO_COMISION_MED.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DTO_COMISION_MED.name + "</label>";
+                    discountFields += "<" + data.P_DTO_COMISION_MED.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DTO_COMISION_MED.attributes + ">\n";
+
+                    if (data.P_DTO_COMISION_MED.fieldType == "select") {
+                        var cobroArray = data.P_DTO_COMISION_MED.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                        });
+                        discountFields += "</select>";
+                    }
                     discountFields += "</div>";
                 }
 
                 if( typeof data.P_DTO_COMISION_DEL !== 'undefined' ) {
                     var hidden = "";
-                    discountFields +=  "";
-                    if(data.P_DTO_COMISION_DEL.hidden == "S"){
+                    if (data.P_DTO_COMISION_DEL.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='mb-1 quote-discount-commision-del-label' for='quote-discount-commision-del'>" + data.P_DTO_COMISION_DEL.name + "</label>";
-                    discountFields += "<" + data.P_DTO_COMISION_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-commision-del valid' name='quote-discount-commision-del' " + data.P_DTO_COMISION_DEL.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_DTO_COMISION_DEL.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DTO_COMISION_DEL.name + "</label>";
+                    discountFields += "<" + data.P_DTO_COMISION_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DTO_COMISION_DEL.attributes + ">\n";
+
+                    if (data.P_DTO_COMISION_DEL.fieldType == "select") {
+                        var cobroArray = data.P_DTO_COMISION_DEL.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                        });
+                        discountFields += "</select>";
+                    }
                     discountFields += "</div>";
                 }
 
                 if( typeof data.P_RECARGO_FINANCIACION !== 'undefined' ) {
                     var hidden = "";
-                    if(data.P_RECARGO_FINANCIACION.hidden == "S"){
+                    if (data.P_RECARGO_FINANCIACION.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields +=  "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='quote-discount-recargo-financiacion-label mb-1' for='quote-discount-recargo-financiacion'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
-                    discountFields +=  "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-recargo-financiacion valid' name='quote-discount-recargo-financiacion' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_RECARGO_FINANCIACION.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
+                    discountFields += "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
 
                     if (data.P_RECARGO_FINANCIACION.fieldType == "select") {
-
-                        var recargoArray = data.P_RECARGO_FINANCIACION.values;
-                        Object.keys(recargoArray).forEach(function (key) {
-                            discountFields += "<option value='" + key + "'>" + recargoArray[key] + "</option>";
+                        var cobroArray = data.P_RECARGO_FINANCIACION.values;
+                        Object.keys(cobroArray).forEach(function (key) {
+                            discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
                         });
                         discountFields += "</select>";
                     }
@@ -1565,9 +1936,10 @@ jQuery( document ).ready(function() {
                     if (data.P_CANAL_COBRO.hidden == "S") {
                         hidden = " type='hidden' ";
                     }
-                    discountFields += "<div class='col-6 impersonator-field'>";
-                    discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
-                    discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+                    cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
+                    discountFields += "<div class='col-"+cols+" align-self-end'>";
+                    discountFields += "<label class='quote-forma-cobro-label mb-1' for='quote-forma-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+                    discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-forma-cobro valid' name='quote-forma-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
 
                     if (data.P_CANAL_COBRO.fieldType == "select") {
                         var cobroArray = data.P_CANAL_COBRO.values;
@@ -1675,7 +2047,24 @@ jQuery( document ).ready(function() {
         jQuery('#quote .get-rates').fadeIn();
     }
 
-
+    // QUOTE - Validate legal age
+    jQuery("#quote .quote-person-entity-birthdate-show").on('focusout', function(){
+        var actualBirthay = jQuery('.quote-person-entity-birthdate-show').val().substr(6,4);
+        var today = new Date();
+        var actualYear = today.getFullYear();
+        var difYear = actualYear - actualBirthay;
+        if (difYear > 18){
+            console.log('Mayor de edad');
+            jQuery(this).removeClass("invalid");
+            jQuery(this).addClass("valid");
+            jQuery(this).next().hide();
+        } else {
+            console.log('Menor de edad');
+            jQuery(this).addClass("invalid");
+            jQuery(this).removeClass("valid");
+            jQuery(this).next().show();
+        }
+    });
     // QUOTE - Date field behavior (only numbers and /)
     jQuery("#quote").on('keypress',
         ".quote-birthdate, .quote-person-entity-birthdate-show, .quote-another-insurance-ends, .datetimepickerHealth input, .quote-starting-date,  .quote-another-insurance-ends, .date-input",
@@ -1731,10 +2120,13 @@ jQuery( document ).ready(function() {
         jQuery("#quote .product-extra-info").on('keypress', ".quote-benefit[required]", function (evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            if (charCode > 31 && jQuery(this).val().indexOf('.') != -1 && (charCode < 48 || charCode > 57)) {
                 return false;
             }
 
+            if ((jQuery(this).val().indexOf('.') != -1) && (jQuery(this).val().substring(jQuery(this).val().indexOf('.')).length > 2) ) {
+                return false;
+            }
             enableQuoteButton();
         });
 
@@ -1791,7 +2183,6 @@ jQuery( document ).ready(function() {
         }
 
         if (jQuery(element).hasClass("quote-birthdate") ||
-            jQuery(element).hasClass("quote-starting-date") ||
             jQuery(element).hasClass("quote-person-entity-birthdate-show")) {
             var valid;
 
@@ -1799,7 +2190,7 @@ jQuery( document ).ready(function() {
                 var splitDate = jQuery(element).val().split("/");
                 if (splitDate[0] >= 1 && splitDate[0] <= 31) {
                     if (splitDate[1] >= 1 && splitDate[1] <= 12) {
-                        if (splitDate[2] >= 1920 && splitDate[2] <= 2021) {
+                        if (splitDate[2] >= 1920 && splitDate[2] <= 2022) {
                             valid = true;
                         } else {
                             valid = false;
@@ -1907,7 +2298,7 @@ jQuery( document ).ready(function() {
                 var discountCommisionDel = jQuery('#quote .quote-discount-commision-del').val();
                 var discountRecargoFinanciacion = jQuery('#quote .quote-discount-recargo-financiacion').val();
                 var discountCobro = jQuery('#quote .quote-discount-cobro').val();
-                var formaPago = jQuery('#quote .quote-discount-cobro').val();
+                var formaPago = jQuery('#quote .quote-forma-cobro').val();
 
                 var enfCob = null;
                 var enfSub  = null;
@@ -2022,7 +2413,7 @@ jQuery( document ).ready(function() {
                     date: date,
                     formaPago: formaPago
                 }
-
+                console.log(window.PMgetRatesData);
                 jQuery.ajax({
                     type: "POST",
                     url: url,
@@ -2097,7 +2488,8 @@ jQuery( document ).ready(function() {
     function quote_load_Rates(data){
 
         window.PMrates = data;
-        console.log(window.PMrates);
+        //console.log(window.PMrates);
+
         // Signing method Logalty/handwriting
         if( typeof window.PMrates.hiringType !== 'undefined' ) {
             window.PMsigningMode = window.PMrates.hiringType;
@@ -2109,6 +2501,7 @@ jQuery( document ).ready(function() {
 
         //console.log("Rates ");
         //console.log(data);
+
         var startIcon = "<i class='fas fa-info-circle'"; //comment-alt'";
         var endIcon = "></i>"
         var i;
@@ -2478,6 +2871,7 @@ jQuery( document ).ready(function() {
                 var height = jQuery("#quote #quote-height").val();
                 var weight = jQuery("#quote #quote-weight").val();
                 var commercialKey = jQuery('#quote .quote-commercial-key').val();
+                var date = jQuery('#quote .quote-starting-date').val();
 
                 var duration = null;
                 if (window.PMduration != null)
@@ -2502,9 +2896,11 @@ jQuery( document ).ready(function() {
                     height : height,
                     weight : weight,
                     commercialKey : commercialKey,
-                    duration: duration
+                    duration: duration,
+                    date: date
+
                 }
-                //console.log(window.PMgetRatesData);
+                console.log(window.PMgetRatesData);
 
 
                 jQuery.ajax({
@@ -2741,6 +3137,25 @@ jQuery( document ).ready(function() {
     });
 
     // QUOTE - Send mail button
+    jQuery('#quote .advisor-results .action-minibutton.send-email-advisor').click(function(e){
+        e.preventDefault(); // prevent native submit
+
+        var form = "";
+        form += "<form class='modal-send-email'>";
+        form += "<label class='mt-4'>" + lang["modal.input.email"] + "</label>";
+        form += "<input class='my-2' type='email' required>";
+        form += "<button type='submit' id='advisor-results' class='my-2 bg-lime-yellow text-white mx-auto d-block rounded border-0 px-3 py-2' disabled>" + lang['modal.send'] + "</button>";
+        form += "<div class='loader-wrapper w-100 pt-5 text-center' style='display:none;'>";
+        form += "<i class='fas fa-circle-notch fa-spin fa-2x txt-navy-blue'></i>";
+        form += "</div>";
+        form += "<p class='result text-center txt-navy-blue mt-4'></p>";
+        form += "</form>";
+
+        displayModal("send-email", lang["modal.title.sendEmail"], form, lang['quote.modal.close']);
+
+    });
+
+    // QUOTE - Send mail button
     jQuery('#selected-product-info button#send-budget').click(function(e){
         e.preventDefault(); // prevent native submit
 
@@ -2779,6 +3194,12 @@ jQuery( document ).ready(function() {
         window.print();
     });
 
+    // QUOTE - Print advisor button
+    jQuery('#quote .advisor-results .action-minibutton.print-advisor').click(function(e){
+
+        window.print();
+    });
+
     // QUOTE - Selects row from rates table and enable billing cycle
     jQuery("#quote .rates-table table").on('click', "td.product", function (e) {
 
@@ -2792,7 +3213,19 @@ jQuery( document ).ready(function() {
         selectedColumnIndex = jQuery(this).index() + 1;
         jQuery('#quote .rates-table table th:nth-child(' + selectedColumnIndex +')' ).addClass("selected");
         window.PMselectedFinalProduct = jQuery('#quote .rates-table table th:nth-child(' + selectedColumnIndex +')' ).html();
-        console.log(window.PMselectedFinalProduct);
+        //console.log(window.PMselectedFinalProduct);
+        if( jQuery('.quote-benefit-covidPrestacion').attr('checked') || jQuery('.quote-benefit-covidHospitalizacion').attr('checked') ) {
+            window.PMselectedFinalProduct = jQuery('#quote .rates-table table th:nth-child(' + selectedColumnIndex +')' ).html() + ' y complementaria Covid-19';
+        }
+        var str1 = window.PMselectedFinalProduct;
+        if (jQuery('input[name="quote-product-modality"]:checked').val() == '22'){
+            if(str1.indexOf('ACC') == -1){
+                jQuery('p.card-text.product-exemption').hide();
+            } else {
+                jQuery('p.card-text.product-exemption').show();
+            }
+        }
+
         // Enables action buttons
         resetRatesTableActionsBilling();
         jQuery('#quote .rates-table .billing-cycle input').removeAttr("disabled");
@@ -2826,7 +3259,7 @@ jQuery( document ).ready(function() {
         var coverages = [];
         // Loads coverage (cobertura) info
         var j = 0;
-        for( i=0;i<10;i++ ) {
+        for( i=0;i<30;i++ ) {
 
             // Stores exemption (franquicia)
             if( i ===0 ){
@@ -2880,6 +3313,7 @@ jQuery( document ).ready(function() {
         }
 
         window.PMselectedFinalProductCoverages = coverages;
+        console.log(window.PMselectedFinalProductCoverages);
 
         selectionDescription = "<p>" + jQuery(this).data("info") + "<p>";
         jQuery('#quote .rates-table-selection-description').html(selectionDescription);
@@ -2956,7 +3390,8 @@ jQuery( document ).ready(function() {
                 discountRecargoFinanciacion : window.PMgetRatesData.discountRecargoFinanciacion,
                 discountCobro : window.PMgetRatesData.discountCobro,
                 coverages : window.PMselectedFinalProductCoverages,
-                paymentMethod : window.PMbillingCycle
+                paymentMethod : window.PMbillingCycle,
+                franchise : window.PMgetRatesData.franchise
             },
             success: function (response) {
                 console.log(response);
@@ -2998,11 +3433,12 @@ jQuery( document ).ready(function() {
                     //console.log(response['data']['url']);
                     // Stores it to use later
                     window.PMbudgetURL = response['data']['url'];
+                    budgetDownload = '/'+response['data']['url'];
                     jQuery('#quote #step-1 #send-budget').removeAttr("disabled");
                     jQuery('#quote #step-1 #send-budget').addClass("active");
                     jQuery('#quote #step-1 #print-budget').removeAttr("disabled");
                     jQuery('#quote #step-1 #print-budget').addClass("active");
-                    jQuery('a.print-budget').attr("href", response['data']['url']);
+                    jQuery('a.print-budget').attr("href", budgetDownload);
                     jQuery('#quote #generate-budget .loadingIcon').hide();
                     jQuery('#quote #generate-budget').removeAttr("disabled");
                     jQuery(".loader-wrapper-get-budget").hide();
@@ -3079,6 +3515,48 @@ jQuery( document ).ready(function() {
     });
 
     // MODAL - SEND EMAIL send
+    jQuery("#PMmodal").on('click', '.modal-send-email button#advisor-results', function(e){
+        e.preventDefault(); // prevent native submit
+        //jQuery(this).attr("disabled");
+
+        jQuery('.modal-send-email .loader-wrapper').show();
+        jQuery('.modal-send-email .result').html();
+
+
+        // NEED TO GET INFO of the file FROM WS
+        var fileId = ""; // 323785;
+        var filename = ""; // "6600031_201911_2.pdf";
+        var tipoFichero = "" // 2;
+
+
+        var html = jQuery('#quote #step-1 #advisor-results').html();
+        var email = jQuery(".modal-send-email input[type=email]").val();
+        var product = 'Recomendador';
+        var body = "Le remitimos información de la recomendación del coste de su Seguro, solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
+
+        // Send email with attachment from /downloads
+        jQuery.ajax({
+            type: "POST",
+            url: "/send-mail-html",
+            data: {
+                email : email,
+                product : product,
+                body : body,
+                html : html,
+
+            },
+            success: function(response) {
+                jQuery('.modal-send-email .loader-wrapper').hide();
+                jQuery('.modal-send-email .result').html(response['body']);
+            },
+            error: function(response){
+                //console.error(response['e']);
+            }
+        });
+
+    });
+
+    // MODAL - SEND EMAIL send
     jQuery("#PMmodal").on('click', '.modal-send-email button#budget', function(e){
         e.preventDefault(); // prevent native submit
         //jQuery(this).attr("disabled");
@@ -3098,12 +3576,12 @@ jQuery( document ).ready(function() {
         html += jQuery('#quote #step-1 .print1').html();
         var email = jQuery(".modal-send-email input[type=email]").val();
         var product = jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html();
-        var body = "Le remitimos información del coste de su Seguro de " + jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html() +", solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
+        var body = "Le remitimos presupuesto de su Seguro de " + jQuery('#quote #selected-product-info .print3 .product-name .dynamic-content').html() +", solicitada a su mediador de seguros, en documento adjunto. <br>Un cordial saludo. <br> La Previsión Mallorquina de Seguros, S.A.";
 
         // Send email with attachment from /downloads
         jQuery.ajax({
             type: "POST",
-            url: "/send-mail-html",
+            url: "/send-budget-html",
             data: {
                 email : email,
                 product : product,
@@ -3198,6 +3676,7 @@ jQuery( document ).ready(function() {
     // QUOTES - postal code max numbers
     jQuery("#quote .quote-postal-code, " +
         "#quote .quote-company-postal-code," +
+        "#quote .quote-person-entity-postal-code," +
         "#quote .quote-legal-entity-postal-code").on("keyup", function(e){
 
         if (jQuery(this).val().length > 5) {
@@ -3212,6 +3691,9 @@ jQuery( document ).ready(function() {
         }
         if( jQuery(this).hasClass("quote-legal-entity-postal-code") ) {
             currentClass = "quote-legal-entity-postal-code";
+        }
+        if( jQuery(this).hasClass("quote-person-entity-postal-code") ) {
+            currentClass = "quote-person-entity-postal-code";
         }
         resetQuoteCityProvince(currentClass);
 
@@ -3244,6 +3726,11 @@ jQuery( document ).ready(function() {
                             case "quote-legal-entity-postal-code":
                                 quote_load_cityProvince(response.data, "quote-legal-entity-postal-code");
                                 break;
+
+                            case "quote-person-entity-postal-code":
+                                quote_load_cityProvince(response.data, "quote-person-entity-postal-code");
+                                break;
+
                         }
                     } else {
                         //console.error( response.e);
@@ -3298,6 +3785,14 @@ jQuery( document ).ready(function() {
                 jQuery('#quote .quote-legal-entity-province').removeAttr("disabled");
                 jQuery("#quote .quote-legal-entity-postal-code").change();
                 break;
+
+            case "quote-person-entity-postal-code":
+                jQuery('#quote .quote-person-entity-city').html(citiesSelect);
+                jQuery('#quote .quote-person-entity-city').removeAttr("disabled");
+                jQuery('#quote .quote-person-entity-province').html(provincesSelect);
+                jQuery('#quote .quote-person-entity-province').removeAttr("disabled");
+                jQuery("#quote .quote-person-entity-postal-code").change();
+                break;
         }
 
 
@@ -3316,6 +3811,7 @@ jQuery( document ).ready(function() {
                 jQuery(this).hasClass("quote-company-address") ||
                 jQuery(this).hasClass("quote-legal-entity-name") ||
                 jQuery(this).hasClass("quote-legal-entity-address") ||
+                jQuery(this).hasClass("quote-person-entity-address") ||
                 jQuery(this).hasClass("quote-another-insurance-name")  ){
 
                 if (jQuery(this).val().length > 0) {
@@ -3412,7 +3908,7 @@ jQuery( document ).ready(function() {
                 return regex.test(texto);
             }
             function onlyLetters(texto) {
-                var regex = /^[a-zA-Z ]+$/;
+                var regex = /^[a-zçA-ZÇ\u00f1\u00d1\s]+$/;
                 return regex.test(texto);
             }
             if (jQuery(this).hasClass("quote-company-phone")) {
@@ -3442,7 +3938,8 @@ jQuery( document ).ready(function() {
             if (jQuery(this).hasClass("quote-first-name") ||
                 jQuery(this).hasClass("quote-last-name") ||
                 jQuery(this).hasClass("quote-person-entity-name") ||
-                jQuery(this).hasClass("quote-person-entity-last-name") ) {
+                jQuery(this).hasClass("quote-person-entity-last-name") ||
+                jQuery(this).hasClass("quote-legal-entity-name")) {
                 if (onlyLetters(this.value)==true) {
                     jQuery(this).removeClass("invalid");
                     jQuery(this).addClass("valid");
@@ -3532,6 +4029,32 @@ jQuery( document ).ready(function() {
                 }
             }
 
+            if ( jQuery(this).hasClass("quote-person-entity-postal-code") ) {
+                if (jQuery(this).val().length == 5) {
+                    jQuery(this).removeClass("invalid");
+                    jQuery(this).addClass("valid");
+                } else {
+                    jQuery(this).addClass("invalid");
+                    jQuery(this).removeClass("valid");
+                }
+
+                if (jQuery("#quote .quote-person-entity-city").children("option:selected").val() > 0) {
+                    jQuery("#quote .quote-person-entity-city").removeClass("invalid");
+                    jQuery("#quote .quote-person-entity-city").addClass("valid");
+                } else {
+                    jQuery("#quote .quote-person-entity-city").addClass("invalid");
+                    jQuery("#quote .quote-person-entity-city").removeClass("valid");
+                }
+
+                if (jQuery("#quote .quote-person-entity-province").children("option:selected").val() > 0) {
+                    jQuery("#quote .quote-person-entity-province").removeClass("invalid");
+                    jQuery("#quote .quote-person-entity-province").addClass("valid");
+                } else {
+                    jQuery("#quote .quote-person-entity-province").addClass("invalid");
+                    jQuery("#quote .quote-person-entity-province").removeClass("valid");
+                }
+            }
+
             if (jQuery(this).hasClass("quote-email") ||
                 jQuery(this).hasClass("quote-person-entity-email") ||
                 jQuery(this).hasClass("quote-legal-entity-email") ||
@@ -3552,7 +4075,7 @@ jQuery( document ).ready(function() {
         });
 
     // QUOTE - postal code  and price (only numbers)
-    jQuery( '#quote #personal-info').on('keypress', ".quote-postal-code, .quote-company-postal-code, .quote-legal-entity-postal-code, .quote-another-insurance-price", function (evt) {
+    jQuery( '#quote #personal-info').on('keypress', ".quote-postal-code, .quote-company-postal-code, .quote-legal-entity-postal-code, .quote-person-entity-postal-code, .quote-another-insurance-price", function (evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -3643,7 +4166,8 @@ jQuery( document ).ready(function() {
         '#quote #personal-info .quote-job-location,' +
         '#quote #personal-info .quote-company-address-pick,' +
         '#quote #personal-info .quote-company-address-type,' +
-        '#quote #personal-info .quote-legal-entity-address-type').change( function() {
+        '#quote #personal-info .quote-legal-entity-address-type,' +
+        '#quote #personal-info .quote-person-entity-address-type').change( function() {
 
         if (jQuery(this).children("option:selected").val() != null) {
             jQuery(this).removeClass("invalid");
@@ -3663,6 +4187,13 @@ jQuery( document ).ready(function() {
     jQuery("#quote .quote-another-insurance.no").click( function(e){
         jQuery("#quote .quote-another-insurance-extra-info").hide();
         step2EnableNextButton();
+    });
+    // QUOTES - toggles another insurance extra info
+    jQuery("#quote .quote-another-buyer.yes").click( function(e){
+        jQuery("#quote .quote-another-buyer-extra-info").fadeIn();
+    });
+    jQuery("#quote .quote-another-buyer.no").click( function(e){
+        jQuery("#quote .quote-another-buyer-extra-info").hide();
     });
     // QUOTES - toggles person entity extra info
     jQuery("#quote .quote-legal-entity-type.natural-person").click( function(e){
@@ -3696,9 +4227,9 @@ jQuery( document ).ready(function() {
             .each(function() {
                 if( !jQuery(this).hasClass("valid") ){
                     allValid = false;
-                    // console.log( "FAIL | " + this.className.split(' ')[2] );
+                    //console.log( "FAIL | " + this.className.split(' ')[2] );
                 }else{
-                    // console.log( "OK | " + this.className.split(' ')[2] );
+                    //console.log( "OK | " + this.className.split(' ')[2] );
                 }
             });
         //console.log( "------------------------");
@@ -3714,47 +4245,42 @@ jQuery( document ).ready(function() {
 
     // QUOTES - Saves step 2 data into JS variable
     function storeStep2Data(){
-        if ( jQuery('#quote .quote-legal-entity-name').val() != '' ) {
-            var quoteEntityName = jQuery('#quote .quote-legal-entity-name').val();
-        } else if ( jQuery('#quote .quote-person-entity-name').val() != '' ) {
+        if(jQuery('#quote .natural-person').hasClass("active")) {
             var quoteEntityName = jQuery('#quote .quote-person-entity-name').val();
+            var quoteEntityLastName= jQuery('#quote .quote-person-entity-last-name').val();
+            var quoteEntityId = jQuery('#quote .quote-person-entity-personal-id').val();
+            var quoteEntityEmail = jQuery('#quote .quote-person-entity-email').val();
+            var quoteEntityPhone = jQuery('#quote .quote-person-entity-phone').val();
+            var quoteLegalEntity = 'F';
+            var quoteEntityAddress = jQuery('#quote .quote-person-entity-address').val();
+            var quoteEntityAddressType =jQuery('#quote .quote-person-entity-address-type').val();
+            var quoteEntityCP = jQuery('#quote .quote-person-entity-postal-code').val();
+            var quoteEntityCity = jQuery('#quote .quote-person-entity-city').val();
+            var quoteEntityProvince = jQuery('#quote .quote-person-entity-province').val();
+        } else if(jQuery('#quote .legal-entity').hasClass("active")) {
+            var quoteEntityName = jQuery('#quote .quote-legal-entity-name').val();
+            var quoteEntityLastName = '';
+            var quoteEntityId = jQuery('#quote .quote-legal-entity-id').val();
+            var quoteEntityEmail = jQuery('#quote .quote-legal-entity-email').val();
+            var quoteEntityPhone = jQuery('#quote .quote-legal-entity-phone').val();
+            var quoteLegalEntity = jQuery('#quote .quote-legal-entity-type.active').data("person-type");
+            var quoteEntityAddress = jQuery('#quote .quote-legal-entity-address').val();
+            var quoteEntityAddressType = jQuery('#quote .quote-legal-entity-address-type').val();
+            var quoteEntityCP = jQuery('#quote .quote-legal-entity-postal-code').val();
+            var quoteEntityCity = jQuery('#quote .quote-legal-entity-city').val();
+            var quoteEntityProvince = jQuery('#quote .quote-legal-entity-province').val();
         } else {
             var quoteEntityName = '';
-        }
-        if ( jQuery('#quote .quote-person-entity-last-name').val() != '' ) {
-            var quoteEntityLastName= jQuery('#quote .quote-person-entity-last-name').val();
-        } else {
             var quoteEntityLastName = '';
-        }
-        if ( jQuery('#quote .quote-legal-entity-id').val() != '' ) {
-            var quoteEntityId = jQuery('#quote .quote-legal-entity-id').val();
-        } else if ( jQuery('#quote .quote-person-entity-personal-id').val() != '' ) {
-            var quoteEntityId = jQuery('#quote .quote-person-entity-personal-id').val();
-        }
-        if ( jQuery('#quote .quote-legal-entity-email').val() != '' ) {
-            var quoteEntityEmail = jQuery('#quote .quote-legal-entity-email').val();
-        } else if ( jQuery('#quote .quote-person-entity-email').val() != '' ) {
-            var quoteEntityEmail = jQuery('#quote .quote-person-entity-email').val();
-        }
-        if ( jQuery('#quote .quote-legal-entity-phone').val() != '' ) {
-            var quoteEntityPhone = jQuery('#quote .quote-legal-entity-phone').val();
-        } else if ( jQuery('#quote .quote-person-entity-phone').val() != '' ) {
-            var quoteEntityPhone = jQuery('#quote .quote-person-entity-phone').val();
-        }
-        if(jQuery('#quote .quote-legal-entity-type.active').data("person-type") == undefined) {
-            var quoteLegalEntity = 'F';
-        } else {
-            var quoteLegalEntity = jQuery('#quote .quote-legal-entity-type.active').data("person-type");
-        }
-        if(jQuery('#quote .quote-legal-entity-address').val() != '') {
-            var quoteEntityAddress = jQuery('#quote .quote-legal-entity-address').val();
-        } else if ( jQuery('#quote .quote-person-entity-address').val() != '' ) {
-            var quoteEntityAddress = jQuery('#quote .quote-person-entity-address').val();
-        }
-        if(jQuery('#quote .quote-legal-entity-address-type').val() != '') {
-            var quoteEntityAddressType = jQuery('#quote .quote-legal-entity-address-type').val();
-        } else if ( jQuery('#quote .quote-person-entity-address-type').val() != '' ) {
-            var quoteEntityAddressType = jQuery('#quote .quote-person-entity-address-type').val();
+            var quoteEntityId = '';
+            var quoteEntityEmail = '';
+            var quoteEntityPhone = '';
+            var quoteLegalEntity = '';
+            var quoteEntityAddress = '';
+            var quoteEntityAddressType = '';
+            var quoteEntityCP = '';
+            var quoteEntityCity = '';
+            var quoteEntityProvince = '';
         }
 
         window.PMquoteStep2 = {
@@ -3795,13 +4321,14 @@ jQuery( document ).ready(function() {
             legalEntityBirthay : jQuery('#quote .quote-person-entity-birthdate-show').val(),
             legalEntityAddressType : quoteEntityAddressType,
             legalEntityAddress : quoteEntityAddress,
-            legalEntityPostalCode : jQuery('#quote .quote-legal-entity-postal-code').val(),
-            legalEntityCity : jQuery('#quote .quote-legal-entity-city').val(),
-            legalEntityProvince : jQuery('#quote .quote-legal-entity-province').val(),
+            legalEntityPostalCode : quoteEntityCP,
+            legalEntityCity : quoteEntityCity,
+            legalEntityProvince : quoteEntityProvince,
 
             additionalBeneficiary : jQuery('#quote .quote-beneficiary').val(),
             additionalIncreasedValue : jQuery('#quote .quote-increased-value').val()
         }
+        console.log(window.PMquoteStep2);
     }
 
     // QUOTES - step 2 previous button
@@ -3839,7 +4366,6 @@ jQuery( document ).ready(function() {
 
                 },
                 success: function (response) {
-                    console.log(response);
                     if (response['success'] == true) {
                         if (response.data.html == 'KO') {
                             healthFormRequired = false;
@@ -3898,6 +4424,8 @@ jQuery( document ).ready(function() {
 
     // QUOTES - Loads html code of health form
     function quote_load_healthForm(data){
+        console.log('healthForm');
+        console.log(data);
         window.PMquoteHealthFormId = data.id;
         jQuery('#quote #health-form .dynamic-content').html(data.html);
         /*if( jQuery( ".datetimepickerHealth input" ).length ){
@@ -4033,7 +4561,7 @@ jQuery( document ).ready(function() {
                         var splitDate = jQuery(this).val().split("/");
                         if (splitDate[0] >= 1 && splitDate[0] <= 31) {
                             if (splitDate[1] >= 1 && splitDate[1] <= 12) {
-                                if (splitDate[2] >= 1920 && splitDate[2] <= 2021) {
+                                if (splitDate[2] >= 1920 && splitDate[2] <= 2022) {
                                     valid = true;
                                 } else {
                                     valid = false;
@@ -4311,6 +4839,7 @@ jQuery( document ).ready(function() {
             var weight = window.PMquoteStep1.weight;
             var paymentMethod  = window.PMquoteStep1.billingCycle;
             var hiring = window.PMquoteStep1.hiring;
+            var jobType = window.PMgetRatesData.jobType;
             if (hiring.length > 1) {
                 hiring= jQuery('#signing-method').val();
             }
@@ -4351,7 +4880,7 @@ jQuery( document ).ready(function() {
 
             var holderName  = window.PMquoteStep2.legalEntityName;
             var holderSurname = window.PMquoteStep2.legalLastName;
-            var holderDocId  = window.PMquoteStep2.legalEntityId
+            var holderDocId  = window.PMquoteStep2.legalEntityId;
             // var holderDocType  =   Generated on PMWShandler;
             var holderEmail  = window.PMquoteStep2.legalEntityEmail;
             var holderPhone  = window.PMquoteStep2.legalEntityPhone;
@@ -4403,6 +4932,7 @@ jQuery( document ).ready(function() {
                     productId : productId,
                     startingDate : startingDate,
                     profession : profession,
+                    jobType : jobType,
                     birthdate : birthdate,
                     gender : gender,
                     height : height,
@@ -4524,7 +5054,10 @@ jQuery( document ).ready(function() {
                         if( data.P_CODIGO_ESTADO != 'V') {
                             quote_load_policyCPRequestDownload(data.P_NUMERO_POLIZA);
                             quote_load_policyCGRequestDownload(data.P_NUMERO_POLIZA);
-                            jQuery('#dowload-condition').fadeIn();
+                            quote_load_receiptRequestDownload(data.P_NUMERO_POLIZA);
+                            jQuery('button#quote-download-policy').click(function(){jQuery('#dowload-condition').fadeIn()});
+                            jQuery('button#test-download').click(function(){jQuery('#dowload-receipt').fadeIn();});
+
                         }
                         break;
 
@@ -4569,12 +5102,14 @@ jQuery( document ).ready(function() {
                                     format : format
                                 },
                                 success: function (response) {
+                                    //console.log(response);
                                     if (response['success'] == true) {
                                         window.PMwidgetStep5 = {
                                             contenidoFichero : response.data.contenidoFichero
                                         }
                                         // Initiates logalty iframe
                                         loadLogalty( data.P_NUMERO_SOLICITUD, data.P_NUMERO_POLIZA, response.data.contenidoFichero);
+                                        jQuery('iframe#logaltyFrame').addClass('mostrar');
                                     } else {
                                         displayModal("health", lang["quote.modal.error"], "OK", lang["quote.modal.close"]);
                                     }
@@ -4623,8 +5158,6 @@ jQuery( document ).ready(function() {
         jQuery('#quote-download-form .type').prop("value", type);
         jQuery('#quote-download-form .format').prop("value",format);
 
-
-
         jQuery('#send-policy-request .productor').prop("value",window.PMquoteStep1.productor);
         jQuery('#send-policy-request .refId').prop("value", docId);
 
@@ -4663,6 +5196,32 @@ jQuery( document ).ready(function() {
         */
 
     }
+
+    jQuery( "#quote-download-policy" ).click(function() {
+        jQuery( "#quote-download-policy" ).removeClass('active');
+        jQuery( "#quote-download-policy" ).attr('disabled','disabled');
+        jQuery('#quote-download-form').submit();
+        jQuery('.loader-wrapper-download').show();
+        jQuery('.loader-wrapper-download').delay(20000).fadeOut();
+    });
+
+    jQuery( "#test-download" ).click(function() {
+        jQuery( "#test-download" ).removeClass('active');
+        jQuery( "#test-download" ).attr('disabled','disabled');
+        jQuery('#quote-download-policy-cg-form').submit();
+        jQuery('#quote-download-policy-cp-form').submit();
+        jQuery('.loader-wrapper-download').show();
+        jQuery('.loader-wrapper-download').delay(40000).fadeOut();
+    });
+
+    jQuery( "#quote-download-receipt" ).click(function() {
+        jQuery( "#quote-download-receipt" ).removeClass('active');
+        jQuery( "#quote-download-receipt" ).attr('disabled','disabled');
+        jQuery('#quote-download-receipt-form').submit();
+        jQuery('.loader-wrapper-download').show();
+        jQuery('.loader-wrapper-download').delay(15000).fadeOut();
+    });
+
     // QUOTE - gets the policy request to download and sign
     function quote_load_policyCPRequestDownload(docId){
 
@@ -4703,7 +5262,45 @@ jQuery( document ).ready(function() {
 
 
     }
+    function quote_load_receiptRequestDownload(docId){
+        var url = "/get-data";
+        var ws = "getReceipt";
 
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                ws: ws,
+                docId : docId
+            },
+            success: function (response) {
+                if (response['success'] == true) {
+                    var receiptNumber = response.data.number;
+                    var productor = window.PMquoteStep1.productor;
+                    var source = 5;
+                    var type = "REC";
+                    var format  = "A4";
+
+                    jQuery('#quote-download-receipt-form .docId').prop("value", receiptNumber );
+                    jQuery('#quote-download-receipt-form .productor').prop("value", productor);
+                    jQuery('#quote-download-receipt-form .source').prop("value", source);
+                    jQuery('#quote-download-receipt-form .type').prop("value", type);
+                    jQuery('#quote-download-receipt-form .format').prop("value",format);
+
+                    jQuery('#send-policy-request-cg .productor').prop("value",window.PMquoteStep1.productor);
+                    jQuery('#send-policy-request-cg .refId').prop("value", receiptNumber );
+                } else {
+                    displayModal("connection", lang["quote.modal.error"], response.e, lang["quote.modal.close"]);
+                    console.error(response.e);
+                }
+            },
+            error: function (response) {
+                displayModal("connection", lang["quote.modal.error"], lang["WS.error"], lang["quote.modal.close"]);
+                console.error(lang["WS.error"]);
+            }
+        });
+
+    }
 
     // ------------------- STEP 5 ----------------------
 
@@ -4720,6 +5317,7 @@ jQuery( document ).ready(function() {
         if( jQuery(this).hasClass("logalty-synchronous")){
             selectedSigningMethod = "logalty-synchronous";
             jQuery('.logalty-synchronous-method').fadeIn();
+
         }
         if( jQuery(this).hasClass("hand-write")){
             selectedSigningMethod = "hand-write";
@@ -4769,7 +5367,7 @@ jQuery( document ).ready(function() {
             },
             success: function (response) {
                 if (response['success'] == true) {
-                    //console.log( response.data );
+                    console.log( response.data );
                     jQuery("#logaltyFrame").attr("src",response.data);
                     setTimeout(function() {
                         jQuery("#step-5 .loader-wrapper").hide();
@@ -4795,6 +5393,7 @@ jQuery( document ).ready(function() {
 
         // Load Freelancers fee
         var freelancerFees = "";
+        console.log(window.PMadvisorCuotaAutonomos);
         Object.keys(window.PMadvisorCuotaAutonomos).forEach(function(key) {
             freelancerFees += "<option value='" + key + "'>" + window.PMadvisorCuotaAutonomos[key]['nombre'] + "</option>\n";
         });
@@ -5116,6 +5715,10 @@ jQuery( document ).ready(function() {
             //console.log(window.PMadvisorResult);
 
             jQuery('#quote .advisor-results').fadeIn();
+            jQuery('#quote .advisor-results .print-advisor').removeAttr("disabled");
+            jQuery('#quote .advisor-results .print-advisor').addClass("active");
+            jQuery('#quote .advisor-results .send-email-advisor').removeAttr("disabled");
+            jQuery('#quote .advisor-results .send-email-advisor').addClass("active");
 
         }
 
@@ -5562,6 +6165,7 @@ jQuery( document ).ready(function() {
             var loginType = jQuery("#loginFormPrivate input[name='login-type']").val();
             var action = jQuery("#loginFormPrivate input[name='action']").val();
             var userPM = jQuery("#loginFormPrivate input[name='pm-user']").val();
+            var entryChannel = jQuery("#loginFormPrivate input[name='entry-channel']").val();
 
             jQuery.ajax({
                 type: "POST",
@@ -5573,10 +6177,13 @@ jQuery( document ).ready(function() {
                     loginType: loginType,
                     action: action,
                     userPM: userPM,
+                    entryChannel : entryChannel
                 },
                 success: function(response){
                     if(response['success'] == true){
-                        window.location.href = response['redirect'];
+                        //HARDCODE PARA REDIRECT EN LOCAL
+                        //window.location.href = response['redirect'];
+                        window.location.href = 'http://127.0.0.1:8000/app';
                     }else{
                         jQuery('#loginFormPrivate .loadingIcon').hide();
                         jQuery('#loginFormPrivate .error-message').html( response['e']);
@@ -5905,18 +6512,6 @@ jQuery( document ).ready(function() {
                 break;
         }
     });
-    jQuery('#quote-download-policy-cp-request').on('click', function () {
-        setTimeout(function(){ jQuery('#quote-download-policy-cg-request').trigger('click'); }, 30000);
-    });
-
-
-
-
-
-
-
-
-
 
     // ------------------- RESETS ----------------------
 
@@ -6053,8 +6648,14 @@ jQuery( document ).ready(function() {
                 jQuery('#quote .quote-legal-entity-province').html("");
                 jQuery('#quote .quote-legal-entity-province').attr("disabled","disabled");
                 break;
-        }
 
+            case "quote-person-entity-postal-code":
+                jQuery('#quote .quote-person-entity-city').html("");
+                jQuery('#quote .quote-person-entity-city').attr("disabled","disabled");
+                jQuery('#quote .quote-person-entity-province').html("");
+                jQuery('#quote .quote-person-entity-province').attr("disabled","disabled");
+                break;
+        }
     }
 
     function resetQuoteCompanyCityProvince(){

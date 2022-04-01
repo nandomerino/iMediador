@@ -96,6 +96,10 @@
                 case "CG":
                     $name = "Condiciones-generales";
                     break;
+
+                case "REC":
+                    $name = "Recibo";
+                    break;
             }
 
             $decoded = base64_decode( $data['contenidoFichero'] );
