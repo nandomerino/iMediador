@@ -36,6 +36,7 @@
                         <input name="pm-user" type="text" class="gestor form-control text-center" required autocomplete="pmuser ">
                     </div>
                     <input name="login-type" type="hidden" class="login-type" value="private-login">
+                    <input name="entry-channel" type="hidden" class="login-type" value="GI">
                     <input type="hidden" name="action" value="sendLoginForm">
                     <div class="position-relative button-wrapper">
                         <input type="submit" class="btn btn-block text-white font-weight-bold bg-lime-yellow mt-5" value="{{ __('login.PM.submit') }}">

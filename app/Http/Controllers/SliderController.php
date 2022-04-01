@@ -145,24 +145,36 @@ class SliderController extends Controller
             case "slider":
                 // Generates HTML for slider
 
-                //app('debugbar')->info(session('home.showSliders') );
+                app('debugbar')->info(session('home.showSliders') );
 
                 $output = "";
+                if( is_array(session('home.showSliders') )){
+                    foreach( session('home.showSliders') as $find){
+                        foreach($idList as $row) {
+                            if( $find == $row){
+                                // Load data from file
+                                require( config('filesystems.disks.local.sliders') . $row);
 
-                foreach( session('home.showSliders') as $find){
-                    foreach($idList as $row) {
-                        if( $find == $row){
-                            // Load data from file
-                            require( config('filesystems.disks.local.sliders') . $row);
-
-                            $output .= '<li class="splide__slide" style="background-image: url(\'/sliders/' . $row . '.jpg\')">';
-                            $output .= '<h2 style="color: ' . $color . ';">' . $header . '</h2>';
-                            $output .= '<h4 style="color: ' . $color . ';">' . $description . '</h4>';
-                            $output .= '</li>';
-                            break;
+                                $output .= '<li class="splide__slide" style="background-image: url(\'/sliders/' . $row . '.jpg\')">';
+                                $output .= '<h2 style="color: ' . $color . ';">' . $header . '</h2>';
+                                $output .= '<h4 style="color: ' . $color . ';">' . $description . '</h4>';
+                                $output .= '</li>';
+                                break;
+                            }
                         }
                     }
+
+                } else {
+                    $row = session('home.showSliders');
+
+
+                    $output .= '<li class="splide__slide" style="background-image: url(\'/sliders/' . $row . '.jpg\')">';
+                    //$output .= '<h2 style="color: ' . $color . ';">' . $header . '</h2>';
+                    //$output .= '<h4 style="color: ' . $color . ';">' . $description . '</h4>';
+                    $output .= '</li>';
+
                 }
+
 
                 break;
         }

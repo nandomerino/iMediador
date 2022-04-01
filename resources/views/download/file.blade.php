@@ -85,9 +85,25 @@
                 $_GET["type"],
                 $_GET["format"]
             );
+            switch ($_GET["type"]) {
+                case "SO":
+                    $name = "Solicitud";
+                    break;
+                case "CP":
+                    $name = "Condiciones-Particulares";
+                    break;
+
+                case "CG":
+                    $name = "Condiciones-generales";
+                    break;
+
+                case "REC":
+                    $name = "Recibo";
+                    break;
+            }
 
             $decoded = base64_decode( $data['contenidoFichero'] );
-            $file = $_GET["docId"] . '.pdf';
+            $file = $name.'-'.$_GET["docId"] . '.pdf';
             $r = file_put_contents($file, $decoded);
 
             if (file_exists($file)) {

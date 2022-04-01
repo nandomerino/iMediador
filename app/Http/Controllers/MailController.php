@@ -11,7 +11,6 @@ use PHPMailer\PHPMailer\Exception;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-
 class MailController extends Controller
 {
 
@@ -152,23 +151,19 @@ class MailController extends Controller
 
         $this->mail->Body =
             'Nombre: ' . $this->JSdata['name'] . "<br>" .
-            'Apellidos: ' . $this->JSdata['surname'] . "<br>" .
+            'Mediador: ' . $this->JSdata['mediador'] . "<br>" .
+            'Código/usuario: ' . $this->JSdata['mediadorId'] . "<br>" .
             'Telf: ' . $this->JSdata['phone'] . "<br>" .
             'E-Mail: ' . $this->JSdata['email'] . "<br>" .
-            'Empresa: ' . $this->JSdata['company'] . "<br>" .
-            'Puesto: ' . $this->JSdata['position'] . "<br>" .
-            'CIF: ' . $this->JSdata['cif'] . "<br>" .
             'Privacidad: ' . $this->JSdata['rgpd'] . "<br>" .
             'Mensaje: ' . "<br>" . $this->JSdata['message'] . "<br>";
 
         $this->mail->AltBody =
             'Nombre: ' . $this->JSdata['name'] .
-            'Apellidos: ' . $this->JSdata['surname'] .
+            'Mediador: ' . $this->JSdata['mediador'] .
+            'Código/usuario: ' . $this->JSdata['mediadorId'] .
             'Telf: ' . $this->JSdata['phone'] .
             'E-Mail: ' . $this->JSdata['email'] .
-            'Empresa: ' . $this->JSdata['company'] .
-            'Puesto: ' . $this->JSdata['position'] .
-            'CIF: ' . $this->JSdata['cif'] .
             'Privacidad: ' . $this->JSdata['rgpd'] .
             'Mensaje: ' . $this->JSdata['message'];
 
@@ -257,53 +252,7 @@ class MailController extends Controller
 
     }
 
-    public function sendBudget(Request $request)
-    {
-        app('debugbar')->info('En sendBudget');
-        app('debugbar')->info($request);
-        // Gets sent variables variables
-        $this->JSdata = $request->all();
 
-        //$this->type = $this->JSdata["type"];
-        $this->toAddress = $this->JSdata["email"];
-        $this->body = $this->JSdata["body"];
-        $this->html = $this->JSdata["html"];
-
-        $this->generatePDF("presupuesto");
-        $this->document();
-
-        //Server settings
-        $this->mail->SMTPDebug = 0;                                       // Enable verbose debug output
-        $this->mail->isSMTP();                                            // Set mailer to use SMTP
-        $this->mail->Host = config('mail.host');               // Specify main and backup SMTP servers
-        $this->mail->SMTPAuth = true;                                   // Enable SMTP authentication
-        $this->mail->Username = config('mail.username');           // SMTP username
-        $this->mail->Password = config('mail.password');           // SMTP password
-        $this->mail->SMTPSecure = config('mail.encryption');         // Enable TLS encryption, `ssl` also accepted
-        $this->mail->Port = config('mail.port');               // TCP port to connect to
-        $this->mail->CharSet = 'UTF-8';
-
-        // Content
-        $this->mail->isHTML(true);                                  // Set email format to HTML
-
-        // Fixes connection errors
-        $this->mail->SMTPOptions = array(
-            'ssl' => array(
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
-            )
-        );
-
-        if (!$this->mail->send()) {
-            unlink('presupuesto.pdf');
-            return response()->json(['error' => 'KO', 'customClass'=> $this->modalKOClass, 'title'=> $this->modalKOTitle, 'body'=> $this->modalKOBody, 'button'=> $this->modalKOButton1, 'e' => $this->mail->ErrorInfo]);
-        } else {
-            unlink('presupuesto.pdf');
-            return response()->json(['success' => 'OK', 'customClass'=>  $this->modalOKClass, 'title'=> $this->modalOKTitle, 'body'=> $this->modalOKBody, 'button'=> $this->modalOKButton1]);
-        }
-
-    }
 
     public function generatePDF($title)
     {
@@ -332,32 +281,53 @@ class MailController extends Controller
         $this->JSdata['attachment'] = 'coste-seguro.pdf';
     }
 
-    public function generatePDFBudget($title)
+    public function sendBudget(Request $request)
     {
+        app('debugbar')->info('En SendHTML');
+        app('debugbar')->info($request);
+        // Gets sent variables variables
+        $this->JSdata = $request->all();
 
-        //app('debugbar')->info('En generatePDF');
-        //app('debugbar')->info($this->html);
+        //$this->type = $this->JSdata["type"];
+        $this->toAddress = $this->JSdata["email"];
+        $this->body = $this->JSdata["body"];
+        $this->html = $this->JSdata["html"];
+        $this->JSdata['attachment'] = $this->JSdata['budgetURL'];
 
-        $html_content = file_get_contents('../resources/views/app/mail/layouts/prices.table.php');
-        if ($html_content){
-            $content = str_replace(
-                array("{TITLE}", "{DATA_TABLE}"),
-                array($title, $this->html),
-                $html_content);
+        //$this->generatePDF("coste-seguro");
+        $this->document();
+
+        //Server settings
+        $this->mail->SMTPDebug = 0;                                       // Enable verbose debug output
+        $this->mail->isSMTP();                                            // Set mailer to use SMTP
+        $this->mail->Host = config('mail.host');               // Specify main and backup SMTP servers
+        $this->mail->SMTPAuth = true;                                   // Enable SMTP authentication
+        $this->mail->Username = config('mail.username');           // SMTP username
+        $this->mail->Password = config('mail.password');           // SMTP password
+        $this->mail->SMTPSecure = config('mail.encryption');         // Enable TLS encryption, `ssl` also accepted
+        $this->mail->Port = config('mail.port');               // TCP port to connect to
+        $this->mail->CharSet = 'UTF-8';
+
+        // Content
+        $this->mail->isHTML(true);                                  // Set email format to HTML
+
+        // Fixes connection errors
+        $this->mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+
+        if (!$this->mail->send()) {
+            //unlink($this->JSdata['budgetURL']);
+            return response()->json(['error' => 'KO', 'customClass'=> $this->modalKOClass, 'title'=> $this->modalKOTitle, 'body'=> $this->modalKOBody, 'button'=> $this->modalKOButton1, 'e' => $this->mail->ErrorInfo]);
+        } else {
+            //unlink($this->JSdata['budgetURL']);
+            return response()->json(['success' => 'OK', 'customClass'=>  $this->modalOKClass, 'title'=> $this->modalOKTitle, 'body'=> $this->modalOKBody, 'button'=> $this->modalOKButton1]);
         }
 
-        $options = new Options();
-        $options->set('isRemoteEnabled', TRUE);
-        //Esto es necesario para que funcionen las css en el pdf
-        $options->setDpi(150);
-        $dompdf = new Dompdf($options);
-        $dompdf->setBasePath(url()->current());
-        $dompdf->loadHtml($content);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        file_put_contents('presupuesto.pdf', $dompdf->output());
-        $this->JSdata['attachment'] = 'presupuesto.pdf';
     }
-
 
 }

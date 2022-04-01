@@ -43,7 +43,88 @@ class PMWS extends controller
      * @return bool
      * @throws \SoapFault
      */
-    function login($user, $pass, $language, $managerCode = null, $nombreMediador = null, $nombreProductor = null, $coberturasOpcionales = null, $riesgoTarificado= null) {
+    function login($user, $pass, $language, $managerCode = null, $nombreMediador = null, $nombreProductor = null, $coberturasOpcionales = null, $riesgoTarificado= null, $entryChannel = null) {
+
+        $endpoint = $this->baseUrl . "/v4/wsautenticacion" . $this->environment . "/Autenticacion?WSDL";
+        $client = new SoapClient($endpoint);
+
+        $inputData = array();
+
+        if ( $entryChannel != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CANAL_ENTRADA",
+                "valorParametro"	=> $entryChannel);
+        } else {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CANAL_ENTRADA",
+                "valorParametro"	=> "IM");
+        }
+        if ( $managerCode != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CODIGO_GESTOR",
+                "valorParametro"	=> $managerCode);
+        }
+        if ( $nombreMediador != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_NOMBRE_MEDIADOR",
+                "valorParametro"	=> $nombreMediador);
+        }
+
+        if ( $nombreProductor != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_NOMBRE_PRODUCTOR",
+                "valorParametro"	=> $nombreProductor);
+        }
+        if ( $coberturasOpcionales != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_COBERTURAS_OPCIONALES",
+                "valorParametro"	=> $coberturasOpcionales);
+        }
+        if ( $riesgoTarificado != null ) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_RIESGO_TARIFICADO",
+                "valorParametro"	=> $riesgoTarificado);
+        }
+
+
+        $cData = array();
+        $cData[] = array(
+            "nombreParametro"	=> "P_APLICACION",
+            "valorParametro"	=> "IMEDIADOR"
+        );
+
+        $params = array(
+            "pTipoAcceso"	=> "GEN",
+            "pUsuario"		=> $user,
+            "pPassword"		=> $pass,
+            "pIdioma"		=> $language,
+            "pDatosEntrada"	=> $inputData,
+            "pDatosConexion"=> $cData
+        );
+
+        //app('debugbar')->info('parametros');
+        //app('debugbar')->info($params);
+
+        $result = $client->obtenerDatosMediador($params);
+
+        app('debugbar')->info('result');
+        app('debugbar')->info($result);
+
+        if (is_soap_fault($result)) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $user - user from login form
+     * @param $language - current language
+     * @param null $managerCode - gestor from login form
+     * @return bool
+     * @throws \SoapFault
+     */
+    function recoveryLogin($user,$language, $managerCode = null, $nombreMediador = null, $nombreProductor = null, $coberturasOpcionales = null, $riesgoTarificado= null) {
 
         $endpoint = $this->baseUrl . "/v4/wsautenticacion" . $this->environment . "/Autenticacion?WSDL";
         $client = new SoapClient($endpoint);
@@ -90,19 +171,70 @@ class PMWS extends controller
         $params = array(
             "pTipoAcceso"	=> "GEN",
             "pUsuario"		=> $user,
-            "pPassword"		=> $pass,
             "pIdioma"		=> $language,
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
 
-        //var_dump("parametros:");
-        //var_dump($params);
+        //app('debugbar')->info('parametros');
+        //app('debugbar')->info($params);
 
-        $result = $client->obtenerDatosMediador($params);
+        $result = $client->recuperaPassword($params);
 
-        //var_dump("result:");
-        //var_dump($result);
+        //app('debugbar')->info('result');
+        //app('debugbar')->info($result);
+
+        if (is_soap_fault($result)) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $user - user from login form
+     * @param $language - current language
+     * @param null $managerCode - gestor from login form
+     * @return bool
+     * @throws \SoapFault
+     */
+    function changePassword($user, $password, $language, $passwordNew) {
+
+        $endpoint = $this->baseUrl . "/v4/wsautenticacion" . $this->environment . "/Autenticacion?WSDL";
+        $client = new SoapClient($endpoint);
+
+        $inputData = array();
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_CANAL_ENTRADA",
+            "valorParametro"	=> "IM");
+
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_NUEVO_PASSWORD",
+            "valorParametro"	=> $passwordNew);
+
+
+        $cData = array();
+        $cData[] = array(
+            "nombreParametro"	=> "P_APLICACION",
+            "valorParametro"	=> "IMEDIADOR"
+        );
+
+        $params = array(
+            "pTipoAcceso"	=> "GEN",
+            "pUsuario"		=> $user,
+            "pPassword"		=> $password,
+            "pIdioma"		=> $language,
+            "pDatosEntrada"	=> $inputData,
+            "pDatosConexion"=> $cData
+        );
+
+        app('debugbar')->info('cambiarPassword parametros');
+        app('debugbar')->info($params);
+
+        $result = $client->cambiarPassword($params);
+
+        app('debugbar')->info('cambiarPassword result');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -129,15 +261,16 @@ class PMWS extends controller
         $inputData[] =  array(
             "nombreParametro"	=> "P_CANAL_ENTRADA",
             "valorParametro"	=> $this->getChannel($pmUserCode));
-        $inputData[] =  array(
-            "nombreParametro"	=> "P_USUARIO_INTERNO",
-            "valorParametro"	=> $pmUserCode);
+
 
         $cData = array();
         $cData[] = array(
             "nombreParametro"	=> "P_APLICACION",
             "valorParametro"	=> "IMEDIADOR"
         );
+        $cData[] =  array(
+            "nombreParametro"	=> "P_USU_INTERNO",
+            "valorParametro"	=> $pmUserCode);
 
         $params = array(
             "pTipoAcceso"	=> "GEN",
@@ -155,7 +288,10 @@ class PMWS extends controller
         }
 
         return $result;
+
     }
+
+
 
     /**
      * @param $language - current language
@@ -189,7 +325,8 @@ class PMWS extends controller
         );
 
         $result = $client->obtenerDatosAcceso($params);
-
+        app('debugbar')->info('$result');
+        app('debugbar')->info($result);
         if (is_soap_fault($result)) {
             $result = false;
         }
@@ -242,7 +379,6 @@ class PMWS extends controller
 
         return $result;
     }
-
 
     /**
      * @param $user - logged in username
@@ -346,8 +482,11 @@ class PMWS extends controller
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
-
+        app('debugbar')->info('getProductVariations $params');
+        app('debugbar')->info($params);
         $result = $client->obtenerListaProductos($params);
+        app('debugbar')->info('getProductVariations $result');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -381,12 +520,20 @@ class PMWS extends controller
                 "nombreParametro"	=> "P_CODIGO_PRODUCTOR",
                 "valorParametro"	=> $productor);
         }
+
         $inputData[] =  array(
-            "nombreParametro"	=> "P_CODIGO_AGRUPACION",
+            "nombreParametro"	=> "P_AGRUPACION",
             "valorParametro"	=> $productGroup);
-        $inputData[] =  array(
-            "nombreParametro"	=> "P_CODIGO_PRODUCTO",
-            "valorParametro"	=> $productModalityId);//$productVariationId);
+        if($productModalityId == null) {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CODIGO_PRODUCTO",
+                "valorParametro"	=> $productGroup);//$productVariationId);
+        } else {
+            $inputData[] =  array(
+                "nombreParametro"	=> "P_CODIGO_PRODUCTO",
+                "valorParametro"	=> $productModalityId);//$productVariationId);
+        }
+
 
         if( !$entryChannel ){
             $entryChannel = $this->getChannel($pmUserCode);
@@ -405,8 +552,6 @@ class PMWS extends controller
         if ( $modifiedField !==  null ) {
             $valueData = $modifiedField;
         }
-
-
 
         $cData = array();
         if( isset($application) ){
@@ -430,13 +575,13 @@ class PMWS extends controller
         if (!empty($valueData)){
             $params["pValoresCampos"] = $valueData;
         }
-
-        //app('debugbar')->info($params);
+        app('debugbar')->info('params obtenerConfiguracionProducto:');
+        app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'productList - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt' . PHP_EOL, serialize($params), FILE_APPEND );
         $result = $client->obtenerConfiguracionProducto($params);
-        //app('debugbar')->info('resultado servicio obtenerConfiguracionProducto:');
-        //app('debugbar')->info($result);
+        app('debugbar')->info('resultado servicio obtenerConfiguracionProducto:');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -783,7 +928,7 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        // app('debugbar')->info($params);
+        //app('debugbar')->info($params);
         $result = $client->getDocumento($params);
 
         if (is_soap_fault($result)) {
@@ -907,6 +1052,7 @@ class PMWS extends controller
         );
 
         $result = $client->getListaObjetivos($params);
+        //app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -1087,6 +1233,12 @@ class PMWS extends controller
                 "valorParametro"	=> $data["paymentChannel"]
             );
         }
+        if ( isset($data["paymentChannel"]) ) {
+            $fData[] = array(
+                "nombreParametro"	=> "P_FORMA_PAGO",
+                "valorParametro"	=> $data["paymentChannel"]
+            );
+        }
 
         $fData = array_merge($fData, $this->getCapitalGarantia(
             $data["enfCob"],
@@ -1129,8 +1281,8 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        //app('debugbar')->info('$params');
-        //app('debugbar')->info($params);
+        app('debugbar')->info('$params');
+        app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'getRates - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->obtenerCuadroTarifas($params);
@@ -1255,7 +1407,7 @@ class PMWS extends controller
             "pDatosEntrada"	=> $inputData,
             "pDatosConexion"=> $cData
         );
-//        app('debugbar')->info('obtenerSubsidiosPrima: $params:');
+        //app('debugbar')->info('obtenerSubsidiosPrima: $params:');
         //app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'obtenerSubsidiosPrima - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', json_encode($params) . PHP_EOL , FILE_APPEND );
@@ -1287,11 +1439,14 @@ class PMWS extends controller
      * @param "gender" - user gender
      * @param "height" - user height
      * @param "weight" - user weigth
+     * @param "paymentMethod" -
      * @param "coverages" -
      * @return bool - false or rates list
      * @throws \SoapFault
      */
     function getBudget($data) {
+        app('debugbar')->info('getBudget data');
+        app('debugbar')->info($data);
 
         $endpoint = $this->baseUrl . "/v4/wspresupuesto" . $this->environment . "/Presupuesto?WSDL";
         $client = new SoapClient($endpoint);
@@ -1360,12 +1515,15 @@ class PMWS extends controller
             "nombreParametro"	=> "P_IDIOMA_PRESUPUESTO",
             "valorParametro"	=> $data["language"]);
         $inputData[] =  array(
+            "nombreParametro"	=> "P_FRANQUINCIA",
+            "valorParametro"	=> $data["franchise"]);
+        $inputData[] =  array(
             "nombreParametro"	=> "P_ALTA_AUTOMATICA",
             "valorParametro"	=> "N");
 
-        $inputData[] = array(
+        $inputData[] =  array(
             "nombreParametro"	=> "P_FORMA_PAGO",
-            "valorParametro"	=> "1");
+            "valorParametro"	=> $data["paymentMethod"]);
         $fData = array();
 
         $fData[] = array(
@@ -1394,8 +1552,8 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        //app('debugbar')->info('getBudget');
-        //app('debugbar')->info($params);
+        app('debugbar')->info('getBudget');
+        app('debugbar')->info($params);
         //file_put_contents('d:\logs\test.txt', 'getBudget - params:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt', serialize($params) . PHP_EOL , FILE_APPEND );
         $result = $client->altaPresupuesto($params);
@@ -1620,6 +1778,7 @@ class PMWS extends controller
      * @param "gender" - user gender
      * @param "height" - user height
      * @param "weight" - user weigth
+     * @param "hiring" - Type of hiring
      * @param "name" - insured person name
      * @param "surname" - insured person surname
      * @param "docId" - insured person documentId
@@ -1636,6 +1795,8 @@ class PMWS extends controller
      * @param "companyStreetType" - company street type
      * @param "companyAddress" - company address
      * @param "companyCity" - company city
+     * @param "companyPhone" - company phone
+     * @param "companyMail" - company mail
      * @param "workLocationType" - insured person work location type
      * @param "paymentMethod" - chosen payment method
      * @param "hasMorePolicies" - whether insurance person has more policies. Options: "S"/"N"
@@ -1673,8 +1834,8 @@ class PMWS extends controller
     public function submitPolicy($data) {
 
         //app('debugbar')->info('submitPolicy: $data["productId"]: ');
-        //app('debugbar')->info($data["productId"]);
-        //app('debugbar')->info($data);
+        app('debugbar')->info('$data submitPolicy');
+        app('debugbar')->info($data);
         $endpoint = $this->baseUrl . "/v3/wspoliza" . $this->environment . "/Poliza?WSDL";
         $client = new SoapClient($endpoint);
 
@@ -1687,8 +1848,8 @@ class PMWS extends controller
             "valorParametro"	=> $data["productId"]);
 
         $scheme = "A";
-        if ( isset($data["scheme"]) ) {
-            $scheme = $data["scheme"];
+        if ( isset($data["jobType"]) ) {
+            $scheme = $data["jobType"];
         }
         $inputData[] =  array(
             "nombreParametro"	=> "P_REGIMEN_SEG_SOCIAL",
@@ -1724,6 +1885,10 @@ class PMWS extends controller
                 "nombreParametro"	=> "P_CLAVE_COMERCIAL",
                 "valorParametro"	=> "DUE");
         }
+
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_TIPO_CONTRATACION",
+            "valorParametro"	=> $data["hiring"]);
         $inputData[] =  array(
             "nombreParametro"	=> "P_NOMBRE_ASEGURADO",
             "valorParametro"	=> $data["name"]);
@@ -1761,8 +1926,16 @@ class PMWS extends controller
             "nombreParametro"	=> "P_NOMBRE_EMPRESA",
             "valorParametro"	=> $data["companyName"]);
         $inputData[] =  array(
+            "nombreParametro"	=> "P_TELEFONO_EMPRESA",
+            "valorParametro"	=> $data["companyPhone"]);
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_EMAIL_EMPRESA",
+            "valorParametro"	=> $data["companyMail"]);
+        $inputData[] =  array(
             "nombreParametro"	=> "P_TIPO_DIRECCION_EMPRESA",
             "valorParametro"	=> $data["companyAddressType"]);
+
+
 
         if( $data["companyAddressType"] == "O") {
             $inputData[] =  array(
@@ -1789,18 +1962,18 @@ class PMWS extends controller
                 "nombreParametro"	=> "P_TIENE_OTRO_SEGURO",
                 "valorParametro"	=> $data["hasMorePolicies"]);
 
-            if ( $data["hasMorePolicies"] == "S" ) {
-                if ( isset($data["extraCompanyName"]) ) {
+            if ( $data["hasMorePolicies"] = "S" ) {
+                if ( isset($data["anotherInsuranceName"]) ) {
                     $inputData[] =  array(
                         "nombreParametro"	=> "P_COMPAÑIA_OTRO_SEGURO",
                         "valorParametro"	=> $data["anotherInsuranceName"]);
                 }
-                if ( isset($data["extraInsurancePrice"]) ) {
+                if ( isset($data["anotherInsuranceAmount"]) ) {
                     $inputData[] =  array(
                         "nombreParametro"	=> "P_CAPITAL_OTRO_SEGURO",
-                        "valorParametro"	=> $data["anotherInsurancePrice"]);
+                        "valorParametro"	=> $data["anotherInsuranceAmount"]);
                 }
-                if ( isset($data["extraInsuranceDate"]) ) {
+                if ( isset($data["anotherInsuranceEnds"]) ) {
                     $inputData[] =  array(
                         "nombreParametro"	=> "P_OTRO_SEGURO_FECHA_VENCIM",
                         "valorParametro"	=> $data["anotherInsuranceEnds"]);
@@ -1950,10 +2123,65 @@ class PMWS extends controller
                 "pDatosConexion"	=> $cData
             );
         }
-
-        // app('debugbar')->info($params);
+        app('debugbar')->info('$params submit policy');
+        app('debugbar')->info($params);
         //file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/log.txt', serialize($params) );
         $result = $client->altaPoliza($params);
+        //app('debugbar')->info('$result submit policy');
+        //app('debugbar')->info($result);
+
+        if (is_soap_fault($result)) {
+            return false;
+        }
+
+        return $result;
+    }
+
+    public function getReceipt($data) {
+
+        app('debugbar')->info('getReceipt: $data["productId"]: ');
+        app('debugbar')->info($data);
+        $endpoint = $this->baseUrl . "/v3/wspoliza" . $this->environment . "/Poliza?WSDL";
+        $client = new SoapClient($endpoint);
+
+        $inputData = array();
+
+        $inputData[] =  array(
+            "nombreParametro"	=> "P_POLIZA",
+            "valorParametro"	=> $data["docId"]);
+
+
+        if( !$data["entryChannel"] ){
+            $data["entryChannel"] = $this->getChannel($data["pmUserCode"]);
+        }
+
+        $cData = array();
+        if ( isset($data["application"]) ) {
+            $cData[] = array(
+                "nombreParametro"	=> "P_APLICACION",
+                "valorParametro"	=> $data["application"]
+            );
+        } else {
+            $cData[] = array(
+                "nombreParametro"	=> "P_APLICACION",
+                "valorParametro"	=> "IMEDIADOR"
+            );
+        }
+        $params = array(
+            "pTipoAcceso"		=> "GEN",
+            "pUsuario"			=> $data["user"],
+            "pPassword"			=> $data["pass"],
+            "pIdioma"			=> $data["language"],
+            "pDatosEntrada"		=> $inputData,
+            "pDatosConexion"	=> $cData
+        );
+
+        app('debugbar')->info('$params getReceipt');
+        app('debugbar')->info($params);
+        //file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/log.txt', serialize($params) );
+        $result = $client->getDatosPoliza($params);
+        app('debugbar')->info('$result getReceipt');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             return false;
