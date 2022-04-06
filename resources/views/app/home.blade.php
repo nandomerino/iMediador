@@ -59,6 +59,9 @@
                             $fechaFin = strtotime(str_replace('/', '-', $row["fechaFin"]));
                             $fechaHoy = strtotime(date("d") . "-" . date("m") . "-" . date("Y"));
                             $diasFaltan = ($fechaFin-$fechaHoy)/86400;
+                            if ($diasFaltan < 0) {
+                                $diasFaltan = 0;
+                            }
 
                             $i = 0;
 

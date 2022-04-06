@@ -71,6 +71,10 @@ class PMWSjs extends Controller
             case "getProductsList":
                 $response = $this->getProductsList();
                 break;
+            case "consultas":
+                $response = $this->consultas();
+                break;
+
             default:
                 $response = false;
         }
@@ -688,6 +692,7 @@ class PMWSjs extends Controller
         }
     }
 
+
     public function uploadDocument()
     {
         // Call PM WS
@@ -732,4 +737,5 @@ class PMWSjs extends Controller
             return response()->json(['success' => false, 'e' => $data]);
         }
     }
+
 }

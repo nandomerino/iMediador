@@ -1288,8 +1288,8 @@ class PMWS extends controller
         $result = $client->obtenerCuadroTarifas($params);
         //file_put_contents('d:\logs\test.txt', 'getRates - result:' . PHP_EOL, FILE_APPEND );
         //file_put_contents('d:\logs\test.txt' , serialize($result). PHP_EOL, FILE_APPEND );
-        //app('debugbar')->info('$result');
-        //app('debugbar')->info($result);
+        app('debugbar')->info('getRates PMWS $result');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -2191,6 +2191,7 @@ class PMWS extends controller
     }
 
 
+
     /**
      * @param $user - logged in username
      * @param $pass - logged in password
@@ -2648,6 +2649,7 @@ class PMWS extends controller
         }
         return "IM";
     }
+
 }
 
 ?>

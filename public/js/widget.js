@@ -1,7 +1,9 @@
 var healthFormRequired = false;
 
 jQuery( document ).ready(function() {
-
+    jQuery(function(){
+        jQuery("#quote-starting-date").datepicker({ minDate: 0, maxDate: 30 });
+    });
     // Loads widget first step
     getProductVariations();
     getProductConfiguration();
@@ -35,7 +37,9 @@ jQuery( document ).ready(function() {
                 u: PMu,
                 p: PMp
             },
+
             success: function (response) {
+                console.log(response);
                 if (response['success'] == true) {
                     quote_load_ProductVariations(response.data);
                 } else {
@@ -72,13 +76,14 @@ jQuery( document ).ready(function() {
                 ws: ws,
                 productor: PMproductor,
                 product: PMproduct,
-                productVariation: PMproductVariation,
+                //productVariation: PMproductVariation,
                 entryChannel: PMentryChannel,
                 application: PMapplication,
                 u: PMu,
                 p: PMp
             },
             success: function (response) {
+                //console.log(response);
                 if (response['success'] == true) {
                     quote_load_ProductConfiguration(response.data);
                 } else {
@@ -93,144 +98,652 @@ jQuery( document ).ready(function() {
     }
 
     // WIDGET - Loads extra info dynamically from WS
-    function quote_load_ProductConfiguration(data) {
+    function quote_load_ProductConfiguration( data ){
         // Stores this info in a global array to access it later on
         window.PMproductConfig = data;
-
-        // Signing method Logalty/handwriting
-        if( typeof data.P_ES_EMISION_LOGALTY !== 'undefined' ) {
-            window.PMsigningMode = data.P_ES_EMISION_LOGALTY;
-        }else{
-            window.PMsigningMode = null;
+        var productConfig = [];
+        Object.keys(window.PMproductConfig).forEach(function(key) {
+            productConfig.push(window.PMproductConfig[key]);
+        });
+        console.log(productConfig.length);
+        console.log(productConfig);
+        var inputWidget = '';
+        for (var i=1; productConfig.length > i; i++) {
+            if(productConfig[i].WS != null || productConfig[i].WS != undefined){
+                //console.log(productConfig[i].WS);
+                cols = Math.floor(12 / productConfig[i].WS.columnas);
+                var textoAyuda = '';
+                if (productConfig[i].WS.textoAyuda != null){
+                    textoAyuda = '<i class="fas fa-info-circle" title="' + productConfig[i].WS.textoAyuda  + '"></i>';
+                }
+                var hidden = '';
+                if (productConfig[i].WS.esOculto == 'S') {
+                    hidden = 'style="display:none;"';
+                }
+                inputWidget += '<div class="col-' + cols + ' align-self-end pt-3" ' + hidden + '>';
+                inputWidget += '<label class="quote-'+productConfig[i].WS.nombre.toLowerCase()+' mb-1" For="quote-'+productConfig[i].WS.nombre.toLowerCase()+'">'+productConfig[i].WS.etiquetaPre+textoAyuda+'</label>';
+                if (productConfig[i].WS.copiarValorDe != null) {
+                    inputWidget += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('.quote-"+productConfig[i].WS.copiarValorDe.toLowerCase()+"').keyup(function (){var value = jQuery(this).val();jQuery('.quote-"+productConfig[i].WS.nombre.toLowerCase()+"').val(value);});});</script>";
+                }
+                if (productConfig[i].WS.dependeDe != null) {
+                    inputWidget += "<script type='text/javascript'>jQuery('.quote-"+productConfig[i].WS.dependeDe.toLowerCase()+"').on('change', function(){jQuery('.quote-"+productConfig[i].WS.nombre.toLowerCase()+"').prop('checked',this.checked);});</script>";
+                }
+                switch (productConfig[i].WS.tipoCampoHTML) {
+                    case 'select':
+                        inputWidget += "<select class='form-control w-100 quote-benefit quote-benefit-" + productConfig[i].WS.nombre.toLowerCase() + "' name='quote-benefit-" + productConfig[i].WS.nombre.toLowerCase() + "' " + productConfig[i].WS.atributosHTML + ">";
+                        var durationSelect = '<option value=""> </option>';
+                        for (var j=0; productConfig[i].WS.listaValores.listaValores.length > j; j++) {
+                            durationSelect += "<option value='" +  productConfig[i].WS.listaValores.listaValores[j].codigo  + "'>" + productConfig[i].WS.listaValores.listaValores[j].descripcion + "</option>";
+                        }
+                        inputWidget += durationSelect;
+                        inputWidget += "</select>";
+                        break;
+                    case 'checkbox':
+                        inputWidget += '<input type="checkbox" class="form-control quote-'+productConfig[i].WS.nombre.toLowerCase()+' ui-autocomplete-input" data-index="1" name="quote-'+productConfig[i].WS.nombre.toLowerCase()+'" '+productConfig[i].WS.atributosHTML+' >';
+                        break;
+                    default:
+                        inputWidget += '<input class="form-control quote-'+productConfig[i].WS.nombre.toLowerCase()+' ui-autocomplete-input" data-index="1" name="quote-'+productConfig[i].WS.nombre.toLowerCase()+'" '+productConfig[i].WS.atributosHTML+' >';
+                }
+                inputWidget += '</div>';
+            }
         }
-
+        inputWidget += '<div class="col-12 align-self-end pt-3"><label class="quote-starting-date-label mb-1" for="quote-starting-date">Fecha de efecto</label><input type="text" class="form-control w-100 quote-starting-date hasDatepicker" name="quote-starting-date" id="quote-starting-date" maxlength="10" autocomplete="off" required="" readonly=""></div>';
+        inputWidget += '<div class="get-rates content w-100 mt-1"><div class="col"><button class="quote-button text-white bold py-2 px-4 border-0 rounded w-100 mt-4 position-relative bg-lime-yellow">CALCULAR<svg class="svg-inline--fa fa-circle-notch fa-w-16 fa-spin loadingIcon" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-notch" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M288 39.056v16.659c0 10.804 7.281 20.159 17.686 23.066C383.204 100.434 440 171.518 440 256c0 101.689-82.295 184-184 184-101.689 0-184-82.295-184-184 0-84.47 56.786-155.564 134.312-177.219C216.719 75.874 224 66.517 224 55.712V39.064c0-15.709-14.834-27.153-30.046-23.234C86.603 43.482 7.394 141.206 8.003 257.332c.72 137.052 111.477 246.956 248.531 246.667C393.255 503.711 504 392.788 504 256c0-115.633-79.14-212.779-186.211-240.236C302.678 11.889 288 23.456 288 39.056z"></path></svg> </button></div></div>';
+        //var timestamp = window.PMproductConfig.coberturas;//'{{ Session::get("quote")}}';
         // Loads jobs
         var jobsArray = data.P_PROFESION_CLIENTE.values;
+
+        var modificaConfiguracion = data.P_PROFESION_CLIENTE.WS.modificaConfiguracion.toUpperCase()=="S";
+        //alert(data.P_PROFESION_CLIENTE.WS.modificaConfiguracion);
+        if (modificaConfiguracion){
+            jQuery('select[name="quote-job"]').addClass("configChange");
+            jQuery('input[name="quote-job-picker"]').addClass("configChange");
+        } else {
+            jQuery('select[name="quote-job"]').removeClass("configChange");
+            jQuery('input[name="quote-job-picker"]').removeClass("configChange");
+        }
         var jobPicker = [];
         var jobSelect = "";
-
-        Object.keys(jobsArray).forEach(function (key) {
+        Object.keys(jobsArray).forEach(function(key) {
             jobPicker.push(jobsArray[key]);
             jobSelect += "<option value='" + key + "'>" + jobsArray[key] + "</option>";
         });
-        window.PMjobPicker = jobPicker;
+        window.PMjobPicker = jobPicker.sort();
         window.PMjobSelect = jobSelect;
 
         // Loads Gender
         var genderArray = data.P_SEXO.values;
-        var genderSelect = "<option value='' disabled selected></option>";
-        Object.keys(genderArray).forEach(function (key) {
+        var genderSelect = "<option value=''></option>";
+        Object.keys(genderArray).forEach(function(key) {
             genderSelect += "<option value='" + key + "'>" + genderArray[key] + "</option>";
         });
-
-        // Loads Job type
-        if (typeof data.P_REGIMEN_SEG_SOCIAL.values !== 'undefined'){
-            var jobTypeArray = data.P_REGIMEN_SEG_SOCIAL.values;
-            var jobTypeSelect = "<option value='' disabled selected></option>";
-            Object.keys(jobTypeArray).forEach(function (key) {
-                jobTypeSelect += "<option value='" + key + "'>" + jobTypeArray[key] + "</option>";
-            });
-        }else{
-            jQuery('.quote-job-type-wrapper').hide();
+        modificaConfiguracion = data.P_SEXO.WS.modificaConfiguracion.toUpperCase()=="S";
+        if (modificaConfiguracion){
+            jQuery('select[name="quote-gender"]').addClass("configChange");
+        } else {
+            jQuery('select[name="quote-gender"]').removeClass("configChange");
         }
 
-        // Loads coverages
-        // There are no field names coming from the WS so we have to set them manually
-        var benefitsArray = data.coberturas;
-        window.PMcoberturas = data.coberturas;
-        window.PMperiodocobertura = data.P_PERIODO_COBERTURA;
-        var cols;
-        var benefits = "";
-        var i = 1;
-        cols = Math.floor(12 / Object.keys(benefitsArray).length);
-        Object.keys(benefitsArray).forEach(function (key) {
-            FieldName = key;
 
-            benefits += "<input type='hidden' class='form-control w-100 quote-benefit valid quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' data-name='" + benefitsArray[key].name + "' " + benefitsArray[key].attributes + "required>\n";
-            /*benefits += "<input type='hidden' class='form-control w-100 quote-benefit valid quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' data-name='" + benefitsArray[key].name + "' " + benefitsArray[key].attributes + "required>\n";*/
+        // Loads Height
+        var hiddenHeight = "";
+        //console.log(data.P_TALLA);
+        helpHeight = '';
+        if (data.P_TALLA.help != null){
+            helpHeight = '<i class="fas fa-info-circle" title="' + data.P_TALLA.help + '"></i>';
+        }
+        if(data.P_TALLA.hidden == "S"){
+            var heightProduct = "<input type='hidden' class='form-control w-100 quote-height valid' name='quote-height' " + data.P_TALLA.attributes + ">";
+        } else {
+            var heightProduct = "<label className='quote-height-label mb-1 control-label' htmlFor='quote-height'>"+data.P_TALLA.name+" "+helpHeight+"</label>";
+            heightProduct += "<input type='number' class='form-control w-100 quote-height valid' data-index='3' name='quote-height' id='quote-height'  " + data.P_TALLA.attributes + " min='"+data.P_TALLA.min+"' max='"+data.P_TALLA.max+"'>";
+        }
 
-            i++;
-            // TODO: min/max values received are not the ones that the WS is using,
-            //  sometimes we get a WS response telling us it exceeds the max while it's withint received paramenters.
-            //  the attribute value is also wrong in most cases
-        });
+        // Loads Weight
+        var hiddenWeight = "";
+        //console.log(data.P_PESO);
+        helpWeight = '';
+        if (data.P_PESO.help != null){
+            helpWeight = '<i class="fas fa-info-circle" title="' + data.P_PESO.help + '"></i>';
+        }
+        if(data.P_PESO.hidden == "S"){
+            var weightProduct = "<input type='hidden' class='form-control w-100 quote-weight valid' name='quote-weight' " + data.P_PESO.attributes + ">";
+        } else {
+            var weightProduct = "<label className='quote-weight-label mb-1 control-label' htmlFor='quote-weight'>"+data.P_PESO.name+" "+helpWeight+"</label>";
+            weightProduct += "<input type='number' class='form-control w-100 quote-weight valid' data-index='3' name='quote-weight' id='quote-weight' " + data.P_PESO.attributes + " min='"+data.P_PESO.min+"' max='"+data.P_PESO.max+"'>";
+        }
+
+
+        // Loads Job type
+        var hidden = "";
+        if(data.P_REGIMEN_SEG_SOCIAL.hidden == "S"){
+            hidden = " type='hidden' ";
+        }
+        var jobTypeField = "<div class='col-6'>";
+        jobTypeField += "<label class='quote-job-type-label mb-1' for='quote-job-type'>" + data.P_REGIMEN_SEG_SOCIAL.name + "</label>";
+        jobTypeField += "<" + data.P_REGIMEN_SEG_SOCIAL.fieldType + hidden + " class='form-control w-100 quote-job-type valid' name='quote-job-type' " + data.P_REGIMEN_SEG_SOCIAL.attributes + ">\n";
+
+        if( data.P_REGIMEN_SEG_SOCIAL.fieldType == "select"){
+
+            var jobTypeArray = data.P_REGIMEN_SEG_SOCIAL.values;
+            var jobTypeSelect ="";
+            jobTypeSelect +="<option value=\"\"> </option>";
+            Object.keys(jobTypeArray).forEach(function(key) {
+                jobTypeSelect += "<option value='" + key + "'>" + jobTypeArray[key] + "</option>";
+            });
+            jobTypeField += jobTypeSelect;
+
+            jobTypeField += "</select>";
+        }
+        jobTypeField += "</div>";
+        modificaConfiguracion = data.P_REGIMEN_SEG_SOCIAL.WS.modificaConfiguracion.toUpperCase()=="S";
+        if (modificaConfiguracion){
+            jQuery('select[name="quote-job-type"]').addClass("configChange");
+        } else {
+            jQuery('select[name="quote-job-type"]').removeClass("configChange");
+        }
+
+
 
         // Loads durations
         // There are no field names coming from the WS so we have to set them manually
-        var durationArray = data.duracion;
-        window.PMduracion = data.duracion;
-        var duration = "";
-        Object.keys(durationArray).forEach(function (key) {
-            FieldName = key;
-            duration += "<input type='hidden' class='form-control w-100 quote-duration valid quote-duration-" + FieldName + "' name='quote-duration-" + FieldName + "' data-name='" + durationArray[key].name + "' " + durationArray[key].attributes + " required>\n";
-            i++;
-        });
+        var duration = "<div class='col-12'>";
+        if( typeof data.duracion !== 'undefined' ) {
+            var durationArray = data.duracion;
+            window.PMduracion = data.duracion;
 
+            Object.keys(durationArray).forEach(function (key) {
+                FieldName = key;
+                duration += "<input type='hidden' class='form-control w-100 quote-duration valid quote-duration-" + FieldName + "' data-index='3' ' name='quote-duration-" + FieldName + "' data-name='" + durationArray[key].name + "' " + durationArray[key].attributes + ">\n";
+                i++;
+            });
+        }
+        duration += '</div>';
         // Load commercial key
         window.PMcommercialKey = data.P_CLAVE_COMERCIAL;
-
+        //console.log(data.P_CLAVE_COMERCIAL);
+        modificaConfiguracion = data.P_CLAVE_COMERCIAL.WS.modificaConfiguracion.toUpperCase()=="S";
+        var modConfig = "";
+        if (modificaConfiguracion){
+            modConfig = " configChange";
+        }
         var hidden = "";
-        if (data.P_CLAVE_COMERCIAL.hidden == "S") {
+        if(data.P_CLAVE_COMERCIAL.hidden == "S"){
             hidden = " type='hidden' ";
         }
-        var commercialKey = "<" + data.P_CLAVE_COMERCIAL.fieldType + hidden + " class='form-control w-100 quote-commercial-key valid' name='quote-commercial-key' " + data.P_CLAVE_COMERCIAL.attributes + " required>\n";
-
-        if (data.P_CLAVE_COMERCIAL.fieldType == "select") {
+        var commercialKey = "<div class='col-12'>";
+        commercialKey += "<label class='mb-1 quote-commercial-key-label' for='quote-commercial-key'>" + data.P_CLAVE_COMERCIAL.name + "</label>";
+        commercialKey += "<" + data.P_CLAVE_COMERCIAL.fieldType + hidden + " class='form-control w-100 quote-commercial-key valid" + modConfig + "' data-index='2' name='quote-commercial-key' " + data.P_CLAVE_COMERCIAL.attributes + ">\n";
+        if( data.P_CLAVE_COMERCIAL.fieldType == "select"){
 
             var claveCommercialArray = data.P_CLAVE_COMERCIAL.values;
             var claveCommercialSelect = "";
-
-            Object.keys(claveCommercialArray).forEach(function (key) {
+            claveCommercialSelect += "<option value=\"\"></option>";
+            Object.keys(claveCommercialArray).forEach(function(key) {
                 claveCommercialSelect += "<option value='" + key + "'>" + claveCommercialArray[key] + "</option>";
             });
             commercialKey += claveCommercialSelect;
 
             commercialKey += "</select>";
         }
+        commercialKey += "</div>";
 
-
-        // Load dynamic data and displays updated block
-        jQuery('#quote .quote-job-picker').autocomplete({
-            source: jobPicker,
-            // triggers change event when selecting from the list, really important
-            select: function (event, ui) {
-                this.value = ui.item.value;
-                jQuery(this).trigger('change');
-                return false;
+        var franchiseField = "";
+        if (data.P_FRANQUICIA ){//data.P_NOMBRE_PRODUCTO == "ENFERMEDADES GRAVES"){
+            // Load franchise
+            window.PMfranchise = data.P_FRANQUICIA;
+            modificaConfiguracion = data.P_FRANQUICIA.WS.modificaConfiguracion.toUpperCase()=="S";
+            modConfig = "";
+            if (modificaConfiguracion){
+                modConfig = " configChange";
             }
-        });
+            //window.PMEnfGraves = true;
+            //console.log(data.P_FRANQUICIA);
+            var hidden = "";
+            if(data.P_FRANQUICIA.hidden == "S"){
+                hidden = " type='hidden' ";
+            }
+            franchiseField += "";
+            franchiseField += "<label class='mb-1 quote-franchise-label' for='quote-franchise'>" + data.P_FRANQUICIA.name + "</label>";
+            franchiseField += "<" + data.P_FRANQUICIA.fieldType + hidden + " class='form-control w-100 quote-franchise valid" + modConfig + "' data-index='3' name='quote-franchise' " + data.P_FRANQUICIA.attributes + ">\n";
+            if( data.P_FRANQUICIA.fieldType == "select"){
+
+                var franchiseArray = data.P_FRANQUICIA.values;
+                var franchiseSelect;
+
+                Object.keys(franchiseArray).forEach(function(key) {
+                    franchiseSelect += "<option value='" + franchiseArray[key].codigo + "'>" + franchiseArray[key].opcion + "</option>";
+                });
+                franchiseField += franchiseSelect;
+
+                franchiseField += "</select>";
+            }
+            franchiseField += "";
+        } else {
+            window.PMfranchise = null;
+            window.PMEnfGraves = false;
+        }
+
+        window.PMduration = null;
+        var durationField = "";
+        if (data.P_PERIODO_COBERTURA){
+            // Load commercial key
+            window.PMduration = data.P_PERIODO_COBERTURA;
+            modificaConfiguracion = data.P_PERIODO_COBERTURA.WS.modificaConfiguracion.toUpperCase()=="S";
+            modConfig = "";
+            if (modificaConfiguracion){
+                modConfig = " configChange";
+            }
+            var hidden = "";
+            var durationField = "";
+            if(data.P_PERIODO_COBERTURA.hidden == "S"){
+                hidden = " type='hidden' ";
+            }
+            var durationField = "";
+            durationField += "<label class='mb-1 quote-duration-label' for='quote-duration'>" + data.P_PERIODO_COBERTURA.name + "</label>";
+            durationField += "<" + data.P_PERIODO_COBERTURA.fieldType + hidden + " class='form-control w-100 quote-duration valid" + modConfig + "' data-index='4' name='quote-duration' " + data.P_PERIODO_COBERTURA.attributes + ">\n";
+            if( data.P_PERIODO_COBERTURA.fieldType == "select"){
+
+                var durationArray = data.P_PERIODO_COBERTURA.values;
+                var durationSelect = "";
+
+                Object.keys(durationArray).forEach(function(key) {
+                    durationSelect += "<option value='" + key + "'>" + durationArray[key] + "</option>";
+                });
+                durationField += durationSelect;
+
+                durationField += "</select>";
+            }
+            durationField += "";
+        }
+
+        // Loads coverages if "subsidio" is selected
+        var benefits = "";
+        if( jQuery(".toggles .subsidio.active").length == 1 ) {
+            // There are no field names coming from the WS so we have to set them manually
+            var benefitsArray = data.coberturas;
+            //console.log(data.coberturas);
+            var cols;
+            var i = 1;
+
+            Object.keys(benefitsArray).forEach(function (key) {
+                switch (i) {
+                    case 1:
+                        //FieldDescription = lang["quote.sickness"];
+                        FieldName = lang["quote.sicknessFieldName"];
+                        break;
+                    case 2:
+                        //FieldDescription = lang["quote.accident"];
+                        FieldName = lang["quote.accidentFieldName"];
+                        break;
+                    case 3:
+                        //FieldDescription = lang["quote.hospitalization"];
+                        FieldName = lang["quote.hospitalizationFieldName"];
+                        break;
+                    case 4:
+                        //FieldDescription = lang["quote.hospitalization"];
+                        FieldName = "covidPrestacion";
+                        break;
+                    case 5:
+                        //FieldDescription = lang["quote.hospitalization"];
+                        FieldName = "covidHospitalizacion";
+                        break;
+                    case 6:
+                        //FieldDescription = lang["quote.hospitalization"];
+                        FieldName = "covidUCI";
+                        break;
+                }
+                cols = Math.floor(12 / benefitsArray[key].columns);
+                hiddenBenefits = benefitsArray[key].hidden;
+                FieldDescription = benefitsArray[key].label;
+                FieldType = benefitsArray[key].fieldType;
+                helpBenefits = '';
+                if (benefitsArray[key].helpField != null){
+                    helpBenefits = '<i class="fas fa-info-circle" title="' + benefitsArray[key].helpField + '"></i>';
+                }
+                if (hiddenBenefits == "S") {
+                    benefits += "<div class=' align-self-end' >";
+                    benefits += "<input type='hidden' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                    benefits += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('#"+benefitsArray[key].valueCopy+"').keyup(function (){var value = jQuery(this).val();jQuery('#"+benefitsArray[key].name+"').val(value);});});</script>";
+                    benefits += "</div>";
+                } else {
+                    benefits += "<div class='col-" + cols + " align-self-end' >";
+                    benefits += "<label class='mb-1 quote-benefit-label' for='quote-benefit-" + FieldName + "'>" + benefitsArray[key].label + ""+ helpBenefits +"</label>";
+                    /*benefits += "<input type='number' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' placeholder='" + benefitsArray[key].min + " - " + benefitsArray[key].max + "' required>";*/
+                    if (FieldType == 'select') {
+                        benefits += "<select class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' " + benefitsArray[key].attributes + ">";
+                        var valuesArray = benefitsArray[key].values;
+                        var labelArray = benefitsArray[key].labelValue;
+                        var durationSelect = "";
+                        durationSelect += "<option value=''> </option>";
+                        Object.keys(valuesArray).forEach(function(key) {
+                            durationSelect += "<option value='" +  valuesArray[key]  + "'>" + labelArray[key] + "</option>";
+                        });
+                        benefits += durationSelect;
+                        benefits += "</select>";
+
+                    }else if (FieldType == 'checkbox') {
+                        if (benefitsArray[key].valueCopy != null) {
+                            benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + " >";
+                            benefits += "<script type='text/javascript'>jQuery(document).ready(function (){jQuery('#"+benefitsArray[key].valueCopy+"').keyup(function (){var value = jQuery(this).val();jQuery('#"+benefitsArray[key].name+"').val(value);});});</script>";
+                        }else if (benefitsArray[key].dependsOn != null) {
+                            benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + " >";
+                            benefits += "<script type='text/javascript'>jQuery('#"+benefitsArray[key].dependsOn+"').on('change', function(){jQuery('#"+benefitsArray[key].name+"').prop('checked',this.checked);});</script>";
+                        }else{
+                            benefits += "<input type='checkbox' id='"+benefitsArray[key].name+"' class='form-control 2 w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                        }
+                    }else{
+                        benefits += "<input type='number' id='"+benefitsArray[key].name+"' class='form-control w-100 quote-benefit quote-benefit-" + FieldName + "' name='quote-benefit-" + FieldName + "' min='" + benefitsArray[key].min + "' max='" + benefitsArray[key].max + "' step='1' autocomplete='off' " + benefitsArray[key].attributes + ">";
+                    }
+                    benefits += "</div>";
+
+                }
+
+                i++;
+            });
+
+
+            if( typeof data.P_CANAL_COBRO !== 'undefined' ) {
+                var hidden = "";
+                if (data.P_CANAL_COBRO.hidden == "S") {
+                    hidden = " type='hidden' ";
+                }
+                cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
+                discountFields += "<div class='col-"+cols+" impersonator-field'>";
+                discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+                discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+
+                if (data.P_CANAL_COBRO.fieldType == "select") {
+                    var cobroArray = data.P_CANAL_COBRO.values;
+                    Object.keys(cobroArray).forEach(function (key) {
+                        discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                    });
+                    discountFields += "</select>";
+                }
+                discountFields += "</div>";
+            }
+
+            if( typeof data.P_FORMA_PAGO !== 'undefined' ) {
+                var hidden = "";
+                if (data.P_FORMA_PAGO.hidden == "S") {
+                    hidden = " type='hidden' ";
+                }
+                cols = Math.floor(12 / data.P_FORMA_PAGO.columns);
+                benefits += "<div class='col-"+cols+" impersonator-field'>";
+                benefits += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_FORMA_PAGO.name + "</label>";
+                benefits += "<" + data.P_FORMA_PAGO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_FORMA_PAGO.attributes + ">\n";
+
+                if (data.P_FORMA_PAGO.fieldType == "select") {
+                    var cobroArray = data.P_FORMA_PAGO.values;
+                    Object.keys(cobroArray).forEach(function (key) {
+                        benefits += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                    });
+                    benefits += "</select>";
+                }
+                benefits += "</div>";
+            }
+        }
 
         // load info button if there is text for it
-        if (typeof data.P_PROFESION_CLIENTE.WS.textoAyuda !== 'undefined' && data.P_PROFESION_CLIENTE.WS.textoAyuda != null) {
+        if( typeof data.P_PROFESION_CLIENTE.WS.textoAyuda !== 'undefined' && data.P_PROFESION_CLIENTE.WS.textoAyuda != null){
             jobLabel = data.P_PROFESION_CLIENTE.name + ' <i class="fas fa-info-circle" title="' + data.P_PROFESION_CLIENTE.WS.textoAyuda + '"></i>';
-        } else {
+        }else{
             jobLabel = data.P_PROFESION_CLIENTE.name;
         }
 
-        jQuery('#quote .quote-job-label').html(jobLabel);
-        jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.name);
-        jQuery('#quote .product-extra-info .quote-job').html(jobSelect);
-        jQuery('#quote .product-extra-info .quote-gender').html(genderSelect);
-        jQuery('#quote .product-extra-info .quote-job-type').html(jobTypeSelect);
 
+        // Loads autocomplete input text.
+        jQuery( function() {
+
+            var accentMap = {
+                "á": "a",
+                "é": "e",
+                "í": "i",
+                "ó": "o",
+                "ú": "u",
+                "ü": "u"
+            };
+
+            // "Remove" accents
+            var normalize = function(termOriginal) {
+                var term = termOriginal.toLowerCase();
+                var ret = "";
+                for ( var i = 0; i < term.length; i++ ) {
+                    ret += accentMap[ term.charAt(i) ] || term.charAt(i);
+                }
+                return ret;
+            };
+
+            jQuery( "#quote .quote-job-picker" ).autocomplete({
+                minLength: 0,
+
+                source: function( request, response ) {
+                    var matcher = new RegExp( jQuery.ui.autocomplete.escapeRegex( request.term ), "i" );
+                    response( jQuery.grep( jobPicker, function( value ) {
+                        value = value.label || value.value || value;
+                        return matcher.test( value ) || matcher.test( normalize( value ) );
+                    }) );
+                },
+
+                select: function(event,ui) {
+                    this.value=ui.item.value;
+                    jQuery(this).trigger('change');
+                    return false;
+                }
+            });
+        });
+
+
+
+        // Load dynamic data and displays updated block
+        /*        jQuery('#quote .quote-job-picker').autocomplete({
+                    source: jobPicker,
+                    // triggers change event when selecting from the list, really important
+                    select: function(event,ui) {
+                        this.value=ui.item.value;
+                        jQuery(this).trigger('change');
+                        return false;
+                    }
+                });*/
+
+
+        // load discount fields for impersonator users
+        var discountFields = "";
+        if( typeof data.P_DESCUENTO_06 !== 'undefined' ) {
+            var hidden = "";
+            if (data.P_DESCUENTO_06.hidden == "S") {
+                hidden = " type='hidden' ";
+            }
+            cols = Math.floor(12 / data.P_DESCUENTO_06.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DESCUENTO_06.name + "</label>";
+            discountFields += "<" + data.P_DESCUENTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DESCUENTO_06.attributes + ">\n";
+
+            if (data.P_DESCUENTO_06.fieldType == "select") {
+                var cobroArray = data.P_DESCUENTO_06.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
+            discountFields += "</div>";
+        }
+
+        if( typeof data.P_ANYOS_DTO_06 !== 'undefined' ) {
+            var hidden = "";
+            if (data.P_ANYOS_DTO_06.hidden == "S") {
+                hidden = " type='hidden' ";
+            }
+            cols = Math.floor(12 / data.P_ANYOS_DTO_06.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end '>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_ANYOS_DTO_06.name + "</label>";
+            discountFields += "<" + data.P_ANYOS_DTO_06.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_ANYOS_DTO_06.attributes + ">\n";
+
+            if (data.P_ANYOS_DTO_06.fieldType == "select") {
+                var cobroArray = data.P_ANYOS_DTO_06.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
+            discountFields += "</div>";
+        }
+
+        if( typeof data.P_SOBREPRIMA_DEL !== 'undefined' ) {
+            var hidden = "";
+            if (data.P_SOBREPRIMA_DEL.hidden == "S") {
+                hidden = " type='hidden' ";
+            }
+            cols = Math.floor(12 / data.P_SOBREPRIMA_DEL.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_SOBREPRIMA_DEL.name + "</label>";
+            discountFields += "<" + data.P_SOBREPRIMA_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_SOBREPRIMA_DEL.attributes + ">\n";
+
+            if (data.P_SOBREPRIMA_DEL.fieldType == "select") {
+                var cobroArray = data.P_SOBREPRIMA_DEL.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
+            discountFields += "</div>";
+        }
+
+        if( typeof data.P_DTO_COMISION_MED !== 'undefined' ) {
+            var hidden = "";
+            if (data.P_DTO_COMISION_MED.hidden == "S") {
+                hidden = " type='hidden' ";
+            }
+            cols = Math.floor(12 / data.P_DTO_COMISION_MED.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DTO_COMISION_MED.name + "</label>";
+            discountFields += "<" + data.P_DTO_COMISION_MED.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DTO_COMISION_MED.attributes + ">\n";
+
+            if (data.P_DTO_COMISION_MED.fieldType == "select") {
+                var cobroArray = data.P_DTO_COMISION_MED.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
+            discountFields += "</div>";
+        }
+
+        if( typeof data.P_DTO_COMISION_DEL !== 'undefined' ) {
+            var hidden = "";
+            if (data.P_DTO_COMISION_DEL.hidden == "S") {
+                hidden = " type='hidden' ";
+            }
+            cols = Math.floor(12 / data.P_DTO_COMISION_DEL.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_DTO_COMISION_DEL.name + "</label>";
+            discountFields += "<" + data.P_DTO_COMISION_DEL.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_DTO_COMISION_DEL.attributes + ">\n";
+
+            if (data.P_DTO_COMISION_DEL.fieldType == "select") {
+                var cobroArray = data.P_DTO_COMISION_DEL.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
+            discountFields += "</div>";
+        }
+
+        if( typeof data.P_RECARGO_FINANCIACION !== 'undefined' ) {
+            var hidden = "";
+            if (data.P_RECARGO_FINANCIACION.hidden == "S") {
+                hidden = " type='hidden' ";
+            }
+            cols = Math.floor(12 / data.P_RECARGO_FINANCIACION.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_RECARGO_FINANCIACION.name + "</label>";
+            discountFields += "<" + data.P_RECARGO_FINANCIACION.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_RECARGO_FINANCIACION.attributes + ">\n";
+
+            if (data.P_RECARGO_FINANCIACION.fieldType == "select") {
+                var cobroArray = data.P_RECARGO_FINANCIACION.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
+            discountFields += "</div>";
+        }
+
+        if( typeof data.P_CANAL_COBRO !== 'undefined' ) {
+            var hidden = "";
+            if (data.P_CANAL_COBRO.hidden == "S") {
+                hidden = " type='hidden' ";
+            }
+            cols = Math.floor(12 / data.P_CANAL_COBRO.columns);
+            discountFields += "<div class='col-"+cols+" align-self-end'>";
+            discountFields += "<label class='quote-discount-cobro-label mb-1' for='quote-discount-cobro'>" + data.P_CANAL_COBRO.name + "</label>";
+            discountFields += "<" + data.P_CANAL_COBRO.fieldType + hidden + " class='form-control w-100 quote-discount-cobro valid' name='quote-discount-cobro' " + data.P_CANAL_COBRO.attributes + ">\n";
+
+            if (data.P_CANAL_COBRO.fieldType == "select") {
+                var cobroArray = data.P_CANAL_COBRO.values;
+                Object.keys(cobroArray).forEach(function (key) {
+                    discountFields += "<option value='" + key + "'>" + cobroArray[key] + "</option>";
+                });
+                discountFields += "</select>";
+            }
+            discountFields += "</div>";
+        }
+
+
+
+        //console.log(data);
+
+        jQuery('#inputWidget').html(inputWidget);
+        /*
+        jQuery('#quote .product-extra-info .quote-job').html(jobSelect);
+        jQuery('#quote .quote-job-type-label').html(data.P_REGIMEN_SEG_SOCIAL.name);
+        jQuery('#quote .product-extra-info .quote-job-type').html(jobTypeSelect);
+        jQuery('#quote .product-extra-info .quote-commercialKey').html(commercialKey);
+        jQuery('#quote .product-extra-info .quote-gender').html(genderSelect);
         jQuery('#quote .quote-birthdate-label').html(data.P_FECHA_NACIMIENTO_CLIENTE.name);
         jQuery('#quote .quote-gender-label').html(data.P_SEXO.name);
-        jQuery('#quote .product-extra-info .quote-weight').prop("min", data.P_PESO.min);
-        jQuery('#quote .product-extra-info .quote-weight').prop("max", data.P_PESO.max);
-        jQuery('#quote .product-extra-info .quote-weight-label').html(data.P_PESO.name);
-        jQuery('#quote .product-extra-info .quote-height').prop("min", data.P_TALLA.min);
-        jQuery('#quote .product-extra-info .quote-height').prop("max", data.P_TALLA.max);
-        jQuery('#quote .product-extra-info .quote-height-label').html(data.P_TALLA.name);
+        //jQuery('#quote .quote-height').html(heightProduct);
+        //jQuery('#quote .quote-weight').html(heightWeight);
+        jQuery('#quote .quote-job-label').html(jobLabel);
+        jQuery('#quote .product-extra-info .quote-height-wrapper').html(heightProduct);
+        jQuery('#quote .product-extra-info .quote-weight-wrapper').html(weightProduct);
+        //jQuery('#quote .product-extra-info .quote-weight').prop("min", data.P_PESO.min);
+        //jQuery('#quote .product-extra-info .quote-weight').prop("max", data.P_PESO.max);
+        //jQuery('#quote .product-extra-info .quote-weight-label').html(data.P_PESO.name);
+        //jQuery('#quote .product-extra-info .quote-height').prop("min", data.P_TALLA.min);
+        //jQuery('#quote .product-extra-info .quote-height').prop("max", data.P_TALLA.max);
+        //jQuery('#quote .product-extra-info .quote-height-label').html(data.P_TALLA.name);
 
-        extraFields = benefits + duration + commercialKey;
-        jQuery('#quote .product-extra-info .quote-hidden-fields-wrapper .col').html(extraFields);
+        durationGroup = franchiseField + duration + durationField;
+        //extraFields = benefits + franchiseField + duration + durationField + discountFields;
+        if (discountFields == ""){
+            discountFields = "<div class='col-12'></div>";
+        }
+        jQuery('#quote .product-extra-info .quote-benefit-wrapper').html(benefits);
+        if (franchiseField == "") {
+            franchiseField = "<div class='col-4'></div>";
+        }
+        jQuery('#quote .product-extra-info .quote-franchise-wrapper').html(franchiseField);
+        jQuery('#quote .product-extra-info .quote-duration-wrapper').html(duration);
+        jQuery('#quote .product-extra-info .quote-durationField-wrapper').html(durationField);
+        jQuery('#quote .product-extra-info .quote-discount-wrapper').html(discountFields);
+    */
 
+
+        //jQuery('#quote .product-extra-info .dynamic-content .row').html(output);
+        jQuery('#quote #step-1 .loader-wrapper').hide();
+        jQuery('#quote .product-extra-info').fadeIn();
+        jQuery('#quote .get-rates').fadeIn();
+        jQuery(function(){
+            jQuery("#quote-starting-date").datepicker({ minDate: 0, maxDate: 30 });
+        });
 
         //jQuery('#quote .product-extra-info .dynamic-content .row').html(output);
         jQuery('#quote #step-1 .loader-wrapper').hide();
         jQuery('header').fadeIn();
         jQuery('#quote #step-1 .product-extra-info').fadeIn();
         jQuery('footer').fadeIn();
+
     }
 
     // GENERAL - Display modal
@@ -713,7 +1226,7 @@ jQuery( document ).ready(function() {
         jQuery('#quote .get-rates .quote-button').removeAttr("disabled");
     });
 
-            // WIDGET - toggles check attribute on clicked toggle button
+    // WIDGET - toggles check attribute on clicked toggle button
     jQuery("#quote .btn-group-toggle .btn").click(function (e) {
         jQuery(this).parent().find(".btn input").removeAttr("checked");
         jQuery(this).find("input").attr("checked", "checked");
@@ -1147,7 +1660,7 @@ jQuery( document ).ready(function() {
         if (allValid) {
             jQuery('#step-2 .quote-step.next').removeAttr("disabled");
         } else {
-           //  jQuery('#step-2 .quote-step.next').attr("disabled", "disabled");
+            //  jQuery('#step-2 .quote-step.next').attr("disabled", "disabled");
             jQuery([document.documentElement, document.body]).animate({
                 scrollTop: jQuery(".invalid").offset().top -50
             }, 1000);
@@ -1208,43 +1721,43 @@ jQuery( document ).ready(function() {
             jQuery('#step-2').hide();
 
 
-                jQuery('#quote #step-3 .loader-wrapper').show();
+            jQuery('#quote #step-3 .loader-wrapper').show();
 
-                // Retrieves health form data from WS
-                var url = "/get-data";
-                var ws = "getHealthForm";
-                var commercialkey = window.PMwidgetStep1.commercialKey;
+            // Retrieves health form data from WS
+            var url = "/get-data";
+            var ws = "getHealthForm";
+            var commercialkey = window.PMwidgetStep1.commercialKey;
 
-                jQuery.ajax({
-                    type: "POST",
-                    url: url,
-                    data: {
-                        ws : ws,
-                        productor : PMproductor,
-                        product : PMproduct,
-                        commercialKey : commercialkey,
-                        u: PMu,
-                        p: PMp
+            jQuery.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    ws : ws,
+                    productor : PMproductor,
+                    product : PMproduct,
+                    commercialKey : commercialkey,
+                    u: PMu,
+                    p: PMp
 
-                    },
-                    success: function (response) {
-                        if (response['success'] == true) {
-                            healthFormRequired = true;
-                            quote_load_healthForm(response.data);
-                        } else {
-                            console.error( response.e);
-                        }
-
-                        if (healthFormRequired){
-                            jQuery('#step-3').fadeIn();
-                        }else{
-                            jQuery('#step-4').fadeIn();
-                        }
-                    },
-                    error: function (response) {
-                        console.error( lang["WS.error"] );
+                },
+                success: function (response) {
+                    if (response['success'] == true) {
+                        healthFormRequired = true;
+                        quote_load_healthForm(response.data);
+                    } else {
+                        console.error( response.e);
                     }
-                });
+
+                    if (healthFormRequired){
+                        jQuery('#step-3').fadeIn();
+                    }else{
+                        jQuery('#step-4').fadeIn();
+                    }
+                },
+                error: function (response) {
+                    console.error( lang["WS.error"] );
+                }
+            });
 
 
         }

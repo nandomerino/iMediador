@@ -365,6 +365,10 @@ label {
     color: red;
     font-size: 1rem;
 }
+.ok-message{
+    color: #28a745;
+    font-size: 1rem;
+}
 form .error-message{
     display: none;
 }
@@ -573,7 +577,8 @@ table td{
 }
 .app-core .toggles button.active,
 #quote .get-rates button.active,
-#quote .get-advice button.active{
+#quote .get-advice button.active,
+section#step-5 button.active{
     background-color: #D1D546;
     color: white !important;
 }
@@ -599,6 +604,10 @@ table td{
 .app-core label,
 .app-core input{
     color: #707070;
+}
+
+.app-core label {
+    padding-right: 20px;
 }
 
 .app-core label svg{
@@ -660,6 +669,11 @@ table td{
 .rates-table .table td, .rates-table .table th{
      vertical-align: middle;
      min-width: 60px;
+}
+
+.rates-table .table td:first-of-type {
+    width: 70px;
+    padding: 5px 15px;
 }
 
 .rates-table .table tfoot td {
@@ -869,7 +883,7 @@ table.ui-datepicker-calendar tbody td span{
     margin-bottom: 10px;
 }
 
-#step-4 #payment-input{
+#step-4 #payment-input, #step-4 #hiring-method{
     max-width: 500px;
     margin: auto;
 }
@@ -908,11 +922,11 @@ table.ui-datepicker-calendar tbody td span{
 }
 
 #step-5 .container{
-    max-width: 500px;
+    max-width: 750px;
     margin: auto !important;
 }
 #step-5 .thank-you .message{
-    max-width: 300px !important;
+    max-width: 320px !important;
     margin: auto !important;
     font-size: 15.8px !important;
 }
@@ -938,11 +952,16 @@ table.ui-datepicker-calendar tbody td span{
     line-height: 1.2;
 }
 
-#quote-download-policy-request{
+#quote-download-policy-request.active, #dowload-condition input[type=submit].active, #quote-download-receipt-form input[type=submit].active{
     background-color: #D1D546;
     color: white;
     padding: 10px 15px;
     border-radius: 3px;
+}
+
+#quote-download-policy-request.inactive, #dowload-condition input[type=submit].inactive, #quote-download-receipt-form input[type=submit].inactive{
+    background-color: rgb(225, 225, 225);
+    cursor: default;
 }
 
 #quote-insurance-policy-upload-button{
@@ -953,6 +972,23 @@ table.ui-datepicker-calendar tbody td span{
     border: none;
 }
 
+iframe {
+    z-index: -1;
+    position: absolute;
+    border: none;
+    top: 0px;
+    left: 0px;
+    height: 2px;
+    width: 2px;
+}
+iframe#logaltyFrame.mostrar {
+    z-index: 999;
+    width: 750px;
+    height: 1100px;
+    top: auto;
+    left: 20%;
+    position: relative;
+}
 .advisor-results table{
     display: block;
     overflow: hidden;
@@ -1068,7 +1104,7 @@ table.ui-datepicker-calendar tbody td span{
     line-height: 2;
 }
 
-#quote-download-form input[type=submit]{
+#quote-download-form input[type=submit], #dowload-condition input[type=submit], #quote-download-receipt-form input[type=submit]{
     border: none;
     padding: 10px 15px;
     max-height: unset;
@@ -1114,7 +1150,31 @@ table.ui-datepicker-calendar tbody td span{
 #campaigns h4{
     font-size: 17px
 }
-
+.card.campaign {
+    margin-bottom: 50px;
+}
+/*Home progress bar*/
+.progress {
+    width: 100%;
+    height: 50px;
+}
+.progress-bar {
+    height: 50px;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: #002A66;
+}
+.progress-bar.bg-success {
+    background-color: #D1D546 !important;
+}
+.progress-bar.bg-info {
+    background-color: #e5e888 !important;
+}
+.progress-text {
+    text-align: center;
+    margin-bottom: -35px;
+    padding-top: 20px;
+}
 .PM-progress-bar-wrapper{
     border: thin solid #002A66;
     border-radius: 5px;
@@ -1158,7 +1218,30 @@ table.ui-datepicker-calendar tbody td span{
 #info-boxes .col{
     border-radius: 15px;
 }
-
+.message {
+    text-align: center;
+    font-weight: bold;
+    padding-top: 20px;
+}
+.message p {
+    font-size: 16px;
+    margin-bottom: 0;
+    color: #a31366;
+}
+.row.fechaFin {
+    background: #002A66;
+    color: #fff;
+    padding: 15px;
+    margin-right: 0;
+    margin-left: 0;
+    margin-top: -25px;
+}
+.row.fechaFin p {
+    margin-bottom: 0;
+}
+.row.fechaFin h3 {
+    color: #fff;
+}
 #recent-activity h3{
     font-size: 19px;
     font-weight: normal
@@ -1198,7 +1281,24 @@ table.ui-datepicker-calendar tbody td span{
     max-width: 80%;
     margin: auto;
 }
-
+div#cambiarPWD {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100vw;
+    height: 100vh;
+    background: #ffffffba;
+}
+div#cambiarPWD .card {
+    width: 500px;
+    position: absolute;
+    top: 25%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
 #PMmodal .modal-send-email button:disabled{
     background-color: #E1E1E1 !important;
 }
@@ -1549,12 +1649,48 @@ button#print-budget.active, button#send-budget.active {
 .collapse {
     display: block;
 }
+#group-12.row.questions-group.show.collapse.in {
+    display: block;
+}
+#group-12.row.questions-group.show.collapse {
+    display: none;
+}
+
+/* datepicker */
+div#ui-datepicker-div {
+    z-index: 9 !important;
+    margin-top: -246px !important;
+}
+input#quote-starting-date[readonly] {
+    background: none;
+}
+/* loader */
+.loader-wrapper-get-rates.w-100.pt-5.text-center, .loader-wrapper-get-budget.w-100.pt-5.text-center, .loader-wrapper-download {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: rgb(249,249,249);
+    opacity: .8;
+}
+.loader-wrapper-get-rates.w-100.pt-5.text-center svg, .loader-wrapper-get-budget.w-100.pt-5.text-center svg, .loader-wrapper-download svg {
+    top: 50%;
+    position: fixed;
+}
+.loader-wrapper-get-rates.w-100.pt-5.text-center h3, .loader-wrapper-get-budget.w-100.pt-5.text-center h3, .loader-wrapper-download h3 {
+    top: 55%;
+    position: fixed;
+}
 
 /* ^^^^^^ MEDIA QUERIES ^^^^^^ */
 
 
 @media print {
-
+    .row.print3 {
+        page-break-before: always;
+    }
      .hiddenprint {
           display: none;
      }

@@ -164,18 +164,15 @@ class SliderController extends Controller
                         }
                     }
 
-                } else {
-                    $row = session('home.showSliders');
-
-
-                    $output .= '<li class="splide__slide" style="background-image: url(\'/sliders/' . $row . '.jpg\')">';
+                } else if (session('home.showSliders') != null) {
+                    $idSlider = session('home.showSliders');
+                    $output .= '<li class="splide__slide" style="background-image: url(\'/sliders/' . $idSlider . '.jpg\')">';
                     //$output .= '<h2 style="color: ' . $color . ';">' . $header . '</h2>';
                     //$output .= '<h4 style="color: ' . $color . ';">' . $description . '</h4>';
                     $output .= '</li>';
-
+                } else {
+                    $output .= '<style>section#slider-home {display: none;}</style>';
                 }
-
-
                 break;
         }
 

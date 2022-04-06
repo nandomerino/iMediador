@@ -181,10 +181,9 @@ class PMWShandler
             }
 
             if (property_exists($data, "datosSliders")) {
-                // Sliders to show
-                if( isset($data->datosSliders->idSlider) && is_array($data->datosSliders->idSlider)){
+                if (property_exists($data->datosSliders, "idSlider")) {
                     $showSliders = $data->datosSliders->idSlider;
-                }else{
+                } else {
                     $showSliders = null;
                 }
             }else{
@@ -749,8 +748,8 @@ class PMWShandler
 
         //app('debugbar')->info($parameters);
         $response = $this->PMWS->getRates($parameters);
-        app('debugbar')->info('getRates $response');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('getRates $response');
+        //app('debugbar')->info($response);
 
         $rates = [];
 
@@ -2164,6 +2163,7 @@ class PMWShandler
 
     }
 
+
     /**
      * @param $productor
      * @param $docId
@@ -2420,4 +2420,5 @@ class PMWShandler
 
         return $response;
     }
+
 }

@@ -195,7 +195,9 @@ jQuery( document ).ready(function() {
                 success: function(response){
                     console.log(response);
                     if(response['success'] == true){
-                        window.location.href = response['redirect'];
+                        //HARDCODE PARA REDIRECT EN LOCAL
+                        //window.location.href = response['redirect'];
+                        window.location.href = 'http://127.0.0.1:8000/app';
                     } else if(response['e'] == 'redirect') {
                        jQuery('#cambiarPWD').show();
                         jQuery('#loginForm .loadingIcon').hide();
@@ -377,7 +379,9 @@ jQuery( document ).ready(function() {
                 },
                 success: function(response){
                     if(response['success'] == true){
-                        window.location.href = response['redirect'];
+                        //HARDCODE PARA REDIRECT EN LOCAL
+                        //window.location.href = response['redirect'];
+                        window.location.href = 'http://127.0.0.1:8000/app';
                     }else{
                         jQuery('#loginForm .loadingIcon').hide();
                         jQuery('.public-core #loginForm .error-message').html('Email enviado');
@@ -3358,6 +3362,7 @@ jQuery( document ).ready(function() {
 
     });
     function getBudget() {
+
         var url = "/get-data";
         var ws = "getBudget";
 
@@ -4190,6 +4195,7 @@ jQuery( document ).ready(function() {
     });
     jQuery("#quote .quote-another-buyer.no").click( function(e){
         jQuery("#quote .quote-another-buyer-extra-info").hide();
+        jQuery('#quote .quote-another-buyer-extra-info input').val('');
     });
     // QUOTES - toggles person entity extra info
     jQuery("#quote .quote-legal-entity-type.natural-person").click( function(e){
@@ -6177,7 +6183,9 @@ jQuery( document ).ready(function() {
                 },
                 success: function(response){
                     if(response['success'] == true){
-                        window.location.href = response['redirect'];
+                        //HARDCODE PARA REDIRECT EN LOCAL
+                        //window.location.href = response['redirect'];
+                        window.location.href = 'http://127.0.0.1:8000/app';
                     }else{
                         jQuery('#loginFormPrivate .loadingIcon').hide();
                         jQuery('#loginFormPrivate .error-message').html( response['e']);
@@ -6506,6 +6514,7 @@ jQuery( document ).ready(function() {
                 break;
         }
     });
+
 
     // ------------------- RESETS ----------------------
 
