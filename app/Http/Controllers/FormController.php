@@ -24,7 +24,25 @@ class FormController extends Controller
         $PMWShandler = new PMWShandler();
         switch( $input["loginType"] ){
             case "app-login":
+                app('debugbar')->info('$input app-login');
+                app('debugbar')->info($input);
                 $data = $PMWShandler->login($input["user"], $input["pass"], $input["gestor"], $input["loginType"], $input["action"], $input["entryChannel"]);
+                app('debugbar')->info('$data app-login');
+                app('debugbar')->info($data);
+                if( $data === true) {
+                    return response()->json(['success'=> true, 'redirect'=> config('filesystems.disks.app.home') ]);
+                }else {
+                    $request->session()->flush();
+                    return response()->json(['success'=> false, 'e'=> $data]);
+                }
+                break;
+
+            case "recovery-login":
+
+                $pass = 'null';
+                $data = $PMWShandler->login($input["user"], $pass, $input["gestor"], $input["loginType"], $input["action"], $input["entryChannel"]);
+                app('debugbar')->info('$data recovery login formcontroller');
+                app('debugbar')->info($data);
                 if( $data === true) {
                     return response()->json(['success'=> true, 'redirect'=> config('filesystems.disks.app.home') ]);
                 }else {

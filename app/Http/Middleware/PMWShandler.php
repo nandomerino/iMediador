@@ -66,7 +66,6 @@ class PMWShandler
         $this->pass = session('login.pass');
         $this->gestor = session('login.gestor');
         $this->userPM = session('login.userPM');
-        // file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/test.txt', "User: " . session('login.user') . " | Pass: " . session('login.pass') );
     }
 
     /**
@@ -82,149 +81,168 @@ class PMWShandler
      */
     public function login($user, $pass, $gestor, $loginType, $action, $userPM = null, $entryChannel = null)
     {
+
         switch( $loginType ){
             case "app-login":
+                $recoveryLogin = false;
                 if( $gestor && strlen( $gestor) > 0){
                     $info = $this->PMWS->login($user, $pass, $this->language, $gestor);
                 }else{
                     $info = $this->PMWS->login($user, $pass, $this->language);
                 }
                 break;
-
+            case "recovery-login":
+                $recoveryLogin = true;
+                $info = $this->PMWS->recoveryLogin($user, $this->language);
+                break;
             case "private-login":
+                $recoveryLogin = false;
                 $info = $this->PMWS->loginInt($user, $pass, $this->language, $userPM, $entryChannel);
                 break;
         }
-
-        $data = $info->return;
-        app('debugbar')->info('$data login');
-        app('debugbar')->info($data);
-        if( $data->correcto == "S") {
-            // Store user info in the session and redirects to app home
-            if (property_exists($data->datosSalida, "listaParametros")) {
-                foreach ($data->datosSalida->listaParametros as $row) {
-                    switch( $row->nombreParametro ){
-                        case "P_TEXTO_HOME_1":
-                            $homeMessage1 = $row->valorParametro;
-                            break;
-                        case "P_TEXTO_HOME_2":
-                            $homeMessage2 = $row->valorParametro;
-                            break;
-                        case "P_NOMBRE_MEDIADOR":
-                            $nombreMediador = $row->valorParametro;
-                            break;
-                        case "P_NOMBRE_PRODUCTOR":
-                            $nombreProductor = $row->valorParametro;
-                            break;
-                        case "P_CODIGO_ACCESO":
-                            $tokenAcceso = $row->valorParametro;
-                            break;
-                        case "P_FORZAR_CAMBIO_PWD":
-                            $cambiarPWD = $row->valorParametro;
-                            break;
-                    }
-
-                }
-            } else {
-                $homeMessage1 = null;
-                $homeMessage2 = null;
+        if ($recoveryLogin == true) {
+            app('debugbar')->info('recovery true');
+            $data = $info->return;
+            if( $data->correcto == "S") {
+                $response = true;
+            }else{
+                $response = $data->mensajeError;
             }
-
-            if (property_exists($data->datosAgrProductos, "listaAgrProductos")) {
-
-                if (!is_array($data->datosAgrProductos->listaAgrProductos)) {
-
-                    $products[$data->datosAgrProductos->listaAgrProductos->codigo]["name"] = $data->datosAgrProductos->listaAgrProductos->descripcion;
-
-                } else {
-
-                    foreach ($data->datosAgrProductos->listaAgrProductos as $row) {
-
-                        $products[$row->codigo]["name"] = $row->descripcion;
-
-                    }
-                }
-
-            } else {
-                $products = null;
-            }
-
-            if (property_exists($data->datosCuadrosHome, "listaCuadrosHome")) {
-                $i = 0;
-                foreach ($data->datosCuadrosHome->listaCuadrosHome as $row) {
-                    // Info boxes
-                    $infoBoxes[$i]["data"] = $row->numero;
-                    $infoBoxes[$i]["name"] = $row->texto;
-
-                    // Recent activity blocks
-                    if( isset($row->detalleActividad->listaDetalleActividad) && is_array($row->detalleActividad->listaDetalleActividad)){
-
-                        $recentActivity[$i]["data"] = $row->numero;
-                        $recentActivity[$i]["name"] = $row->texto;
-                        foreach ( $row->detalleActividad->listaDetalleActividad as $key => $value ) {
-                            if($key == 0){
-                                $recentActivity[$i]["table"]["header"] = $value;
-                            }else{
-                                $recentActivity[$i]["table"]["rows"][$key] = $value;
-                            }
+            return $response;
+        }
+        if ($recoveryLogin == false) {
+            app('debugbar')->info('recovery false');
+            $data = $info->return;
+            if( $data->correcto == "S") {
+                // Store user info in the session and redirects to app home
+                if (property_exists($data->datosSalida, "listaParametros")) {
+                    foreach ($data->datosSalida->listaParametros as $row) {
+                        switch( $row->nombreParametro ){
+                            case "P_TEXTO_HOME_1":
+                                $homeMessage1 = $row->valorParametro;
+                                break;
+                            case "P_TEXTO_HOME_2":
+                                $homeMessage2 = $row->valorParametro;
+                                break;
+                            case "P_NOMBRE_MEDIADOR":
+                                $nombreMediador = $row->valorParametro;
+                                break;
+                            case "P_NOMBRE_PRODUCTOR":
+                                $nombreProductor = $row->valorParametro;
+                                break;
+                            case "P_CODIGO_ACCESO":
+                                $tokenAcceso = $row->valorParametro;
+                                break;
+                            case "P_FORZAR_CAMBIO_PWD":
+                                $cambiarPWD = $row->valorParametro;
+                                break;
                         }
+
+                    }
+                } else {
+                    $homeMessage1 = null;
+                    $homeMessage2 = null;
+                }
+
+                if (property_exists($data->datosAgrProductos, "listaAgrProductos")) {
+
+                    if (!is_array($data->datosAgrProductos->listaAgrProductos)) {
+
+                        $products[$data->datosAgrProductos->listaAgrProductos->codigo]["name"] = $data->datosAgrProductos->listaAgrProductos->descripcion;
+
                     } else {
-                        $recentActivity = null;
+
+                        foreach ($data->datosAgrProductos->listaAgrProductos as $row) {
+
+                            $products[$row->codigo]["name"] = $row->descripcion;
+
+                        }
                     }
 
-
-                    $i++;
-                }
-            } else {
-                $infoBoxes = null;
-                $recentActivity = null;
-            }
-
-            if (property_exists($data, "datosSliders")) {
-                if (property_exists($data->datosSliders, "idSlider")) {
-                    $showSliders = $data->datosSliders->idSlider;
                 } else {
+                    $products = null;
+                }
+
+                if (property_exists($data->datosCuadrosHome, "listaCuadrosHome")) {
+                    $i = 0;
+                    foreach ($data->datosCuadrosHome->listaCuadrosHome as $row) {
+                        // Info boxes
+                        $infoBoxes[$i]["data"] = $row->numero;
+                        $infoBoxes[$i]["name"] = $row->texto;
+
+                        // Recent activity blocks
+                        if( isset($row->detalleActividad->listaDetalleActividad) && is_array($row->detalleActividad->listaDetalleActividad)){
+
+                            $recentActivity[$i]["data"] = $row->numero;
+                            $recentActivity[$i]["name"] = $row->texto;
+                            foreach ( $row->detalleActividad->listaDetalleActividad as $key => $value ) {
+                                if($key == 0){
+                                    $recentActivity[$i]["table"]["header"] = $value;
+                                }else{
+                                    $recentActivity[$i]["table"]["rows"][$key] = $value;
+                                }
+                            }
+                        } else {
+                            $recentActivity = null;
+                        }
+
+
+                        $i++;
+                    }
+                } else {
+                    $infoBoxes = null;
+                    $recentActivity = null;
+                }
+
+                if (property_exists($data, "datosSliders")) {
+                    if (property_exists($data->datosSliders, "idSlider")) {
+                        $showSliders = $data->datosSliders->idSlider;
+                    } else {
+                        $showSliders = null;
+                    }
+                }else{
                     $showSliders = null;
                 }
+
+                session([
+                    'login' => [
+                        'user' => $user,
+                        'pass' => $pass,
+                        'gestor' => $gestor,
+                        'loginType' => $loginType,
+                        'userPM' => $userPM,
+                        'action' => $action,
+                        'loggedSince' => time(),
+                        'tokenAcceso' => $tokenAcceso,
+                    ],
+                    'home' => [
+                        'homeMessage1' => $homeMessage1,
+                        'homeMessage2' => $homeMessage2,
+                        'nombreMediador' => $nombreMediador,
+                        'nombreProductor' => $nombreProductor,
+                        'infoBoxes' => $infoBoxes ?? '',
+                        'recentActivity' => $recentActivity ?? '',
+                        'showSliders' => $showSliders
+                    ],
+                    'quote' => [
+                        'products' => $products
+                    ]
+                ]);
+                if ($cambiarPWD == 'S') {
+                    $response = 'redirect';
+                } else {
+                    $response = true;
+                }
+
             }else{
-                $showSliders = null;
+                $response = $data->mensajeError;
             }
+            app('debugbar')->info('response PMWS');
+            app('debugbar')->info($response);
+            return $response;
 
-            session([
-                'login' => [
-                    'user' => $user,
-                    'pass' => $pass,
-                    'gestor' => $gestor,
-                    'loginType' => $loginType,
-                    'userPM' => $userPM,
-                    'action' => $action,
-                    'loggedSince' => time(),
-                    'tokenAcceso' => $tokenAcceso,
-                ],
-                'home' => [
-                    'homeMessage1' => $homeMessage1,
-                    'homeMessage2' => $homeMessage2,
-                    'nombreMediador' => $nombreMediador,
-                    'nombreProductor' => $nombreProductor,
-                    'infoBoxes' => $infoBoxes ?? '',
-                    'recentActivity' => $recentActivity ?? '',
-                    'showSliders' => $showSliders
-                ],
-                'quote' => [
-                    'products' => $products
-                ]
-            ]);
-            if ($cambiarPWD == 'S') {
-                $response = 'redirect';
-            } else {
-                $response = true;
-            }
-
-        }else{
-            $response = $data->mensajeError;
         }
 
-        return $response;
     }
 
     /**
@@ -236,10 +254,14 @@ class PMWShandler
      *
      * Validates login information and stores retrieved data into session
      */
-    public function recoveryLogin($user, $gestor, $action, $userPM = null)
+    public function recoveryLogin()
     {
-        $response = $this->PMWS->recoveryLogin($this->user, $this->language);
+        //app('debugbar')->info('This recoverylogin PMWSHandler');
+        //app('debugbar')->info($this);
 
+        $response = $this->PMWS->recoveryLogin($this->user, $this->language);
+        //app('debugbar')->info('Response recoverylogin PMWSHandler');
+        //app('debugbar')->info($response);
         $data = $response->return;
         if( $data->correcto == "S") {
             $response = true;
@@ -263,12 +285,12 @@ class PMWShandler
     public function changePassword($user, $password, $passwordNew)
     {
         $response = $this->PMWS->changePassword($user, $password, $this->language, $passwordNew);
-        app('debugbar')->info('changePassword $response');
-        app('debugbar')->info($response);
+        //app('debugbar')->info('changePassword $response');
+        //app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S") {
-            $response = true;
+            $response = false;
         }else{
             $response = $data->mensajeError;
         }
@@ -290,7 +312,8 @@ class PMWShandler
      */
     function getProductVariations($productor, $productGroup, $entryChannel = null, $application = null, $u = null, $p = null)
     {
-
+        app('debugbar')->info('getProductVariations $this');
+        app('debugbar')->info($this);
         if($u != null && $p != null){
             $this->user = $u;
             $this->pass = $p;

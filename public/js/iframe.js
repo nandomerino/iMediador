@@ -8,15 +8,15 @@ jQuery( document ).ready(function() {
         jQuery('#scroll-section').attr("style","display:none !important");
 
         if( jQuery(this).hasClass("basic") ){
-            jQuery('.PMwidget.basic').attr("src","https://imediador.wldev.es/widget?p=D4XTP9L1JHMGMM2VDRDJ"); // D4XTP9L1JHMGMM2VDRDJ
+            jQuery('.PMwidget.basic').attr("src","https://imediador.com/widget?p=D4XTP9L1JHMGMM2VDRDJ"); // D4XTP9L1JHMGMM2VDRDJ
             jQuery('.PMwidget.basic').fadeIn();
         }
         if( jQuery(this).hasClass("medium") ){
-            jQuery('.PMwidget.medium').attr("src","https://imediador.wldev.es/widget?p=ZT3OJ0AAOXVN3Q8HMRK2"); // 58448VDL2O9C3DG5DBY1
+            jQuery('.PMwidget.medium').attr("src","https://imediador.com/widget?p=ZT3OJ0AAOXVN3Q8HMRK2"); // 58448VDL2O9C3DG5DBY1
             jQuery('.PMwidget.medium').fadeIn();
         }
         if( jQuery(this).hasClass("protect") ){
-            jQuery('.PMwidget.protect').attr("src","https://imediador.wldev.es/widget?p=BOIL1SEH9JL19TF085Z1"); // FC4Z57XC439P6192J2D2
+            jQuery('.PMwidget.protect').attr("src","https://imediador.com/widget?p=BOIL1SEH9JL19TF085Z1"); // FC4Z57XC439P6192J2D2
             jQuery('.PMwidget.protect').fadeIn();
         }
         jQuery('#bg-landing-hospitalizacion, #descubre, #ventajas, #como, .como.mobile').fadeOut(3000);

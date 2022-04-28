@@ -371,6 +371,7 @@ label {
 }
 form .error-message{
     display: none;
+    padding: 0;
 }
 
 select.form-control{

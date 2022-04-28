@@ -102,12 +102,9 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        //app('debugbar')->info('parametros');
-        //app('debugbar')->info($params);
-
         $result = $client->obtenerDatosMediador($params);
 
-        app('debugbar')->info('result');
+        app('debugbar')->info('result PMWS');
         app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
@@ -124,7 +121,7 @@ class PMWS extends controller
      * @return bool
      * @throws \SoapFault
      */
-    function recoveryLogin($user,$language, $managerCode = null, $nombreMediador = null, $nombreProductor = null, $coberturasOpcionales = null, $riesgoTarificado= null) {
+    function recoveryLogin($user,$language) {
 
         $endpoint = $this->baseUrl . "/v4/wsautenticacion" . $this->environment . "/Autenticacion?WSDL";
         $client = new SoapClient($endpoint);
@@ -133,34 +130,6 @@ class PMWS extends controller
         $inputData[] =  array(
             "nombreParametro"	=> "P_CANAL_ENTRADA",
             "valorParametro"	=> "IM");
-
-        if ( $managerCode != null ) {
-            $inputData[] =  array(
-                "nombreParametro"	=> "P_CODIGO_GESTOR",
-                "valorParametro"	=> $managerCode);
-        }
-        if ( $nombreMediador != null ) {
-            $inputData[] =  array(
-                "nombreParametro"	=> "P_NOMBRE_MEDIADOR",
-                "valorParametro"	=> $nombreMediador);
-        }
-
-        if ( $nombreProductor != null ) {
-            $inputData[] =  array(
-                "nombreParametro"	=> "P_NOMBRE_PRODUCTOR",
-                "valorParametro"	=> $nombreProductor);
-        }
-        if ( $coberturasOpcionales != null ) {
-            $inputData[] =  array(
-                "nombreParametro"	=> "P_COBERTURAS_OPCIONALES",
-                "valorParametro"	=> $coberturasOpcionales);
-        }
-        if ( $riesgoTarificado != null ) {
-            $inputData[] =  array(
-                "nombreParametro"	=> "P_RIESGO_TARIFICADO",
-                "valorParametro"	=> $riesgoTarificado);
-        }
-
 
         $cData = array();
         $cData[] = array(
@@ -176,13 +145,13 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        //app('debugbar')->info('parametros');
-        //app('debugbar')->info($params);
+        app('debugbar')->info('parametros PMWS RecoveryLogin');
+        app('debugbar')->info($params);
 
         $result = $client->recuperaPassword($params);
 
-        //app('debugbar')->info('result');
-        //app('debugbar')->info($result);
+        app('debugbar')->info('result PMWS Recoverylogin');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
@@ -2125,7 +2094,6 @@ class PMWS extends controller
         }
         app('debugbar')->info('$params submit policy');
         app('debugbar')->info($params);
-        //file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/log.txt', serialize($params) );
         $result = $client->altaPoliza($params);
         //app('debugbar')->info('$result submit policy');
         //app('debugbar')->info($result);
@@ -2178,7 +2146,6 @@ class PMWS extends controller
 
         app('debugbar')->info('$params getReceipt');
         app('debugbar')->info($params);
-        //file_put_contents('/var/www/vhosts/wldev.es/imediador.wldev.es/public/log.txt', serialize($params) );
         $result = $client->getDatosPoliza($params);
         app('debugbar')->info('$result getReceipt');
         app('debugbar')->info($result);

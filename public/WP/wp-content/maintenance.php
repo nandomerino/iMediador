@@ -24,8 +24,8 @@ header('Retry-After: 600');
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="https://imediador.wldev.es/WP/wp-content/maintenance/assets/styles.css">
-    <script src="https://imediador.wldev.es/WP/wp-content/maintenance/assets/timer.js"></script>
+    <link rel="stylesheet" href="https://imediador.com/WP/wp-content/maintenance/assets/styles.css">
+    <script src="https://imediador.com/WP/wp-content/maintenance/assets/timer.js"></script>
     <title>Scheduled Maintenance</title>
 </head>
 
@@ -44,10 +44,10 @@ header('Retry-After: 600');
     <!--START_SOCIAL_LINKS_BLOCK-->
     <section class="social-links">
                     <a class="social-links__link" href="https://www.facebook.com/Plesk" target="_blank" title="Facebook">
-                <span class="icon"><img src="https://imediador.wldev.es/WP/wp-content/maintenance/assets/images/facebook.svg" alt="Facebook"></span>
+                <span class="icon"><img src="https://imediador.com/WP/wp-content/maintenance/assets/images/facebook.svg" alt="Facebook"></span>
             </a>
                     <a class="social-links__link" href="https://twitter.com/Plesk" target="_blank" title="Twitter">
-                <span class="icon"><img src="https://imediador.wldev.es/WP/wp-content/maintenance/assets/images/twitter.svg" alt="Twitter"></span>
+                <span class="icon"><img src="https://imediador.com/WP/wp-content/maintenance/assets/images/twitter.svg" alt="Twitter"></span>
             </a>
             </section>
     <!--END_SOCIAL_LINKS_BLOCK-->
@@ -56,7 +56,7 @@ header('Retry-After: 600');
 
 <footer class="footer">
     <div class="footer__content">
-        Powered by WordPress Toolkit <a href="https://www.plesk.com/" target="_blank"><img class="logo" src="https://imediador.wldev.es/WP/wp-content/maintenance/assets/images/plesk-logo.png" alt="Plesk"></a>
+        Powered by WordPress Toolkit <a href="https://www.plesk.com/" target="_blank"><img class="logo" src="https://imediador.com/WP/wp-content/maintenance/assets/images/plesk-logo.png" alt="Plesk"></a>
     </div>
 </footer>
 

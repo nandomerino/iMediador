@@ -196,10 +196,10 @@ jQuery( document ).ready(function() {
                     console.log(response);
                     if(response['success'] == true){
                         //HARDCODE PARA REDIRECT EN LOCAL
-                        //window.location.href = response['redirect'];
-                        window.location.href = 'http://127.0.0.1:8000/app';
+                        window.location.href = response['redirect'];
+                        //window.location.href = 'http://127.0.0.1:8000/app';
                     } else if(response['e'] == 'redirect') {
-                       jQuery('#cambiarPWD').show();
+                        jQuery('#cambiarPWD').show();
                         jQuery('#loginForm .loadingIcon').hide();
                         jQuery('#loginChangeForm .loadingIcon').hide();
                         jQuery('#loginChangeForm .user').val(jQuery('#loginForm .user').val());
@@ -229,7 +229,7 @@ jQuery( document ).ready(function() {
         var pass1 = jQuery('[name=password]');
         var pass2 = jQuery('[name=passwordNew]');
         var pass3 = jQuery('[name=repitPassword]');
-        var longitud = "La contraseña debe estar formada entre 8-30 carácteres alfanuméricos";
+        var longitud = "La contraseña debe estar formada entre 8-30 caracteres alfanuméricos y debe contener como mínimo una mayúscula, una minúscula y un número";
         var negacion = "No coinciden las contraseñas";
         var vacio = "La contraseña no puede estar vacía";
         var diferentes = "La nueva contraseña debe ser diferente de la contraseña actual";
@@ -237,22 +237,26 @@ jQuery( document ).ready(function() {
         function diferentePassword(){
             var valor1= pass1.val();
             var valor2 = pass2.val();
+            var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)([A-Za-z\d]|[^ ]){8,30}$/;
             //muestro el span
             if(valor1 == valor2){
                 jQuery('#loginChangeForm .message').text(diferentes).removeClass("ok-message").addClass('error-message');
                 jQuery('#loginChangeForm .message').show();
-                jQuery('[name=password]').addClass('invalid');
-                jQuery('[name=passwordNew]').addClass('invalid');
+                jQuery('[name=password]').removeClass('valid').addClass('invalid');
+                jQuery('[name=passwordNew]').removeClass('valid').addClass('invalid');
+            } else if (!regex.test(valor2)) {
+                jQuery('#loginChangeForm .message').text(longitud).removeClass("ok-message").addClass('error-message');
+                jQuery('#loginChangeForm .message').show();
+                jQuery('[name=repitPassword]').removeClass('valid').addClass('invalid');
+                jQuery('[name=passwordNew]').removeClass('valid').addClass('invalid');
             } else {
                 jQuery('#loginChangeForm .message').hide();
                 jQuery('[name=password]').removeClass('invalid').addClass('valid');
                 jQuery('[name=passwordNew]').removeClass('invalid').addClass('valid');
+                return true;
             }
         }
-        //ejecuto la función al soltar la tecla
-        pass2.keyup(function(){
-            diferentePassword();
-        });
+
         function coincidePassword(){
             var valor2 = pass2.val();
             var valor3 = pass3.val();
@@ -260,35 +264,25 @@ jQuery( document ).ready(function() {
             if(valor2 != valor3){
                 jQuery('#loginChangeForm .message').text(negacion).removeClass("ok-message").addClass('error-message');
                 jQuery('#loginChangeForm .message').show();
-                jQuery('[name=repitPassword]').addClass('invalid');
-                jQuery('[name=passwordNew]').addClass('invalid');
-            }
-            if(valor2.length==0 || valor2==""){
-                jQuery('#loginChangeForm .message').text(vacio).removeClass("ok-message").addClass('error-message');
-                jQuery('#loginChangeForm .message').show();
-                jQuery('[name=repitPassword]').addClass('invalid');
-                jQuery('[name=passwordNew]').addClass('invalid');
-            }
-            if(valor2.length<8 || valor2.length>30){
-                jQuery('#loginChangeForm .message').text(longitud).removeClass("ok-message").addClass('error-message');
-                jQuery('#loginChangeForm .message').show();
-                jQuery('[name=repitPassword]').addClass('invalid');
-                jQuery('[name=passwordNew]').addClass('invalid');
-            }
-            if(valor2.length!=0 && valor2==valor3){
-                jQuery('#loginChangeForm .message').removeClass("error-message").addClass('ok-message');
-                jQuery('#loginChangeForm .message').hide();
-                jQuery('[name=repitPassword]').removeClass('invalid').addClass('valid');
-                jQuery('[name=passwordNew]').removeClass('invalid').addClass('valid');
-
-            } else {
                 jQuery('[name=repitPassword]').removeClass('valid').addClass('invalid');
                 jQuery('[name=passwordNew]').removeClass('valid').addClass('invalid');
+            } else {
+                jQuery('[name=repitPassword]').removeClass('invalid').addClass('valid');
+                jQuery('[name=passwordNew]').removeClass('invalid').addClass('valid');
+                jQuery('#loginChangeForm .message').hide();
             }
         }
-        //ejecuto la función al soltar la tecla
+        pass2.keyup(function(){
+            diferentePassword();
+            console.log(diferentePassword());
+            if (diferentePassword() == true){
+                coincidePassword();
+            }
+        });
         pass3.keyup(function(){
             coincidePassword();
+        });
+        jQuery('#loginChangeForm').on("keyup", "input", function () {
             if(jQuery('[name=password]').hasClass( "valid" )
                 && jQuery('[name=repitPassword]').hasClass( "valid" )
                 && jQuery('[name=passwordNew]').hasClass( "valid" ) ) {
@@ -299,11 +293,13 @@ jQuery( document ).ready(function() {
                 jQuery("#loginSubmitChangeForm").removeClass('valid').addClass('invalid');
             }
         });
+
+
         jQuery('#loginChangeForm #loginSubmitChangeForm').on('click', function(e) {
             e.preventDefault(); // prevent native submit
             jQuery('#loginChangeForm .loadingIcon').show();
 
-            var user = jQuery("#loginChangeForm input[name='user']").val();
+            var user = jQuery("#loginForm input[name='user']").val();
             var password = jQuery("#loginChangeForm input[name='password']").val();
             var passwordNew = jQuery("#loginChangeForm input[name='passwordNew']").val();
             var loginType = jQuery("#loginChangeForm input[name='login-type']").val();
@@ -323,6 +319,8 @@ jQuery( document ).ready(function() {
                     action: action
                 },
                 success: function(response){
+                    console.log('RESPONSE:')
+                    console.log(response)
                     if(response['success'] == true){
 
                         jQuery('#loginChangeForm .message').text('Contraseña cambiada con éxito').removeClass("error-message").addClass('ok-message');
@@ -333,6 +331,7 @@ jQuery( document ).ready(function() {
                         console.log(response);
                         jQuery('#loginChangeForm .message').text(response['e']).removeClass("ok-message").addClass('error-message');
                         jQuery('#loginChangeForm .message').show();
+                        jQuery('#loginChangeForm .loadingIcon').hide();
                     }
                 },
                 error: function(response){
@@ -341,6 +340,7 @@ jQuery( document ).ready(function() {
                     jQuery('.public-core #loginForm .error-message').hide();
                     jQuery('.public-core #loginForm .error-message').fadeIn(1000);
                     console.error( lang["login.form.error"] );
+                    jQuery('#loginChangeForm .loadingIcon').hide();
                 }
             });
         });
@@ -364,27 +364,26 @@ jQuery( document ).ready(function() {
             var gestor = jQuery("#loginForm input[name='gestor']").val();
             var loginType = 'recovery-login';
             var action = jQuery("#loginForm input[name='action']").val();
-            var url = "/get-data";
             var ws = "recoveryLogin";
 
             jQuery.ajax({
                 type: "POST",
-                url: url,
+                url: "/send-login-form",
                 data: {
                     ws: ws,
                     user: user,
                     gestor: gestor,
                     loginType: loginType,
-                    action: action
+                    action: action,
+                    entryChannel :'IM'
                 },
                 success: function(response){
                     if(response['success'] == true){
-                        //HARDCODE PARA REDIRECT EN LOCAL
-                        //window.location.href = response['redirect'];
-                        window.location.href = 'http://127.0.0.1:8000/app';
+                        jQuery('.public-core #loginForm .error-message').html('Email enviado');
+                        jQuery('.public-core #loginForm .error-message').show();
                     }else{
                         jQuery('#loginForm .loadingIcon').hide();
-                        jQuery('.public-core #loginForm .error-message').html('Email enviado');
+                        jQuery('.public-core #loginForm .error-message').html(response['e']);
                         jQuery('.public-core #loginForm .error-message').hide();
                         jQuery('.public-core #loginForm .error-message').fadeIn(1000);
                     }
@@ -6184,8 +6183,8 @@ jQuery( document ).ready(function() {
                 success: function(response){
                     if(response['success'] == true){
                         //HARDCODE PARA REDIRECT EN LOCAL
-                        //window.location.href = response['redirect'];
-                        window.location.href = 'http://127.0.0.1:8000/app';
+                        window.location.href = response['redirect'];
+                        //window.location.href = 'http://127.0.0.1:8000/app';
                     }else{
                         jQuery('#loginFormPrivate .loadingIcon').hide();
                         jQuery('#loginFormPrivate .error-message').html( response['e']);

@@ -3,7 +3,7 @@ if( typeof(jQuery) != 'undefined' ){
         token = jQuery("#pm-widget-wrapper").data("token");
         jQuery.ajax({
             type: 'get',
-            url: 'https://imediador.wldev.es/embed?p=' + token,
+            url: 'https://imediador.com/embed?p=' + token,
             success: function(result) {
                 jQuery("#pm-widget-wrapper").append(result);
             }
