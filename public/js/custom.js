@@ -241,12 +241,12 @@ jQuery( document ).ready(function() {
             //muestro el span
             if(valor1 == valor2){
                 jQuery('#loginChangeForm .message').text(diferentes).removeClass("ok-message").addClass('error-message');
-                jQuery('#loginChangeForm .message').show();
+                jQuery('#loginChangeForm .message').css('display', 'inline-block');
                 jQuery('[name=password]').removeClass('valid').addClass('invalid');
                 jQuery('[name=passwordNew]').removeClass('valid').addClass('invalid');
             } else if (!regex.test(valor2)) {
                 jQuery('#loginChangeForm .message').text(longitud).removeClass("ok-message").addClass('error-message');
-                jQuery('#loginChangeForm .message').show();
+                jQuery('#loginChangeForm .message').css('display', 'inline-block');
                 jQuery('[name=repitPassword]').removeClass('valid').addClass('invalid');
                 jQuery('[name=passwordNew]').removeClass('valid').addClass('invalid');
             } else {
@@ -263,7 +263,7 @@ jQuery( document ).ready(function() {
             //condiciones dentro de la función
             if(valor2 != valor3){
                 jQuery('#loginChangeForm .message').text(negacion).removeClass("ok-message").addClass('error-message');
-                jQuery('#loginChangeForm .message').show();
+                jQuery('#loginChangeForm .message').css('display', 'inline-block');
                 jQuery('[name=repitPassword]').removeClass('valid').addClass('invalid');
                 jQuery('[name=passwordNew]').removeClass('valid').addClass('invalid');
             } else {
@@ -322,7 +322,6 @@ jQuery( document ).ready(function() {
                     console.log('RESPONSE:')
                     console.log(response)
                     if(response['success'] == true){
-
                         jQuery('#loginChangeForm .message').text('Contraseña cambiada con éxito').removeClass("error-message").addClass('ok-message');
                         jQuery('#loginChangeForm .message').show();
                         jQuery('#cambiarPWD').delay(2000).fadeOut();

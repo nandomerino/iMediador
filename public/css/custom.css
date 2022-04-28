@@ -1721,3 +1721,15 @@ input#quote-starting-date[readonly] {
     }
 
 }
+.indicadores {
+    height: 35px;
+    margin-top: 10px;
+}
+.indicadores svg {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+}
+.indicadores div:last-of-type {
+    left: 95% !important;
+}

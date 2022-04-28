@@ -290,7 +290,7 @@ class PMWShandler
 
         $data = $response->return;
         if( $data->correcto == "S") {
-            $response = false;
+            $response = true;
         }else{
             $response = $data->mensajeError;
         }

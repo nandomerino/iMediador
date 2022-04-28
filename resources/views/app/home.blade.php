@@ -59,12 +59,13 @@
                             $fechaFin = strtotime(str_replace('/', '-', $row["fechaFin"]));
                             $fechaHoy = strtotime(date("d") . "-" . date("m") . "-" . date("Y"));
                             $diasFaltan = ($fechaFin-$fechaHoy)/86400;
+                            $positionHTML = '';
                             if ($diasFaltan < 0) {
                                 $diasFaltan = 0;
                             }
 
                             $i = 0;
-
+                            $z = (count($row["tramosIncentivos"])-1);
                             foreach($row["tramosIncentivos"] as $row2){
                                 $getNextReward = true;
                                 // loads current rewards
@@ -72,6 +73,8 @@
                                     $rewards[$i]=  $row2["incentivo"];
                                     $getNextReward = false;
                                 }
+                                $rewards[$i]=  $row2["hasta"];
+                                $positionHTML .= '<div style="position:absolute;left:'. (($rewards[$i]*100)/$row["tramosIncentivos"][$z]["hasta"]-2) .'%">'. $rewards[$i] .'<i class="fas fa-ellipsis-v"></i></div>';
 
                                 // loads next reward
                                 if( $getNextReward && !$alreadyGotNext){
@@ -93,8 +96,6 @@
                                         $porcentajeActualConseguido = $row2['porcentajeParcialConseguido'];
                                     }
                                 }
-
-
                                 $i++;
                             }
 
@@ -164,7 +165,9 @@
                                     </div>
                                     <div class="separator bg-navy-blue my-2">&nbsp;</div>
                                     <div class="current-progress">
+
                                         <h5 class="text-center">{{ __('campaigns.progress.title') }}</h5>
+                                        <div class="indicadores">{!! $positionHTML !!}</div>
                                         <div class="progress-text" style="color: #fff;">{{ $currentProgress }}  ({{ $porcentajeActualConseguido }}%)</div>
                                         <div class="progress" style="background-color: #c3c5c7;">
                                             {!! $barsHTML !!}

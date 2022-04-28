@@ -1021,7 +1021,8 @@ class PMWS extends controller
         );
 
         $result = $client->getListaObjetivos($params);
-        //app('debugbar')->info($result);
+        app('debugbar')->info('PMWS getGoals $result');
+        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;

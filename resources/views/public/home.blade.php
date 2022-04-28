@@ -32,7 +32,7 @@
                     <div class="form-group">
                         <label for="user">* {{ __('login.repitpassword') }}</label>
                         <input name="repitPassword" type="password" class="password" class="form-control" required autocomplete="login password">
-                        <span class="message text-center mt-3"></span>
+                        <span class="message text-justify mt-3"></span>
                     </div>
                     <input name="user" type="hidden" class="user" class="form-control" required autocomplete="login user name">
                     <input name="login-type" type="hidden" class="login-type" value="change-password">
@@ -43,7 +43,7 @@
                         <input type="submit" class="btn btn-block text-white font-weight-bold bg-lime-yellow disable" id="loginSubmitChangeForm" value="{{ __('login.submitpassword') }}" disabled>
                         <i class="fas fa-circle-notch fa-spin loadingIcon"></i>
                     </div>
-                    <div class="error-message mt-3 text-center"></div>
+                    <div class="error-message mt-3 text-justify"></div>
                 </form>
 
             </div>
