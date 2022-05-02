@@ -100,15 +100,16 @@ class PMWShandler
                 $info = $this->PMWS->loginInt($user, $pass, $this->language, $userPM, $entryChannel);
                 break;
         }
+
         if ($recoveryLogin == true) {
             app('debugbar')->info('recovery true');
             $data = $info->return;
             if( $data->correcto == "S") {
-                $response = true;
+                $result = true;
             }else{
-                $response = $data->mensajeError;
+                $result = $data->mensajeError;
             }
-            return $response;
+            return $result;
         }
         if ($recoveryLogin == false) {
             app('debugbar')->info('recovery false');
@@ -229,17 +230,17 @@ class PMWShandler
                     ]
                 ]);
                 if ($cambiarPWD == 'S') {
-                    $response = 'redirect';
+                    $result = 'redirect';
                 } else {
-                    $response = true;
+                    $result = true;
                 }
 
             }else{
-                $response = $data->mensajeError;
+                $result = $data->mensajeError;
             }
-            app('debugbar')->info('response PMWS');
-            app('debugbar')->info($response);
-            return $response;
+            app('debugbar')->info('result PMWS');
+            app('debugbar')->info($result);
+            return $result;
 
         }
 
@@ -285,8 +286,6 @@ class PMWShandler
     public function changePassword($user, $password, $passwordNew)
     {
         $response = $this->PMWS->changePassword($user, $password, $this->language, $passwordNew);
-        //app('debugbar')->info('changePassword $response');
-        //app('debugbar')->info($response);
 
         $data = $response->return;
         if( $data->correcto == "S") {

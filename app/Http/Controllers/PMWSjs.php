@@ -100,10 +100,8 @@ class PMWSjs extends Controller
             $this->parameters["password"],
             $this->parameters["passwordNew"]
         );
-        //app('debugbar')->info('changePassword data');
-        //app('debugbar')->info($data);
 
-        if  (is_array($data)) {
+        if  ($data === true) {
             return response()->json(['success' => true, 'data' => $data]);
         } else {
             return response()->json(['success' => false, 'e' => $data]);

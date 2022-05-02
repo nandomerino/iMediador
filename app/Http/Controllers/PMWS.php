@@ -197,13 +197,7 @@ class PMWS extends controller
             "pDatosConexion"=> $cData
         );
 
-        app('debugbar')->info('cambiarPassword parametros');
-        app('debugbar')->info($params);
-
         $result = $client->cambiarPassword($params);
-
-        app('debugbar')->info('cambiarPassword result');
-        app('debugbar')->info($result);
 
         if (is_soap_fault($result)) {
             $result = false;
