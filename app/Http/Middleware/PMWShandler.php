@@ -2358,7 +2358,7 @@ class PMWShandler
                                 } else {
                                     $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'NO';
                                 }
-                                if ($row->valorActual >= $row2->desde && $row->valorActual < $row2->hasta || $row->valorActual== '0' ){
+                                if ($row->valorActual >= $row2->desde && $row->valorActual < $row2->hasta  ){
                                     $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'SI';
                                 } else {
                                     $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'NO';
