@@ -72,11 +72,9 @@
                                 if($row["valorActual"] >= $row2["hasta"]){
                                     $rewards[$i]=  $row2["incentivo"];
                                     $getNextReward = false;
-                                } else {
-                                    $rewards[$i]=  'Ningún objetivo conseguido aún';
                                 }
                                 $objetivo[$i]=  $row2["hasta"];
-                                $positionHTML .= '<div style="position:absolute;left:'. (($objetivo[$i]*100)/$row["tramosIncentivos"][$z]["hasta"]-2) .'%">'. $objetivo[$i] .'<i class="fas fa-ellipsis-v"></i></div>';
+                                $positionHTML .= '<div style="width:'. $row2["porcentajeTotal"] .'%;"><span>'. $objetivo[$i] .'</span><i class="fas fa-ellipsis-v"></i></div>';
 
                                 // loads next reward
                                 if( $getNextReward && !$alreadyGotNext){
@@ -92,20 +90,18 @@
                                 if ( $row["porcentajeConseguido"] >= 100) {
                                         $anchoActual = '100';
                                         $porcentajeActualConseguido = '100';
+                                        $anchoActualRestante = '0';
+                                        $anchoActualConseguido = '0';
                                 } else {
                                     if ($row2['objetivoActual'] == 'SI') {
                                         $anchoActual = $row2['porcentajeTotal'];
                                         $porcentajeActualConseguido = $row2['porcentajeParcialConseguido'];
                                         $anchoActualRestante = ($porcentajeActualConseguido * $anchoActual) / 100;
                                         $anchoActualConseguido = $anchoActual - $anchoActualRestante;
-                                        if ($anchoActualRestante == 0) {
-                                            $anchoActualConseguido  = $anchoActualConseguido - 2 ;
-                                        }
                                     }
                                 }
                                 $i++;
                             }
-
 
                             //var_dump($anchoConseguido);
                             //var_dump($progressBar);
@@ -119,7 +115,7 @@
                             $fullWidth = $progressBar[0];
                             $width = ($currentProgress * 100) /  $fullWidth;
 
-                            $barsHTML .= '<div class="progress-bar" role="progressbar" style="width: '. $totalConseguido .'%" aria-valuenow="'. $totalConseguido .'" aria-valuemin="0" aria-valuemax="100"></div>';
+                            $barsHTML .= '<div class="progress-bar" role="progressbar" style="width: '. ($totalConseguido) .'%" aria-valuenow="'. $totalConseguido .'" aria-valuemin="0" aria-valuemax="100"></div>';
                             $barsHTML .= '<div class="progress-bar bg-success" role="progressbar" style="width: '. ($anchoActualRestante) .'%" aria-valuenow="'. $anchoActualRestante .'" aria-valuemin="0" aria-valuemax="100"></div>';
                             $barsHTML .= '<div class="progress-bar bg-info" role="progressbar" style="width: '.($anchoActualConseguido ).'%" aria-valuenow="'.$anchoActualConseguido.'" aria-valuemin="0" aria-valuemax="100"></div>';
                             //$barsHTML .= "<div class='PM-progress-bar text-center current-progress-bar bar-" . $i . "' style='width: " . $width . "%' >" . $currentProgress . "</div>";
@@ -130,7 +126,6 @@
                                 $barsHTML .= "<div class='PM-progress-bar bar-" . $i . "' style='width: " . $width . "%' >&nbsp;</div>";
                                 $i++;
                             }*/
-
                         @endphp
 
                         <div class="col-12 col-md-12 pt-4 pt-md-0">
@@ -147,7 +142,11 @@
                                         <h5 class="text-center">{{ __('campaigns.rewards.title') }}</h5>
                                         <div class="row">
                                             <div class="col-8 col-md-8">
-                                                <span class="font-weight-bold">{{ __('campaigns.rewards.current') }}: {{ end($rewards) }}</span>
+                                               <span class="font-weight-bold">{{ __('campaigns.rewards.current') }}:
+                                                   @foreach( $rewards as $row5 )
+                                                       {{ $row5 }}
+                                                   @endforeach
+                                                </span>
                                                 @if( $nextReward != "" )
                                                     <br>
                                                     <span class="font-weight-bold">{{ __('campaigns.rewards.next') }}: {{ $nextReward }}</span>

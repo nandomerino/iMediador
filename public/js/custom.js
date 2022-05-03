@@ -261,26 +261,32 @@ jQuery( document ).ready(function() {
             var valor2 = pass2.val();
             var valor3 = pass3.val();
             //condiciones dentro de la función
-            if(valor2 != valor3){
-                jQuery('#loginChangeForm .message').text(negacion).removeClass("ok-message").addClass('error-message');
-                jQuery('#loginChangeForm .message').css('display', 'inline-block');
+            if (pass3.val().length >= 1) {
+                if (valor2 != valor3) {
+                    jQuery('#loginChangeForm .message').text(negacion).removeClass("ok-message").addClass('error-message');
+                    jQuery('#loginChangeForm .message').css('display', 'inline-block');
+                    jQuery('[name=repitPassword]').removeClass('valid').addClass('invalid');
+                    jQuery('[name=passwordNew]').removeClass('valid').addClass('invalid');
+                } else {
+                    jQuery('[name=repitPassword]').removeClass('invalid').addClass('valid');
+                    jQuery('[name=passwordNew]').removeClass('invalid').addClass('valid');
+                    jQuery('#loginChangeForm .message').hide();
+                }
+            }
+            if (pass3.val().length == 0) {
                 jQuery('[name=repitPassword]').removeClass('valid').addClass('invalid');
                 jQuery('[name=passwordNew]').removeClass('valid').addClass('invalid');
-            } else {
-                jQuery('[name=repitPassword]').removeClass('invalid').addClass('valid');
-                jQuery('[name=passwordNew]').removeClass('invalid').addClass('valid');
-                jQuery('#loginChangeForm .message').hide();
             }
         }
         pass2.keyup(function(){
             diferentePassword();
             console.log(diferentePassword());
-            if (diferentePassword() == true){
+            if (diferentePassword() == true ){
                 coincidePassword();
             }
         });
         pass3.keyup(function(){
-            coincidePassword();
+                coincidePassword();
         });
         jQuery('#loginChangeForm').on("keyup", "input", function () {
             if(jQuery('[name=password]').hasClass( "valid" )

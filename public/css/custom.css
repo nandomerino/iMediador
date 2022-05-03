@@ -1725,10 +1725,17 @@ input#quote-starting-date[readonly] {
     height: 35px;
     margin-top: 10px;
 }
+.indicadores div {
+    float: left;
+    text-align: right;
+}
+.indicadores div span {
+    margin-right: -15px;
+}
 .indicadores svg {
-    position: absolute;
+    position: relative;
     top: 20px;
-    left: 50%;
+    margin-right: -3px;
 }
 .indicadores div:last-of-type {
     left: 95% !important;
