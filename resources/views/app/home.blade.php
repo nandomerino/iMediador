@@ -51,6 +51,7 @@
                         @php
 
                             $rewards = [];
+                            $proximoIncentivo = [];
                             $anchoConseguido = [];
                             $nextReward = "";
                             $alreadyGotNext = false;
@@ -87,6 +88,7 @@
                                 if ($row2['objetivoConseguido'] == 'SI') {
                                     $anchoConseguido[$i] = $row2['porcentajeTotal'];
                                 }
+                                $porcentajeTotalConseguido = $row["porcentajeConseguido"];
                                 if ( $row["porcentajeConseguido"] >= 100) {
                                         $anchoActual = '100';
                                         $porcentajeActualConseguido = '100';
@@ -99,6 +101,9 @@
                                         $anchoActualRestante = ($porcentajeActualConseguido * $anchoActual) / 100;
                                         $anchoActualConseguido = $anchoActual - $anchoActualRestante;
                                     }
+                                }
+                                if ($row2['proximoIncentivo'] == 'NO') {
+                                   $proximoIncentivo[$i] =  $row2["incentivo"];
                                 }
                                 $i++;
                             }
@@ -142,18 +147,19 @@
                                         <h5 class="text-center">{{ __('campaigns.rewards.title') }}</h5>
                                         <div class="row">
                                             <div class="col-8 col-md-8">
-                                               <span class="font-weight-bold">{{ __('campaigns.rewards.current') }}:
-                                                   @foreach( $rewards as $row5 )
-                                                       {{ $row5 }}
-                                                   @endforeach
-                                                </span>
+
                                                 @if( $nextReward != "" )
+                                                    <span class="font-weight-bold">{{ __('campaigns.rewards.current') }}: </span><span>{{ $nextReward }}</span>
                                                     <br>
-                                                    <span class="font-weight-bold">{{ __('campaigns.rewards.next') }}: {{ $nextReward }}</span>
+                                                    <span class="font-weight-bold">{{ __('campaigns.rewards.next') }}: </span><span>{{ current($proximoIncentivo) }}</span> <br>
                                                 @else
-                                                    <br>
+                                                    <span class="font-weight-bold">{{ __('campaigns.rewards.current') }}: </span><span>{{ end($rewards) }}</span>
                                                     <br>
                                                 @endif
+                                                <span class="font-weight-bold">Valor actual (primas netas): </span><span>{{ $currentProgress }}€</span><br>
+                                                <span class="font-weight-bold">% Consecución tramo objetivo actual: </span><span>{{ $porcentajeActualConseguido }}%</span><br>
+                                                <span class="font-weight-bold">% Consecución sobre tramo máximo: </span><span>{{ $porcentajeTotalConseguido }}%</span>
+
                                             </div>
                                             <div class="col-4 col-md-4">
                                                 <div class="row fechaFin align-items-center">
@@ -173,7 +179,7 @@
 
                                         <h5 class="text-center">{{ __('campaigns.progress.title') }}</h5>
                                         <div class="indicadores">{!! $positionHTML !!}</div>
-                                        <div class="progress-text" style="color: #fff;">{{ $currentProgress }}  ({{ $porcentajeActualConseguido }}%)</div>
+                                        <div class="progress-text" style="color: #fff;">{{ $currentProgress }}  </div>
                                         <div class="progress" style="background-color: #c3c5c7;">
                                             {!! $barsHTML !!}
                                         </div>

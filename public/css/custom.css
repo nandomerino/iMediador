@@ -1173,8 +1173,9 @@ iframe#logaltyFrame.mostrar {
 }
 .progress-text {
     text-align: center;
-    margin-bottom: -35px;
+    margin-bottom: -40px;
     padding-top: 20px;
+    font-size: 21px;
 }
 .PM-progress-bar-wrapper{
     border: thin solid #002A66;
@@ -1738,5 +1739,5 @@ input#quote-starting-date[readonly] {
     margin-right: -3px;
 }
 .indicadores div:last-of-type {
-    left: 95% !important;
+    display: none;
 }
