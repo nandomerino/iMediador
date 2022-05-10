@@ -100,6 +100,11 @@
                                         $porcentajeActualConseguido = $row2['porcentajeParcialConseguido'];
                                         $anchoActualRestante = ($porcentajeActualConseguido * $anchoActual) / 100;
                                         $anchoActualConseguido = $anchoActual - $anchoActualRestante;
+                                    } else {
+                                        $anchoActual = $row2['porcentajeTotal'];
+                                        $porcentajeActualConseguido = $row2['porcentajeParcialConseguido'];
+                                        $anchoActualRestante = ($porcentajeActualConseguido * $anchoActual) / 100;
+                                        $anchoActualConseguido = $anchoActual - $anchoActualRestante;
                                     }
                                 }
                                 if ($row2['proximoIncentivo'] == 'NO') {
@@ -121,7 +126,7 @@
                             $width = ($currentProgress * 100) /  $fullWidth;
 
                             $barsHTML .= '<div class="progress-bar" role="progressbar" style="width: '. ($totalConseguido) .'%" aria-valuenow="'. $totalConseguido .'" aria-valuemin="0" aria-valuemax="100"></div>';
-                            $barsHTML .= '<div class="progress-bar bg-success" role="progressbar" style="width: '. ($anchoActualRestante) .'%" aria-valuenow="'. $anchoActualRestante .'" aria-valuemin="0" aria-valuemax="100"></div>';
+                            $barsHTML .= '<div class="progress-bar bg-success" role="progressbar" style="width: '. $anchoActualRestante   .'%" aria-valuenow="'. $anchoActualRestante   .'" aria-valuemin="0" aria-valuemax="100"></div>';
                             $barsHTML .= '<div class="progress-bar bg-info" role="progressbar" style="width: '.($anchoActualConseguido ).'%" aria-valuenow="'.$anchoActualConseguido.'" aria-valuemin="0" aria-valuemax="100"></div>';
                             //$barsHTML .= "<div class='PM-progress-bar text-center current-progress-bar bar-" . $i . "' style='width: " . $width . "%' >" . $currentProgress . "</div>";
                             // Goals

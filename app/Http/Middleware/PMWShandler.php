@@ -2351,18 +2351,27 @@ class PMWShandler
                                 $campaigns[$i]["tramosIncentivos"][$j]["desde"] = $row2->desde;
                                 $campaigns[$i]["tramosIncentivos"][$j]["hasta"] = $row2->hasta;
                                 $campaigns[$i]["tramosIncentivos"][$j]["incentivo"] = $row2->incentivo;
-                                $campaigns[$i]["tramosIncentivos"][$j]["porcentajeParcialConseguido"]  = round(($row->valorActual*100)/$row2->hasta, 2);
+                                if($row2->hasta > 0){
+                                    $campaigns[$i]["tramosIncentivos"][$j]["porcentajeParcialConseguido"]  = round(($row->valorActual*100)/$row2->hasta, 2);
+                                } else {
+                                    $campaigns[$i]["tramosIncentivos"][$j]["porcentajeParcialConseguido"]  = 0;
+                                }
                                 $campaigns[$i]["tramosIncentivos"][$j]["porcentajeTotal"]  = round((($row2->hasta - $row2->desde)*100)/$row->tramosIncentivos->tramoIncentivo[$posicion]->hasta, 2);
                                 if ($row->valorActual > $row2->desde){
                                     $campaigns[$i]["tramosIncentivos"][$j]["proximoIncentivo"] = 'SI';
                                 } else {
                                     $campaigns[$i]["tramosIncentivos"][$j]["proximoIncentivo"] = 'NO';
                                 }
-                                if (round(($row->valorActual*100)/$row2->hasta, 2) >= 100){
-                                    $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'SI';
+                                if($row2->hasta > 0){
+                                    if (round(($row->valorActual*100)/$row2->hasta, 2) >= 100){
+                                        $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'SI';
+                                    } else {
+                                        $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'NO';
+                                    }
                                 } else {
                                     $campaigns[$i]["tramosIncentivos"][$j]["objetivoConseguido"] = 'NO';
                                 }
+
                                 if ($row->valorActual >= $row2->desde && $row->valorActual < $row2->hasta || $row->valorActual== '0' ){
                                     $campaigns[$i]["tramosIncentivos"][$j]["objetivoActual"] = 'SI';
                                 } else {
