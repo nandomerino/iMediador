@@ -57,11 +57,11 @@ return [
 
     'from' => [
         'contactForm' => [
-            'address' => 'mail@wiredandlinked.net',
+            'address' => 'imediador@wiredandlinked.net',
             'name' => 'Nuevo Lead',
         ],
         'sendDocument' => [
-            'address' => 'mail@wiredandlinked.net',
+            'address' => 'imediador@wiredandlinked.net',
             'name' => 'Documentación',
         ]
     ],
@@ -77,7 +77,7 @@ return [
 
     'to' => [
         'contactForm' => [
-            'address' => 'pablo.lopez@wiredandlinked.com',
+            'address' => 'fernando.garcia@wiredandlinked.com',
             'name' => 'Contacto',
         ]
     ],

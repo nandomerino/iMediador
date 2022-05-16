@@ -718,6 +718,7 @@ input[type=number] {
     cursor: pointer;
 }
 
+textarea.invalid,
 input.invalid,
 select.invalid {
     border-color: RGBA(255, 0, 0, 0.5);

@@ -4200,6 +4200,8 @@ jQuery( document ).ready(function() {
     jQuery("#quote .quote-another-buyer.no").click( function(e){
         jQuery("#quote .quote-another-buyer-extra-info").hide();
         jQuery('#quote .quote-another-buyer-extra-info input').val('');
+        jQuery('#quote .natural-person').removeClass('active');
+        jQuery('#quote .legal-entity').removeClass('active');
     });
     // QUOTES - toggles person entity extra info
     jQuery("#quote .quote-legal-entity-type.natural-person").click( function(e){
@@ -4536,7 +4538,7 @@ jQuery( document ).ready(function() {
                 }
 
                 if (jQuery(this).is("input")) {
-                    if (jQuery(this).val().length > 1) {
+                    if (jQuery(this).val().length > 0) {
                         jQuery(this).removeClass("invalid");
                         jQuery(this).addClass("valid");
                     } else {
@@ -4546,7 +4548,7 @@ jQuery( document ).ready(function() {
                 }
 
                 if (jQuery(this).is("textarea")) {
-                    if (jQuery(this).val().length > 1) {
+                    if (jQuery(this).val().length > 0) {
                         jQuery(this).removeClass("invalid");
                         jQuery(this).addClass("valid");
                     } else {
@@ -4795,7 +4797,8 @@ jQuery( document ).ready(function() {
             ibanEntity : jQuery('#quote .quote-iban-entity').val(),
             ibanOffice : jQuery('#quote .quote-iban-office').val(),
             ibanDc : jQuery('#quote .quote-iban-dc').val(),
-            ibanAccount : jQuery('#quote .quote-iban-account').val()
+            ibanAccount : jQuery('#quote .quote-iban-account').val(),
+            signinMethod : jQuery('#quote select#signing-method').val()
         }
     }
 
@@ -4847,9 +4850,11 @@ jQuery( document ).ready(function() {
             var hiring = window.PMquoteStep1.hiring;
             var jobType = window.PMgetRatesData.jobType;
             if (hiring.length > 1) {
-                hiring= jQuery('#signing-method').val();
+                hiring = jQuery('#signing-method').val();
             }
-
+            window.PMhiring = {
+                hiring : hiring
+            }
             var name  = window.PMquoteStep2.firstName;
             var surname  = window.PMquoteStep2.lastName;
             var docId  = window.PMquoteStep2.personalId;
@@ -5039,11 +5044,11 @@ jQuery( document ).ready(function() {
         // TESTING
 
         if( window.PMsigningMode){
-            console.log(window.PMsigningMode);
+            console.log( window.PMhiring.hiring);
             // split array
-            var signingMethods = window.PMsigningMode.split(",");
+            var signingMethods = window.PMhiring.hiring.split(",");
             var i;
-            console.log(signingMethods);
+            //console.log(signingMethods);
             // Loads screens for each available option
             for( i=0; i < signingMethods.length; i++ ){
                 /**

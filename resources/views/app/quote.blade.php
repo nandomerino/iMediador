@@ -202,7 +202,7 @@
 
                                             <div class="row pt-3 quote-price-wrapper">
                                                 <div class="col-12">
-                                                    <label class="quote-price-label mb-1" for="quote-price">{{ __('quote.amount.insurance') }}</label>
+                                                    <label class="quote-price-label mb-1" for="quote-price">{{ __('quote.amount.insurance') }}<i class="fas fa-info-circle" title="{{ __('text.helpPrice') }}"></i></label>
                                                     <input type='number' class="form-control w-100 quote-price" data-index="3" name="quote-price" autocomplete="off" required>
                                                 </div>
                                             </div>

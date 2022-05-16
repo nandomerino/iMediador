@@ -148,6 +148,7 @@
     "text.chooseFile" : "Seleccionar archivo",
     "text.save" : "Guardar",
     "text.helpName" : "Introduce el nombre y apellidos del cliente sin acentos ortográficos ni diéresis",
+    "text.helpPrice" : "Las primas a satisfacer se calcularán en base a una forma de pago mensual, para otras opciones de pago pueden aplicarse los correspondientes descuentos por modalidad de pago.",
 
     "error.404.title" : "Página no encontrada",
     "error.404.message" : "Error 404: No hemos podido encontrar la página solicitada.",
